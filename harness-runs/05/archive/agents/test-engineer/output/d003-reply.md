@@ -1,0 +1,21 @@
+# d003 (e02) reply — test-engineer — mapping reconciliation + dirty tree
+
+**Commits:** `6cecc55` (d002 dirty-tree fix: untracked `reports/d002-summary.md` committed) and `b7176fd` (reconciliation: `tests/build_mapping.py` + `reports/tests/mapping.json`). Branch `cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10` is clean and differs from base 8f713fe.
+
+**Accepted source:** `refs/campaign/orchestrator` = `6f55e3f269532d92aba3ebbfa073491ab564b708`. Note: `git fetch origin refs/campaign/orchestrator` failed ("couldn't find remote ref") because the ref was already present locally at exactly that commit — used as-is.
+
+## Reconciliation summary
+- All **129** tests in `reports/tests/mapping.json` now carry accepted analyst S-IDs in `ear` (string when one, list when several, null when none applies); `earProvisional` keeps the docstring tag; `kind`/`statement` unchanged.
+- **Test docstrings were NOT renamed** — the numberings are not aligned (e.g. provisional S-ACT-003 = approve→DONE vs accepted S-LIFE-003 = 404/500 unknown-task; provisional S-LIST-003 = sort=status vs accepted S-QUERY-003 = assignee filter), so the S-ACT-→S-LIFE- / S-LIST-→S-QUERY- mechanical rename would have been wrong. The reconciliation table lives in `tests/build_mapping.py` keyed by full test id (provisional ids are not unique — two S-PROJ-009s) with drift guards; `python3 tests/build_mapping.py` reproduces the reconciled mapping.json deterministically. Full reconciliation notes: `~/.local/share/cs-campaign/output/d003-mapping-reconciliation.md`.
+- Spec-count note: actual accepted specs are AUTH 10, PROJ 8, FORM 10, LIFE 9, BULK 5, QUERY 8, API 5, DATA 8 (the dispatch's AUTH 9 / PROJ 7 / FORM 9 / QUERY 6 undercount); spec files used as authoritative.
+
+## Conflicts (observed vs accepted spec — tests NOT changed, adjudication requested)
+1. **S-QUERY-003** (`test_s_list_018`): spec's fixtures/observables say `assignee=3` → "Rows 1,2 only", but `seed.sql:18-20` assigns tasks 1, 2 **and 3** to person 3; app returns and the passing test asserts [3, 2, 1]. EARS statement itself unaffected — only the enumerated seed row set is wrong.
+2. **S-QUERY-005** (`test_s_list_004`): spec's observable "Row order 1,2,3,4 (HIGH group newest-first)" contradicts its own "updated_at DESC within a group"; seed has task 2 (12:00) newer than task 1 (09:00) in HIGH, app returns and the test asserts [2, 1, 3, 4].
+Both are spec-text/seed discrepancies, not app defects; carried in mapping.json `conflicts` fields.
+
+**No accepted spec matches 5 tests** (kept, `ear: null`, noted): API POST→405, cross-client session isolation, Archive-button-only-for-ACTIVE render, GET /tasks/action→405, edit of nonexistent id (zero-row UPDATE).
+
+## Final test result
+- `python3 tests/build_mapping.py` → mapped 129 tests (0 unmapped); 2 conflicts, 5 without accepted spec.
+- `python3 harness/runtime.py reset` → 4 tasks; `python3 harness/runtime.py test` → **Ran 129 tests in 25.512s — OK** (0 failures, 0 errors). No test modified, skipped, or weakened.

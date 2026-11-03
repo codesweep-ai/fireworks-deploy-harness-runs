@@ -1,0 +1,10 @@
+The harness these members ran is not the harness cs-sandbox ships.
+A tool that CHANGED during the run was modified after create — either by a
+host-driven dispatch redeploying cs-*-turn, or by someone patching a guest.
+
+orchestrator: 1 harness tool(s) CHANGED during the run: cs-opencode-turn: 797dfe7154e0… -> b84e9ef9ae50…
+orchestrator: harness deviates from what cs-sandbox ships, at archive time: cs-opencode-turn: content differs (cs-sandbox ships 797dfe7154e0…, member has b84e9ef9ae50…)
+rule-analyst: 1 harness tool(s) CHANGED during the run: cs-opencode-turn: 797dfe7154e0… -> b84e9ef9ae50…
+rule-analyst: harness deviates from what cs-sandbox ships, at archive time: cs-opencode-turn: content differs (cs-sandbox ships 797dfe7154e0…, member has b84e9ef9ae50…)
+test-engineer: 1 harness tool(s) CHANGED during the run: cs-opencode-turn: 797dfe7154e0… -> b84e9ef9ae50…
+test-engineer: harness deviates from what cs-sandbox ships, at archive time: cs-opencode-turn: content differs (cs-sandbox ships 797dfe7154e0…, member has b84e9ef9ae50…)

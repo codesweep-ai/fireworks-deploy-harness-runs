@@ -1,0 +1,23 @@
+{
+  "kind": "fresh-run-05",
+  "frozenAppCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "frozenSourceDigest": "9a76d3ba424c1ce78103ef8bf8c674792b17d2551ec1c6132cd4cc9d2dac7c44",
+  "promptOrigin": "run 02 mission and role briefs, edited only to remove run 01 continuation and update models/run number",
+  "genericRuntimeOrigin": "run 02 harness and pinned runtime lock",
+  "excludedFromSeed": [
+    "rules",
+    "specifications",
+    "executable tests",
+    "test helpers",
+    "test mappings",
+    "findings",
+    "reports",
+    "transcripts",
+    "history",
+    "v1 JSON schemas"
+  ],
+  "initialOutputCommit": "8f713fe76a31baacf269ecf4fce814513b1ead3f",
+  "testFileCount": 0,
+  "ruleFileCount": 0,
+  "specFileCount": 0
+}

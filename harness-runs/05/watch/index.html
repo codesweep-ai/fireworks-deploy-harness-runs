@@ -1,0 +1,133 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="refresh" content="15"><title>Campaign progress</title>
+<style>:root{color-scheme:light dark}body{font:15px system-ui;max-width:1350px;margin:32px auto;padding:0 20px;line-height:1.5}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:left;vertical-align:top;border-bottom:1px solid #80808066}pre{white-space:pre-wrap;overflow-wrap:anywhere}.scroll{overflow-x:auto}a{color:light-dark(#235e9b,#94c7ff)}</style>
+<script>try{document.documentElement.style.colorScheme=localStorage.getItem('campaign-status-theme')||'light dark'}catch(_){}</script>
+<a href="/status.html">← Campaign status</a><h1>task-tracker-05: progress</h1><p>Mission reply present; inspect verdict and unmet goals · Checked 2026-11-03T00:04:07.326016+00:00</p><p>Node state comes from cs-campaign observe. File/commit readings are separate probes. Output activity is evidence of change, not proof of correctness; the verifier judges that. No output change for 180 seconds is an attention flag, not a failure verdict.</p><div class=scroll><table><thead><tr><th>Member</th><th>State</th><th>Dispatch</th><th>Detail</th><th>Commit</th><th>Files by area</th><th>Seconds without output change</th><th>Attention</th></tr></thead><tbody><tr><td>orchestrator</td><td>node-replied</td><td>m1</td><td>reply present, not accepted</td><td>c6bc3be0182a</td><td>rules: 9, specs: 8, tests: 9, evidence: 6, findings: 2, reports: 74, harness: 2</td><td>16</td><td></td></tr><tr><td>rule-analyst</td><td>node-free</td><td>d005</td><td>d005 accepted</td><td>9c24dc37bd1a</td><td>rules: 9, specs: 8, tests: 0, evidence: 0, findings: 1, reports: 0, harness: 2</td><td>428</td><td>No output changes observed for at least 180 seconds</td></tr><tr><td>test-engineer</td><td>node-free</td><td>d006</td><td>d006 accepted</td><td>8d2b3ce8eba2</td><td>rules: 9, specs: 8, tests: 9, evidence: 0, findings: 2, reports: 70, harness: 2</td><td>363</td><td>No output changes observed for at least 180 seconds</td></tr><tr><td>verifier</td><td>node-free</td><td>d002</td><td>d002 accepted · context 81k</td><td>e0401230557a</td><td>rules: 9, specs: 8, tests: 9, evidence: 6, findings: 2, reports: 73, harness: 2</td><td>49</td><td></td></tr></tbody></table></div><h2>Orchestrator claims</h2><pre>[
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:26:51.783411569Z&quot;,
+    &quot;kind&quot;: &quot;plan&quot;,
+    &quot;text&quot;: &quot;{\&quot;phase\&quot;:\&quot;dispatched\&quot;,\&quot;time_utc\&quot;:\&quot;2026-11-02T23:29:00Z\&quot;,\&quot;minutes_left\&quot;:\&quot;~56\&quot;,\&quot;plan\&quot;:\&quot;Batch A: analyst d002 (inventory + AUTH/PROJ then FORM/LIFE then BULK/QUERY/API/DATA), engineer d002 (runtime up + test batches 1-4), verifier d002 (runtime up + source integrity + verification plan). Next: judge first replies; integrate analyst rule/spec IDs with engineer mapping; push exact integration commit to verifier refs/campaign/orchestrator as soon as engineer batch 1 + analyst batch 1 are accepted. Stop new implementation ~T-15m; commit reports/run-summary.json, reports/attempts.json, findings/ledger.json and reply by T-3m (00:21:57Z).\&quot;}\n&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:31:52.818683654Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;rule-analyst/d002&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:32:01.199163361Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to test-engineer at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;test-engineer&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;6f55e3f269532d92aba3ebbfa073491ab564b708&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:32:01.430461826Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to verifier at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;verifier&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;6f55e3f269532d92aba3ebbfa073491ab564b708&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:34:21.378229958Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d002&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:38:34.220636876Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to rule-analyst at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;rule-analyst&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;2fdf5c069b86fdca1094544730e391e5b1c61d26&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:39:48.885452791Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d003&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:42:10.930208711Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;rule-analyst/d003&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:44:04.730022428Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;rule-analyst/d004&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:48:48.157497366Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d004&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:48:49.521134646Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to verifier at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;verifier&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;065f18d59875a58a777e212fd12d31d61c693e1e&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:48:49.732672156Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to test-engineer at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;test-engineer&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;065f18d59875a58a777e212fd12d31d61c693e1e&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:48:49.950123167Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to rule-analyst at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;rule-analyst&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;065f18d59875a58a777e212fd12d31d61c693e1e&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:51:15.929486366Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d005&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:51:16.377406686Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to verifier at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;verifier&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;6dd956f84717570599ff1daa0c621ffe5fe57541&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:57:15.217978244Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;rule-analyst/d005&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:57:15.693383186Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to verifier at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;verifier&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;8d5045ef889efe78b9c3e2756f203f9c34e1ff9b&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:58:10.989272137Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d006&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T23:58:11.438793542Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to verifier at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;verifier&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;b38f8dae33762710156ea10ddf29c356130b0787&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-03T00:03:36.559742189Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;verifier/d002&quot;
+  }
+]</pre><p>Raw observations are saved beside this page. This watcher observes only; the hard cutoff is a separate launch requirement.</p></html>

@@ -1,0 +1,233 @@
+{
+  "version": 2,
+  "id": "task-tracker-05-36f5ca10bdfa7d53",
+  "name": "task-tracker-05",
+  "group": "task-tracker-05-36f5ca10",
+  "network": "cs-sandbox-task-tracker-05-36f5ca10",
+  "engine": "firecracker",
+  "createdAt": "0001-01-01T00:00:00Z",
+  "updatedAt": "0001-01-01T00:00:00Z",
+  "profilePath": "/home/rishi/.tmp/firecracker-deploy/runs/05/packet/profile.yaml",
+  "profileDigest": "9992499742c0709d6ba82aa37d15c67d2d3e3b5683ccf90c388e9aa2435cfe5a",
+  "policy": {
+    "continueAttempts": 2,
+    "restarts": 1,
+    "elapsedSeconds": 3600,
+    "blindProbes": 3,
+    "pollSeconds": 5,
+    "settlingSeconds": 15,
+    "providerWaitSeconds": 60,
+    "stallSeconds": 180
+  },
+  "deadline": "0001-01-01T01:00:00Z",
+  "members": [
+    {
+      "name": "orchestrator",
+      "role": "orchestrator",
+      "cli": "opencode",
+      "sandbox": "orchestrator-36f5ca10",
+      "ref": "orchestrator-36f5ca10.task-tracker-05-36f5ca10",
+      "branch": "cs-sandbox/orchestrator-36f5ca10.task-tracker-05-36f5ca10",
+      "solo": false,
+      "session": {
+        "name": "task-tracker-05-36f5ca10bdfa7d53-orchestrator"
+      },
+      "profile": {
+        "cli": "opencode",
+        "policy": {
+          "stallSeconds": 180
+        },
+        "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+        "providerHeaderTimeoutSeconds": 60,
+        "repos": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/repo",
+            "name": "outputs",
+            "resolvedCommit": "8f713fe76a31baacf269ecf4fce814513b1ead3f"
+          }
+        ],
+        "snapshots": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/inputs/app",
+            "name": "app"
+          },
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/inputs/runtime",
+            "name": "runtime"
+          }
+        ],
+        "auth": {
+          "apiKey": [
+            "fireworks"
+          ],
+          "credentials": "lend"
+        },
+        "resources": {
+          "cpus": 4,
+          "memoryMiB": 6144
+        },
+        "imageStores": [
+          "tt-demo-01"
+        ]
+      },
+      "stallSeconds": 180
+    },
+    {
+      "name": "rule-analyst",
+      "role": "agent",
+      "cli": "opencode",
+      "sandbox": "rule-analyst-36f5ca10",
+      "ref": "rule-analyst-36f5ca10.task-tracker-05-36f5ca10",
+      "branch": "cs-sandbox/rule-analyst-36f5ca10.task-tracker-05-36f5ca10",
+      "solo": true,
+      "session": {
+        "name": "task-tracker-05-36f5ca10bdfa7d53-rule-analyst"
+      },
+      "profile": {
+        "cli": "opencode",
+        "policy": {
+          "stallSeconds": 180,
+          "freshPerDispatch": true
+        },
+        "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+        "providerHeaderTimeoutSeconds": 60,
+        "repos": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/repo",
+            "name": "outputs",
+            "resolvedCommit": "8f713fe76a31baacf269ecf4fce814513b1ead3f"
+          }
+        ],
+        "snapshots": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/inputs/app",
+            "name": "app"
+          },
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/inputs/runtime",
+            "name": "runtime"
+          }
+        ],
+        "auth": {
+          "apiKey": [
+            "fireworks"
+          ],
+          "credentials": "lend"
+        },
+        "resources": {
+          "cpus": 4,
+          "memoryMiB": 6144
+        },
+        "imageStores": [
+          "tt-demo-01"
+        ]
+      },
+      "stallSeconds": 180,
+      "freshPerDispatch": true
+    },
+    {
+      "name": "test-engineer",
+      "role": "agent",
+      "cli": "opencode",
+      "sandbox": "test-engineer-36f5ca10",
+      "ref": "test-engineer-36f5ca10.task-tracker-05-36f5ca10",
+      "branch": "cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10",
+      "solo": true,
+      "session": {
+        "name": "task-tracker-05-36f5ca10bdfa7d53-test-engineer"
+      },
+      "profile": {
+        "cli": "opencode",
+        "policy": {
+          "stallSeconds": 180,
+          "freshPerDispatch": true
+        },
+        "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+        "repos": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/repo",
+            "name": "outputs",
+            "resolvedCommit": "8f713fe76a31baacf269ecf4fce814513b1ead3f"
+          }
+        ],
+        "snapshots": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/inputs/app",
+            "name": "app"
+          },
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/inputs/runtime",
+            "name": "runtime"
+          }
+        ],
+        "auth": {
+          "apiKey": [
+            "fireworks"
+          ],
+          "credentials": "lend"
+        },
+        "resources": {
+          "cpus": 4,
+          "memoryMiB": 6144
+        },
+        "imageStores": [
+          "tt-demo-01"
+        ]
+      },
+      "stallSeconds": 180,
+      "freshPerDispatch": true
+    },
+    {
+      "name": "verifier",
+      "role": "agent",
+      "cli": "opencode",
+      "sandbox": "verifier-36f5ca10",
+      "ref": "verifier-36f5ca10.task-tracker-05-36f5ca10",
+      "branch": "cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10",
+      "solo": true,
+      "session": {
+        "name": "task-tracker-05-36f5ca10bdfa7d53-verifier"
+      },
+      "profile": {
+        "cli": "opencode",
+        "policy": {
+          "stallSeconds": 180,
+          "freshPerDispatch": true
+        },
+        "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+        "repos": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/repo",
+            "name": "outputs",
+            "resolvedCommit": "8f713fe76a31baacf269ecf4fce814513b1ead3f"
+          }
+        ],
+        "snapshots": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/inputs/app",
+            "name": "app"
+          },
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/05/inputs/runtime",
+            "name": "runtime"
+          }
+        ],
+        "auth": {
+          "apiKey": [
+            "fireworks"
+          ],
+          "credentials": "lend"
+        },
+        "resources": {
+          "cpus": 4,
+          "memoryMiB": 6144
+        },
+        "imageStores": [
+          "tt-demo-01"
+        ]
+      },
+      "stallSeconds": 180,
+      "freshPerDispatch": true
+    }
+  ]
+}

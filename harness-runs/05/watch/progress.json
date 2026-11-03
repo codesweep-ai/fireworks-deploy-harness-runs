@@ -1,0 +1,372 @@
+{
+  "campaign": "task-tracker-05",
+  "checkedAt": "2026-11-03T00:04:07.326016+00:00",
+  "status": "Mission reply present; inspect verdict and unmet goals",
+  "members": [
+    {
+      "name": "orchestrator",
+      "role": "orchestrator",
+      "state": "node-replied",
+      "dispatch": "m1",
+      "detail": "reply present, not accepted",
+      "activity": {
+        "commit": "c6bc3be0182ac46badc2a33a71c08b8149470aad",
+        "tree": "c478c887e015b921a2048d90c7dd6e218f2deaa8",
+        "groups": {
+          "rules": {
+            "files": 9,
+            "digest": "509dc9263256a198c8e68ec8264b1fd505ff7ca57f04f45463e89df428a0eded"
+          },
+          "specs": {
+            "files": 8,
+            "digest": "c4abb7b31d230514f905e31f5320681b1eb64ae139dbeb90978089a4eccf74ef"
+          },
+          "tests": {
+            "files": 9,
+            "digest": "5df54dd088269e2afd22d0149330377755863f9b9aa4b14c537f76335d2a6341"
+          },
+          "evidence": {
+            "files": 6,
+            "digest": "f74e4360d0abd506d89fb425786f7a9976e18641b2acc0c435a5c20384dded86"
+          },
+          "findings": {
+            "files": 2,
+            "digest": "4d3380ac27b0cf2a85d982e235e99fb8d84cc0a1c1ee1e4a5174741816c57d12"
+          },
+          "reports": {
+            "files": 74,
+            "digest": "19748b459b8b6ac020c65794c4d05b922bf5416fc5029f0382a80a50425a9c12"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 16
+    },
+    {
+      "name": "rule-analyst",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d005",
+      "detail": "d005 accepted",
+      "activity": {
+        "commit": "9c24dc37bd1a6aba4ac0e6fe7fbb2c83db4599a6",
+        "tree": "3d95a3f8db7b89cf715dd43f09a3a63b6543239b",
+        "groups": {
+          "rules": {
+            "files": 9,
+            "digest": "509dc9263256a198c8e68ec8264b1fd505ff7ca57f04f45463e89df428a0eded"
+          },
+          "specs": {
+            "files": 8,
+            "digest": "c4abb7b31d230514f905e31f5320681b1eb64ae139dbeb90978089a4eccf74ef"
+          },
+          "tests": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "evidence": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "findings": {
+            "files": 1,
+            "digest": "64ccdc2d995161384d322129cf78d7d5d3774745b561c4342fc655357834a65a"
+          },
+          "reports": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 428,
+      "attention": "No output changes observed for at least 180 seconds"
+    },
+    {
+      "name": "test-engineer",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d006",
+      "detail": "d006 accepted",
+      "activity": {
+        "commit": "8d2b3ce8eba2a0d68722980ce7eddcf22d2e80c4",
+        "tree": "55226827651fc0527c6d6bc2a6009d719a89585f",
+        "groups": {
+          "rules": {
+            "files": 9,
+            "digest": "a37c796e307fb6a3b7e0b4960350c7e938c7aa6c90f09cfc0e4aa1416cae98d8"
+          },
+          "specs": {
+            "files": 8,
+            "digest": "c4abb7b31d230514f905e31f5320681b1eb64ae139dbeb90978089a4eccf74ef"
+          },
+          "tests": {
+            "files": 9,
+            "digest": "5df54dd088269e2afd22d0149330377755863f9b9aa4b14c537f76335d2a6341"
+          },
+          "evidence": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "findings": {
+            "files": 2,
+            "digest": "4ecbe95281beded2699f90a162376e497435963a962458707cf38e50064e6786"
+          },
+          "reports": {
+            "files": 70,
+            "digest": "6f7e05bb05e1c65c3ebe48cd1c9068de3ebd2f51f39d456891a868253bb2f739"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 363,
+      "attention": "No output changes observed for at least 180 seconds"
+    },
+    {
+      "name": "verifier",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d002",
+      "detail": "d002 accepted \u00b7 context 81k",
+      "context": {
+        "tokens": 80852,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/glm-5p3-flash"
+      },
+      "activity": {
+        "commit": "e0401230557ae43c616155410770b41705b27325",
+        "tree": "9a85b3301349cf9169a4754868baa7be60abca0c",
+        "groups": {
+          "rules": {
+            "files": 9,
+            "digest": "509dc9263256a198c8e68ec8264b1fd505ff7ca57f04f45463e89df428a0eded"
+          },
+          "specs": {
+            "files": 8,
+            "digest": "c4abb7b31d230514f905e31f5320681b1eb64ae139dbeb90978089a4eccf74ef"
+          },
+          "tests": {
+            "files": 9,
+            "digest": "5df54dd088269e2afd22d0149330377755863f9b9aa4b14c537f76335d2a6341"
+          },
+          "evidence": {
+            "files": 6,
+            "digest": "f74e4360d0abd506d89fb425786f7a9976e18641b2acc0c435a5c20384dded86"
+          },
+          "findings": {
+            "files": 2,
+            "digest": "4ecbe95281beded2699f90a162376e497435963a962458707cf38e50064e6786"
+          },
+          "reports": {
+            "files": 73,
+            "digest": "ba2be5ed61c4c6e146ec12ca40d2ae37af299818db59545919d429a7b48f4e92"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 49
+    }
+  ],
+  "observation": {
+    "deadline": {
+      "at": "2026-11-03T00:24:57.954763714Z",
+      "remainingSeconds": 1250,
+      "attempt": 1,
+      "startedAt": "2026-11-02T23:24:57.954763714Z"
+    },
+    "derived": [
+      {
+        "name": "orchestrator",
+        "role": "orchestrator",
+        "state": "node-replied",
+        "dispatch": "m1",
+        "detail": "reply present, not accepted"
+      },
+      {
+        "name": "rule-analyst",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d005",
+        "detail": "d005 accepted"
+      },
+      {
+        "name": "test-engineer",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d006",
+        "detail": "d006 accepted"
+      },
+      {
+        "name": "verifier",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d002",
+        "detail": "d002 accepted \u00b7 context 81k",
+        "context": {
+          "tokens": 80852,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/glm-5p3-flash"
+        }
+      }
+    ],
+    "claimed": [
+      {
+        "at": "2026-11-02T23:26:51.783411569Z",
+        "kind": "plan",
+        "text": "{\"phase\":\"dispatched\",\"time_utc\":\"2026-11-02T23:29:00Z\",\"minutes_left\":\"~56\",\"plan\":\"Batch A: analyst d002 (inventory + AUTH/PROJ then FORM/LIFE then BULK/QUERY/API/DATA), engineer d002 (runtime up + test batches 1-4), verifier d002 (runtime up + source integrity + verification plan). Next: judge first replies; integrate analyst rule/spec IDs with engineer mapping; push exact integration commit to verifier refs/campaign/orchestrator as soon as engineer batch 1 + analyst batch 1 are accepted. Stop new implementation ~T-15m; commit reports/run-summary.json, reports/attempts.json, findings/ledger.json and reply by T-3m (00:21:57Z).\"}\n"
+      },
+      {
+        "at": "2026-11-02T23:31:52.818683654Z",
+        "kind": "accepted",
+        "text": "rule-analyst/d002"
+      },
+      {
+        "at": "2026-11-02T23:32:01.199163361Z",
+        "kind": "delivered",
+        "text": "delivered to test-engineer at refs/campaign/orchestrator",
+        "member": "test-engineer",
+        "repo": "outputs",
+        "commit": "6f55e3f269532d92aba3ebbfa073491ab564b708"
+      },
+      {
+        "at": "2026-11-02T23:32:01.430461826Z",
+        "kind": "delivered",
+        "text": "delivered to verifier at refs/campaign/orchestrator",
+        "member": "verifier",
+        "repo": "outputs",
+        "commit": "6f55e3f269532d92aba3ebbfa073491ab564b708"
+      },
+      {
+        "at": "2026-11-02T23:34:21.378229958Z",
+        "kind": "accepted",
+        "text": "test-engineer/d002"
+      },
+      {
+        "at": "2026-11-02T23:38:34.220636876Z",
+        "kind": "delivered",
+        "text": "delivered to rule-analyst at refs/campaign/orchestrator",
+        "member": "rule-analyst",
+        "repo": "outputs",
+        "commit": "2fdf5c069b86fdca1094544730e391e5b1c61d26"
+      },
+      {
+        "at": "2026-11-02T23:39:48.885452791Z",
+        "kind": "accepted",
+        "text": "test-engineer/d003"
+      },
+      {
+        "at": "2026-11-02T23:42:10.930208711Z",
+        "kind": "accepted",
+        "text": "rule-analyst/d003"
+      },
+      {
+        "at": "2026-11-02T23:44:04.730022428Z",
+        "kind": "accepted",
+        "text": "rule-analyst/d004"
+      },
+      {
+        "at": "2026-11-02T23:48:48.157497366Z",
+        "kind": "accepted",
+        "text": "test-engineer/d004"
+      },
+      {
+        "at": "2026-11-02T23:48:49.521134646Z",
+        "kind": "delivered",
+        "text": "delivered to verifier at refs/campaign/orchestrator",
+        "member": "verifier",
+        "repo": "outputs",
+        "commit": "065f18d59875a58a777e212fd12d31d61c693e1e"
+      },
+      {
+        "at": "2026-11-02T23:48:49.732672156Z",
+        "kind": "delivered",
+        "text": "delivered to test-engineer at refs/campaign/orchestrator",
+        "member": "test-engineer",
+        "repo": "outputs",
+        "commit": "065f18d59875a58a777e212fd12d31d61c693e1e"
+      },
+      {
+        "at": "2026-11-02T23:48:49.950123167Z",
+        "kind": "delivered",
+        "text": "delivered to rule-analyst at refs/campaign/orchestrator",
+        "member": "rule-analyst",
+        "repo": "outputs",
+        "commit": "065f18d59875a58a777e212fd12d31d61c693e1e"
+      },
+      {
+        "at": "2026-11-02T23:51:15.929486366Z",
+        "kind": "accepted",
+        "text": "test-engineer/d005"
+      },
+      {
+        "at": "2026-11-02T23:51:16.377406686Z",
+        "kind": "delivered",
+        "text": "delivered to verifier at refs/campaign/orchestrator",
+        "member": "verifier",
+        "repo": "outputs",
+        "commit": "6dd956f84717570599ff1daa0c621ffe5fe57541"
+      },
+      {
+        "at": "2026-11-02T23:57:15.217978244Z",
+        "kind": "accepted",
+        "text": "rule-analyst/d005"
+      },
+      {
+        "at": "2026-11-02T23:57:15.693383186Z",
+        "kind": "delivered",
+        "text": "delivered to verifier at refs/campaign/orchestrator",
+        "member": "verifier",
+        "repo": "outputs",
+        "commit": "8d5045ef889efe78b9c3e2756f203f9c34e1ff9b"
+      },
+      {
+        "at": "2026-11-02T23:58:10.989272137Z",
+        "kind": "accepted",
+        "text": "test-engineer/d006"
+      },
+      {
+        "at": "2026-11-02T23:58:11.438793542Z",
+        "kind": "delivered",
+        "text": "delivered to verifier at refs/campaign/orchestrator",
+        "member": "verifier",
+        "repo": "outputs",
+        "commit": "b38f8dae33762710156ea10ddf29c356130b0787"
+      },
+      {
+        "at": "2026-11-03T00:03:36.559742189Z",
+        "kind": "accepted",
+        "text": "verifier/d002"
+      }
+    ],
+    "mission": {
+      "dispatch": "m1",
+      "phase": "done",
+      "note": "# Run 05 closeout \u2014 orchestrator verdict (m1)\n\nCampaign `task-tracker-05`, app commit eee783057ec28d28fb36ec05484de9b4b40ceb9c, frozen-source checker passing before and after all work.\n\n## Outcome: campaign-exhausted\n\nEvery scope family was inventoried, specified, implemented, executed, and independently verified; the clock, not the fleet, stopped further progress \u2014 boundary residuals were still closable at the implementation cutoff (T-22min), which is why this is **exhausted**, not converged.\n\n## What the campaign produced (all on member branches, integrated on mine)\n\n- **Inventory** (`rules/app-inventory.json` v3): all 8 scope families \u2014 7 routes, auth exemptions, validation/default/null handling, project/task mutations, bulkClose, filters and all 6 whitelisted/default sorts, API readback/escaping/nulls, schema constraints and DAO mappings, seed, JSP-observable behavior, technical Java paths, and no-executable-counter files (18/18 javaSources accounted; TaskStatus zero-executable-lines noted).\n- **Rules/specs**: 45 rules (R-*) and 52 EARS specs (S-*) with file:line citations; 2 spec-text errors corrected in-run with explanations; observed-vs-intended discipline throughout; intended-vs-characterization labeled per test.\n- **Tests**: 137 external real-HTTP unittest tests (8 modules), per-test DB reset, persistence asserted through the read-only oracle, refusal cases assert no mutation, exact ordering asserted for every sort token. `mapping.json`: 137 mapped, 0 unmapped, 0 orphan links.\n- **Execution**: engineer 4x green runs (129\u2192137 tests); **verifier independently ran the suite 3x** (fresh / no-reset dirty-DB / fresh) on its own runtime at integration commit b38f8da \u2014 137 OK, exit 0 each; JaCoCo coverage reproduced exactly: INSTRUCTION 1993/2155 (92.6%), BRANCH 168/188 (89.4%), LINE 452/500 (90.4%), METHOD 103/108, CLASS 17/17 vs the full 18-file denominator; per-family audit PASS \u00d78.\n- **Findings** (`findings/ledger.json`): 11 candidates D-001..D-011, each with a reproducible case and my adjudication. D-002 (MEMBER bulkClose closes PENDING_APPROVAL \u2014 approval-policy bypass) and D-010 (ghost update reports success on nonexistent id) were **independently reproduced by the verifier**; D-004/D-008 families confirmed as observed; D-011 (UTF-8 mojibake) found by the verifier's own probing. Reproduction was treated as observed behavior, not proof of intent \u2014 suspected defects and unresolved ambiguities (D-002, D-003, D-004, D-008, D-009, D-010, D-011) are retained as such. No app edits; no test weakened, skipped, or deleted.\n- **Reports**: `reports/run-summary.json` (breadth by family, commits, coverage, adjudications, achieved/unmet, next-run work), `reports/attempts.json` (14 items, no allowance exhausted), verifier evidence in `reports/verification/` and `evidence/verifier/`.\n\n## Integration chain (my branch, 32 commits over base 8f713fe)\n\n6f55e3f (analyst) \u2192 2fdf5c0\u2192b7176fd\u219256f9601\u21926dd956f\u21928d2b3ce (engineer) \u2192 260a80c\u21922b09f92\u21929c24dc3 (analyst) \u2192 my merges \u2192 b38f8da (verified by verifier) \u2192 33eeb7c + c6bc3be (verifier evidence + closeout reports).\n\n## Unmet (honest residuals)\n\n1. Boundary/refusal residuals specified but never executed: S-FORM-005 (URGENT CHECK\u2192500), S-FORM-010 description>4000, S-PROJ-006 empty-description, S-API-005 literal-newline raw, S-DATA-004 CHECK/NOT-NULL via fixture.\n2. S-AUTH-009 (VIEWER performs mutations) is HTTP-reachable, accepted, and unexecuted.\n3. Documented technical gaps (no HTTP path, explained per criterion 6): S-AUTH-003, S-DATA-001, S-DATA-007, SQLException/awaitReady arms, dead DAO finders (TaskDao.findByProject, ProjectDao.findById), esc(null).\n\n## Next run\n\nExecute the six residuals (\u22486 small tests); start verification at the first integration commit; publish orchestrator pushes to the bare repo (host origin rejects pushes \u2014 unpacker error \u2014 so integration traveled via refs/campaign/orchestrator only).\n",
+      "outcome": "campaign-exhausted",
+      "unmet": [
+        "Boundary/refusal residuals specified but never executed: S-FORM-005 (priority=URGENT CHECK->500), S-FORM-010 description>4000 clause, S-PROJ-006 empty-description boundary, S-API-005 literal-newline raw case, S-DATA-004 CHECK/NOT-NULL constraint checks via fixture",
+        "S-AUTH-009 (VIEWER performs mutations) is HTTP-reachable, accepted, and unexecuted at the implementation cutoff"
+      ],
+      "at": "2026-11-03T00:03:55.848643522Z",
+      "repos": [
+        {
+          "repo": "outputs",
+          "head": "c6bc3be0182ac46badc2a33a71c08b8149470aad",
+          "treeDiffersFromBase": true
+        }
+      ]
+    }
+  }
+}

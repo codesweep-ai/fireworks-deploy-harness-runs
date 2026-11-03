@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"rule-analyst\",\"role\":\"agent\",\"branch\":\"cs-sandbox/rule-analyst-36f5ca10.task-tracker-05-36f5ca10\",\"missing\":[],\"goal\":\"Analyze the task-tracker application source at ~/app to discover every rule family afresh and document them as stable-ID, source-cited, testable specifications so implementation and verification can proceed in parallel.\",\"scope\":\"I own rules/, specs/, rules/app-inventory.json, and evidence/analyst/ on my branch; I must not edit the application, own executable tests, or touch anything outside my branch and the campaign output directory.\",\"obligations\":\"Each dispatch must be closed with a cs-campaign-member reply and my work committed to my branch and written to ~/.local/share/cs-campaign/output, because the machine is destroyed at campaign end and uncommitted or unreplied work is lost.\"}\n",
+  "at": "2026-11-02T23:25:52.726678628Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "8f713fe76a31baacf269ecf4fce814513b1ead3f",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

@@ -1,0 +1,2514 @@
+branch=cs-sandbox/rule-analyst-36f5ca10.task-tracker-05-36f5ca10
+base=8f713fe76a31baacf269ecf4fce814513b1ead3f
+commit=9c24dc37bd1a6aba4ac0e6fe7fbb2c83db4599a6
+subject=d005: final inventory refresh — integrate engineer d004 gap-closure run (137/137): 8 specs planned->executed, S-QUERY-006 result refreshed, d004 spec links added, partial notes rechecked
+diff --git a/findings/ledger.json b/findings/ledger.json
+new file mode 100644
+index 0000000..cf38055
+--- /dev/null
++++ b/findings/ledger.json
+@@ -0,0 +1,203 @@
++{
++  "version": 2,
++  "run": "05",
++  "generatedBy": "rule-analyst",
++  "applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
++  "note": "Defect candidates observed in frozen source and (where marked) executed against it. Each carries a reproducible case and an explicit observed-vs-intended label. Run-05 update: engineer d002 executed evidence folded in — D-001/D-003/D-004/D-005 gained engineer cross-references and executed test IDs; engineer items 1,2,4 merged into D-001/D-004/D-005 (not restated); new candidates D-009/D-010. Execution evidence belongs to test-engineer/verifier runs; analyst does not invent it.",
++  "candidates": [
++    {
++      "id": "D-001",
++      "title": "Dead 'Delete' affordance on projects page",
++      "severity": "medium (UX/correctness)",
++      "observed": "projects.jsp:152 renders <a href=\"/projects/delete?id=...\">Delete</a> for every project, but web.xml maps only /projects (web.xml:71-78). GET /projects/delete reaches the container with no servlet and returns HTTP 404.",
++      "intended": "Either a working delete endpoint or no link.",
++      "repro": "Login -> GET /projects -> click any Delete link -> HTTP 404; project unchanged.",
++      "rules": [
++        "R-PROJ-006"
++      ],
++      "specs": [
++        "S-PROJ-007"
++      ],
++      "engineerCrossRef": "engineer d002 findings item 1 (dangling destructive affordance) — duplicate, merged not restated",
++      "executedTests": [
++        "test_projects.ProjectArchiveTests.test_s_proj_014_projects_delete_link_targets_an_unmapped_route"
++      ],
++      "executionResult": "pass (run 05, engineer d002, 129/129)"
++    },
++    {
++      "id": "D-002",
++      "title": "bulkClose bypasses the approval policy and has no role gate",
++      "severity": "high (authorization/policy bypass)",
++      "observed": "TaskActionServlet dispatches action=bulkClose before any role check (TaskActionServlet.java:26-29); handleBulkClose (76-88) checks nothing; TaskDao.bulkClose sets status='DONE' for every selected non-DONE task including PENDING_APPROVAL (TaskDao.java:136-137). AuthFilter gates only approve/reject (AuthFilter.java:40-46). A MEMBER or VIEWER can therefore close PENDING_APPROVAL tasks.",
++      "intended": "README domain: 'Only ADMIN/MANAGER may approve or reject tasks awaiting approval'. Closing a PENDING_APPROVAL task is an approval-shaped transition.",
++      "repro": "Login as dev (MEMBER) -> POST /tasks/action action=bulkClose&ids=3 (seed task 3 is PENDING_APPROVAL) -> 302, task 3 DONE. Contrast: POST action=approve&id=3 as dev -> 403.",
++      "rules": [
++        "R-BULK-004",
++        "R-AUTH-008"
++      ],
++      "specs": [
++        "S-BULK-004",
++        "S-AUTH-009"
++      ]
++    },
++    {
++      "id": "D-003",
++      "title": "ARCHIVED projects still accept tasks; unknown form id silently renders 'New task'",
++      "severity": "medium (state-model gap) + low (not-found handling)",
++      "observed": "TaskFormServlet validates projectId only via ProjectDao.exists, whose SQL has no state predicate (ProjectDao.java:45-55; TaskFormServlet.java:50-53), so tasks can be created in/edited into ARCHIVED project 3 'Legacy Archive'. Separately, GET /tasks/form?id=<unknown> leaves the task attribute null and task-form.jsp:27 renders the 'New task' form instead of a 404.",
++      "intended": "Source is silent on both; a task tracker conventionally blocks archived projects and reports not-found.",
++      "repro": "POST /tasks/form title=Ghost&projectId=3 -> 302 saved=1, task persists with project 'Legacy Archive'. GET /tasks/form?id=999 -> 200 'New task'.",
++      "rules": [
++        "R-PROJ-007",
++        "R-FORM-002"
++      ],
++      "specs": [
++        "S-PROJ-008",
++        "S-FORM-002"
++      ],
++      "engineerCrossRef": "engineer d002 findings item 5 covers the second half (GET /tasks/form?id=999 renders blank New-task form)",
++      "executedTests": [
++        "test_task_form.TaskFormDisplayTests.test_s_form_003_form_with_unknown_id_renders_blank_new_task_form"
++      ],
++      "executionResult": "pass (run 05, engineer d002, 129/129)"
++    },
++    {
++      "id": "D-004",
++      "title": "Stored markup renders unescaped in JSPs (XSS candidate)",
++      "severity": "high (security)",
++      "observed": "JSPs interpolate task/project fields with bare EL (e.g. tasks.jsp:49 ${t.title}, projects.jsp:140 ${p.name}); plain JSP EL does not HTML-escape, so stored markup executes.",
++      "intended": "Escaped output (JSTL c:out or equivalent).",
++      "repro": "POST /tasks/form with title <script>alert(1)</script> and projectId=1 -> open /tasks -> script markup present in HTML.",
++      "rules": [
++        "R-DATA-008"
++      ],
++      "specs": [
++        "S-DATA-008",
++        "S-QUERY-009"
++      ],
++      "engineerCrossRef": "engineer d002 findings item 2 (stored XSS via task title, list + JSON escaper) — duplicate, merged not restated",
++      "executedTests": [
++        "test_task_list.TaskFilterTests.test_s_list_024_task_titles_are_rendered_unescaped_in_html",
++        "test_api.ApiEscapingAndNullTests.test_s_api_012_html_special_characters_pass_through_unescaped"
++      ],
++      "executionResult": "pass (run 05, engineer d002, 129/129)"
++    },
++    {
++      "id": "D-005",
++      "title": "Unvalidated numeric parameters surface as HTTP 500",
++      "severity": "medium (robustness)",
++      "observed": "Long.parseLong on request params without try/catch: TaskActionServlet.java:31 (id) and 84 (bulk ids), TaskFormServlet.java:50 (projectId), 61 (assigneeId), 69 (edit id), TaskListServlet.java:31 (assignee), ProjectServlet.java:34 (archive id).",
++      "intended": "400-style refusal.",
++      "repro": "GET /tasks?assignee=abc -> 500; POST /tasks/action action=start&id=abc -> 500.",
++      "rules": [
++        "R-QUERY-003",
++        "R-LIFE-006",
++        "R-PROJ-003",
++        "R-FORM-004"
++      ],
++      "specs": [
++        "S-QUERY-003",
++        "S-LIFE-003",
++        "S-PROJ-004",
++        "S-FORM-004"
++      ],
++      "engineerCrossRef": "engineer d002 findings item 4 (user-reachable 500s) — duplicate, merged not restated; engineer extends scope to nonexistent-assigneeId FK 500",
++      "executedTests": [
++        "test_task_list.TaskFilterTests.test_s_list_023_malformed_assignee_filter_yields_500",
++        "test_task_form.TaskFormDisplayTests.test_s_form_004_form_with_malformed_id_yields_500",
++        "test_task_form.TaskCreateTests.test_s_form_014_create_with_malformed_project_id_yields_500",
++        "test_task_form.TaskCreateTests.test_s_form_015_create_with_malformed_due_date_yields_500",
++        "test_task_form.TaskCreateTests.test_s_form_016_create_with_unknown_assignee_violates_fk_yields_500",
++        "test_task_actions.ActionErrorBoundaryTests.test_s_act_018_malformed_task_id_yields_500",
++        "test_task_actions.ActionErrorBoundaryTests.test_s_act_019_missing_task_id_yields_500",
++        "test_bulk_close.BulkCloseTests.test_s_bulk_008_bulk_close_with_malformed_id_yields_500",
++        "test_projects.ProjectArchiveTests.test_s_proj_013_archive_with_malformed_id_yields_500_error_page"
++      ],
++      "executionResult": "pass (run 05, engineer d002, 129/129)"
++    },
++    {
++      "id": "D-006",
++      "title": "bulkClose gives no feedback (skips DONE silently; empty selection silent success)",
++      "severity": "low (UX)",
++      "observed": "TaskDao.bulkClose returns the affected row count but TaskActionServlet ignores it (86-87); already-DONE rows are silently skipped (WHERE status <> 'DONE'); empty selection redirects as if successful (78-81).",
++      "intended": "Report how many tasks were closed.",
++      "repro": "POST action=bulkClose&ids=3&ids=4 (3 PENDING_APPROVAL, 4 DONE) -> 302 with no indication task 4 was skipped.",
++      "rules": [
++        "R-BULK-003",
++        "R-BULK-001"
++      ],
++      "specs": [
++        "S-BULK-003",
++        "S-BULK-001"
++      ]
++    },
++    {
++      "id": "D-007",
++      "title": "Plaintext password storage/comparison; /api/* unauthenticated",
++      "severity": "noted (legacy security posture)",
++      "observed": "PersonDao.authenticate compares the password inside the SQL WHERE clause in plaintext (PersonDao.java:18; schema.sql:13). AuthFilter exempts /api/* (AuthFilter.java:28) so the task readback is public; the API omits description but exposes titles, assignees, projects.",
++      "intended": "The API exemption is documented as intended in ApiTaskServlet.java:14-17; listed so the verifier confirms exposure is acceptable. Password hashing absent entirely.",
++      "repro": "Anonymous GET /api/tasks -> 200 JSON without any session.",
++      "rules": [
++        "R-AUTH-003",
++        "R-API-001"
++      ],
++      "specs": [
++        "S-API-001"
++      ]
++    },
++    {
++      "id": "D-008",
++      "title": "API JSON escaping is quote/backslash only; control characters break the payload",
++      "severity": "medium (protocol correctness)",
++      "observed": "ApiTaskServlet.esc (51-54) escapes only backslash and double-quote; a newline or tab stored in title/status/etc. is emitted raw inside a JSON string token, producing invalid JSON; HTML chars are not escaped either. Content reaches the DB because the form layer never restricts it.",
++      "intended": "Spec-correct JSON string escaping.",
++      "repro": "POST /tasks/form with a title containing a literal newline (craftable via raw POST; the HTML form input is single-line but the server never enforces that) -> GET /api/tasks -> body no longer parses as JSON.",
++      "rules": [
++        "R-API-005"
++      ],
++      "specs": [
++        "S-API-005",
++        "S-API-007"
++      ]
++    },
++    {
++      "id": "D-009",
++      "title": "Unknown sort token silently falls back to the default order instead of being rejected",
++      "severity": "low (policy ambiguity)",
++      "observed": "GET /tasks?sort=<non-whitelisted> answers 200 with the default updated_at DESC order (TaskDao.java:56,154-172 whitelist; unknown token mapped to default). Executed as engineer S-LIST-009 (test_task_list.TaskListSortTests.test_s_list_009_unknown_sort_token_falls_back_to_updated_desc), kind=characterization.",
++      "intended": "Open policy question from the engineer: should unknown sorts answer 400 or fall back? Analyst S-QUERY-006 already specifies the silent fallback as intended; recorded here because the engineer labels the same behavior characterization. Injection is prevented either way (token whitelisted, never concatenated).",
++      "repro": "GET /tasks?sort=BOGUS -> 200, row order identical to GET /tasks (default).",
++      "rules": [
++        "R-QUERY-004"
++      ],
++      "specs": [
++        "S-QUERY-006"
++      ],
++      "engineerCrossRef": "engineer d002 findings item 3 (silent fallback for unknown sort tokens)",
++      "executedTests": [
++        "test_task_list.TaskListOrderTests.test_s_list_009_unknown_sort_token_falls_back_to_updated_desc"
++      ],
++      "executionResult": "pass (run 05, engineer d002, 129/129)"
++    },
++    {
++      "id": "D-010",
++      "title": "POST /tasks/form edit with a nonexistent id answers 302 saved=1 as if saved (ghost update)",
++      "severity": "medium (not-found handling / misleading UI state)",
++      "observed": "POST /tasks/form with id=999 (no such task) runs an UPDATE matching zero rows (TaskDao.java:97-112) and TaskFormServlet still answers 302 /tasks/form?id=999&saved=1 (TaskFormServlet.java:65-74); nothing is created and no error is shown. Executed as engineer S-FORM-024, kind=characterization.",
++      "intended": "A 404 or explicit refusal for a nonexistent edit target; analyst specs only cover the GET counterpart (S-FORM-002), so this POST path is a new gap-plus-defect.",
++      "repro": "POST /tasks/form id=999&title=X&projectId=1 -> 302 with saved=1; GET /api/tasks shows no task 999 and no new row.",
++      "rules": [
++        "R-FORM-008"
++      ],
++      "specs": [
++        "S-FORM-012"
++      ],
++      "engineerCrossRef": "engineer d002 findings, policy ambiguities (POST /tasks/form id=999 ghost update); executed as engineer S-FORM-024",
++      "executedTests": [
++        "test_task_form.TaskEditTests.test_s_form_024_edit_nonexistent_id_creates_nothing"
++      ],
++      "executionResult": "pass (run 05, engineer d002, 129/129)"
++    }
++  ]
++}
+diff --git a/rules/API.md b/rules/API.md
+new file mode 100644
+index 0000000..e2be2ab
+--- /dev/null
++++ b/rules/API.md
+@@ -0,0 +1,61 @@
++# API — public JSON readback / filter / escaping / nulls
++
++## R-API-001
++- **ID**: R-API-001
++- **Statement**: GET `/api/tasks` returns a JSON array of task rows read straight from the DB, outside the authenticated UI path (the filter exempts `/api/`). It is reachable with no session at all.
++- **Source citations**: ApiTaskServlet.java:14-17,23-49; AuthFilter.java:28
++- **Actors and preconditions**: Any client, authenticated or not.
++- **Trigger**: GET /api/tasks.
++- **Effects or refusal**: 200 application/json UTF-8 array; no mutation.
++- **Observed versus intended**: OBSERVED: unauthenticated readback. INTENDED per source comment ("public read-back ... outside the UI path"); flagged in defect ledger (D-007 context) for the verifier to confirm the exposure is acceptable.
++- **Linked EARS IDs**: S-API-001
++
++## R-API-002
++- **ID**: R-API-002
++- **Statement**: Optional `status` param filters exactly like the UI list: empty/absent -> all tasks (findAll, updated_at DESC); non-empty -> search(status,null,null); unknown status values return an empty array, HTTP 200. No other filter or sort params are honored (assignee/sort are ignored).
++- **Source citations**: ApiTaskServlet.java:24-27; TaskDao.java:22-24,40-56
++- **Actors and preconditions**: Any client.
++- **Trigger**: GET /api/tasks?status=DONE, ?status=, ?status=BOGUS, ?assignee=3&sort=title.
++- **Effects or refusal**: DONE-only array / full array / [] / full array (extra params ignored).
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-API-002
++
++## R-API-003
++- **ID**: R-API-003
++- **Statement**: Each object exposes exactly id, title, status, priority, assigneeId, projectId, dueDate, updatedAt; description and the display-join names are NOT exposed; updatedAt is emitted with seconds precision.
++- **Source citations**: ApiTaskServlet.java:36-45; TaskDao.java:234-236
++- **Actors and preconditions**: Any client.
++- **Trigger**: GET /api/tasks.
++- **Effects or refusal**: Fixed field set per row; no extra fields.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-API-003
++
++## R-API-004
++- **ID**: R-API-004
++- **Statement**: NULL handling: assigneeId NULL -> JSON literal `null`; dueDate NULL -> JSON literal `null`; strings that are NULL would be escaped to "" but no exposed string column is nullable in practice (title/status/priority/updatedAt are NOT NULL).
++- **Source citations**: ApiTaskServlet.java:41,43; esc() 51-54; schema.sql:30-39
++- **Actors and preconditions**: Any client; a task with unassigned/no-due-date (seed task 4).
++- **Trigger**: GET /api/tasks.
++- **Effects or refusal**: `"assigneeId":null,"dueDate":null` for task 4.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-API-004
++
++## R-API-005
++- **ID**: R-API-005
++- **Statement**: String escaping is minimal hand-rolled `esc()`: only backslash and double-quote are escaped. Control characters (notably newline) and HTML-significant characters pass through raw, so a title containing a newline produces invalid JSON; `<`/`>` are not escaped either.
++- **Source citations**: ApiTaskServlet.java:51-54 (`.replace("\\","\\\\").replace("\"","\\\"")`)
++- **Actors and preconditions**: Any client; a task whose title (or other exposed string) contains `\n`, tab, or `<` — achievable through the form POST because the servlet does not restrict content (TaskFormServlet.java:41-48).
++- **Trigger**: POST /tasks/form with title containing a newline, then GET /api/tasks.
++- **Effects or refusal**: Raw newline inside a JSON string token -> response is not parseable JSON (defect candidate D-003/escaping gap). Quote and backslash round-trip correctly.
++- **Observed versus intended**: OBSERVED: quote/backslash safe, control chars/HTML not. INTENDED: spec-level JSON correctness. Defect candidate — reproducible case in findings/ledger.json.
++- **Linked EARS IDs**: S-API-005
++
++## R-API-006
++- **ID**: R-API-006
++- **Statement**: `/api/tasks` accepts GET only: the servlet overrides `doGet` exclusively, so any other method (e.g. POST) falls through to the HttpServlet default and is refused with HTTP 405 Method Not Allowed; no state change.
++- **Source citations**: ApiTaskServlet.java:18-23 (only doGet overridden); javax.servlet.http.HttpServlet default method handling; web.xml servlet-mapping apiTasks -> /api/tasks
++- **Actors and preconditions**: Any client, authenticated or not (the filter exempts /api/).
++- **Trigger**: POST (or other non-GET method) /api/tasks.
++- **Effects or refusal**: HTTP 405 Method Not Allowed; no DB write.
++- **Observed versus intended**: Observed (executed engineer evidence). Read-only API by design per source comment.
++- **Linked EARS IDs**: S-API-008
+diff --git a/rules/AUTH.md b/rules/AUTH.md
+new file mode 100644
+index 0000000..0ab98eb
+--- /dev/null
++++ b/rules/AUTH.md
+@@ -0,0 +1,91 @@
++# AUTH — authentication / session / logout / access exemptions
++
++## R-AUTH-001
++- **ID**: R-AUTH-001
++- **Statement**: Every request passes through AuthFilter (mapped to `/*`); requests to exactly `/login`, anything under `/api/`, or ending `.css` bypass the session check entirely.
++- **Source citations**: web.xml:20-23; AuthFilter.java:25-31
++- **Actors and preconditions**: Any HTTP client, with or without a session.
++- **Trigger**: Request to any path.
++- **Effects or refusal**: Exempt paths proceed through the filter chain even when unauthenticated; all other paths require a session.
++- **Observed versus intended**: Observed. `/api/*` exemption makes the whole task readback public — noted as intended-by-comment (ApiTaskServlet.java:14-17) but security-relevant.
++- **Linked EARS IDs**: S-AUTH-001, S-AUTH-002
++
++## R-AUTH-002
++- **ID**: R-AUTH-002
++- **Statement**: A request to a non-exempt path with no session or no `user` session attribute is redirected (302) to `<ctx>/login`.
++- **Source citations**: AuthFilter.java:33-38
++- **Actors and preconditions**: Unauthenticated client; any path other than the R-AUTH-001 exemptions (e.g. `/tasks`, `/projects`, `/logout`, `/tasks/form`, `/tasks/action`).
++- **Trigger**: `getSession(false)` returns null or the `user` attribute is absent.
++- **Effects or refusal**: HTTP 302 to `/login`; no servlet runs; no mutation.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-AUTH-003
++
++## R-AUTH-003
++- **ID**: R-AUTH-003
++- **Statement**: POST `/login` with `username`/`password` matching a `person` row (plaintext comparison inside the SQL WHERE clause) stores the Person in a new session as `user` and redirects to `/tasks`.
++- **Source citations**: LoginServlet.java:23-35; PersonDao.java:16-29
++- **Actors and preconditions**: Any client; credentials for a seeded user (admin/admin, mgr/mgr, dev/dev, view/view — seed.sql:44-48).
++- **Trigger**: Valid POST /login credentials.
++- **Effects or refusal**: HTTP 302 to `<ctx>/tasks`; session attribute `user` set (`getSession(true)`); no DB write.
++- **Observed versus intended**: Observed. Plaintext password comparison (PersonDao.java:18) is a legacy security smell (defect candidate D-007).
++- **Linked EARS IDs**: S-AUTH-004
++
++## R-AUTH-004
++- **ID**: R-AUTH-004
++- **Statement**: POST `/login` with unknown/invalid credentials re-renders login.jsp with error message "Invalid credentials" at HTTP 200.
++- **Source citations**: LoginServlet.java:28-31; login.jsp:20
++- **Actors and preconditions**: Any client.
++- **Trigger**: `people.authenticate(...)` returns null.
++- **Effects or refusal**: No session created; no redirect; error paragraph rendered.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-AUTH-005
++
++## R-AUTH-005
++- **ID**: R-AUTH-005
++- **Statement**: GET `/login` forwards to login.jsp (username/password form posting back to `/login`).
++- **Source citations**: LoginServlet.java:17-20; login.jsp:22-32
++- **Actors and preconditions**: Any client.
++- **Trigger**: GET /login.
++- **Effects or refusal**: Login form rendered; no mutation.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-AUTH-006
++
++## R-AUTH-006
++- **ID**: R-AUTH-006
++- **Statement**: GET `/logout` invalidates the existing session (if any) and redirects to `/login`.
++- **Source citations**: LogoutServlet.java:12-18
++- **Actors and preconditions**: Authenticated (or anonymous) client; must pass AuthFilter (not exempt).
++- **Trigger**: GET /logout.
++- **Effects or refusal**: Session invalidated; subsequent access to protected paths redirects to /login; no DB write.
++- **Observed versus intended**: Observed. GET-based logout is a CSRF/logout-trick candidate (defect D-008).
++- **Linked EARS IDs**: S-AUTH-007
++
++## R-AUTH-007
++- **ID**: R-AUTH-007
++- **Statement**: Only ADMIN or MANAGER may perform `approve` or `reject` on `/tasks/action`; other roles get HTTP 403. Enforced twice: in AuthFilter and again in TaskActionServlet.requireApprover.
++- **Source citations**: AuthFilter.java:40-46; TaskActionServlet.java:91-98; Role.java:12-14
++- **Actors and preconditions**: Authenticated session user with role MEMBER or VIEWER (or a null user reaching the servlet directly).
++- **Trigger**: POST /tasks/action with action=approve or action=reject.
++- **Effects or refusal**: HTTP 403 "Only managers or admins may approve or reject tasks" (filter) / "Approval requires a manager or admin" (servlet); no status change.
++- **Observed versus intended**: Observed. This is the ONLY role-gated action in the app — do not generalize it to other paths.
++- **Linked EARS IDs**: S-AUTH-008, S-LIFE-005, S-LIFE-006
++
++## R-AUTH-008
++- **ID**: R-AUTH-008
++- **Statement**: There is no role restriction on any action other than approve/reject: task create/edit, start/submit/reopen, bulkClose, project create/archive are all available to every authenticated role including VIEWER.
++- **Source citations**: ProjectServlet.java:31-51 (no role checks); TaskFormServlet.java:38-75 (no role checks); TaskActionServlet.java:23-74 (only requireApprover gates approve/reject); AuthFilter.java:40-46 (only approve/reject gate)
++- **Actors and preconditions**: Any authenticated user of any role.
++- **Trigger**: Any mutation POST listed above.
++- **Effects or refusal**: Action executes normally; no refusal based on role.
++- **Observed versus intended**: Observed. Explicitly do NOT infer a read-only policy for VIEWER from its name or from the approval policy — cite this rule instead.
++- **Linked EARS IDs**: S-AUTH-009, S-BULK-004
++
++## R-AUTH-009
++- **ID**: R-AUTH-009
++- **Statement**: The authenticated pages display the session user's full name and role in the top nav, plus a logout link.
++- **Source citations**: _header.jspf:49-53
++- **Actors and preconditions**: Authenticated user viewing any authenticated JSP.
++- **Trigger**: Page render.
++- **Effects or refusal**: `${sessionScope.user.fullName} (${sessionScope.user.role})` and Logout link rendered.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-AUTH-010
+diff --git a/rules/BULK.md b/rules/BULK.md
+new file mode 100644
+index 0000000..c689fc5
+--- /dev/null
++++ b/rules/BULK.md
+@@ -0,0 +1,51 @@
++# BULK — bulk close (empty / selected / mixed states / roles)
++
++## R-BULK-001
++- **ID**: R-BULK-001
++- **Statement**: POST `/tasks/action` with `action=bulkClose` and no `ids` (absent or zero values) redirects to `/tasks` with NO mutation.
++- **Source citations**: TaskActionServlet.java:26-29,76-81; TaskDao.java:129-131
++- **Actors and preconditions**: Authenticated user, any role.
++- **Trigger**: POST action=bulkClose (no ids) or ids= empty.
++- **Effects or refusal**: 302 /tasks; zero rows written (no-mutation case).
++- **Observed versus intended**: Observed. Silent success gives the user no feedback that nothing happened.
++- **Linked EARS IDs**: S-BULK-001
++
++## R-BULK-002
++- **ID**: R-BULK-002
++- **Statement**: bulkClose runs a single UPDATE setting status='DONE' and updated_at=CURRENT_TIMESTAMP for the selected ids WHERE status <> 'DONE'; non-numeric ids throw NumberFormatException -> HTTP 500 before any update.
++- **Source citations**: TaskActionServlet.java:82-86; TaskDao.java:128-147
++- **Actors and preconditions**: Authenticated user; selected task ids.
++- **Trigger**: POST action=bulkClose&ids=1&ids=2.
++- **Effects or refusal**: All selected OPEN/IN_PROGRESS/PENDING_APPROVAL tasks -> DONE; 302 /tasks; ids=abc -> 500 with no changes.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-BULK-002
++
++## R-BULK-003
++- **ID**: R-BULK-003
++- **Statement**: Mixed-state selection: already-DONE ids in the selection are silently skipped (WHERE status <> 'DONE'); the response does not report how many rows were actually closed.
++- **Source citations**: TaskDao.java:136-137; TaskActionServlet.java:86-87 (updateCount ignored)
++- **Actors and preconditions**: Authenticated user; selection containing e.g. tasks 3 (PENDING_APPROVAL) and 4 (DONE).
++- **Trigger**: POST action=bulkClose&ids=3&ids=4.
++- **Effects or refusal**: Task 3 -> DONE; task 4 stays DONE untouched; no count surfaced anywhere.
++- **Observed versus intended**: OBSERVED: silent partial effect. INTENDED: unstated; flagged as feedback gap (defect candidate D-006).
++- **Linked EARS IDs**: S-BULK-003
++
++## R-BULK-004
++- **ID**: R-BULK-004
++- **Statement**: bulkClose has NO role gate: any authenticated role (MEMBER, VIEWER) can close PENDING_APPROVAL tasks through it, bypassing the approval policy enforced on single-task approve/reject (403 there).
++- **Source citations**: TaskActionServlet.java:23-29 (dispatch before requireApprover; no role check in handleBulkClose 76-88); AuthFilter.java:40-46 (filter gates only approve/reject); TaskDao.java:136-137; contrast TaskActionServlet.java:91-98
++- **Actors and preconditions**: Authenticated MEMBER or VIEWER; task 3 seeded PENDING_APPROVAL.
++- **Trigger**: POST action=bulkClose&ids=3 as dev (MEMBER).
++- **Effects or refusal**: Task 3 -> DONE, 302; NO 403. Same POST as action=approve would 403.
++- **Observed versus intended**: OBSERVED: approval policy bypassed on the bulk path. INTENDED: approval policy (README.md domain table: "Only ADMIN/MANAGER may approve or reject tasks awaiting approval"). Defect candidate D-002 — reproducible case supplied.
++- **Linked EARS IDs**: S-BULK-004, S-AUTH-009
++
++## R-BULK-005
++- **ID**: R-BULK-005
++- **Statement**: The list UI exposes bulkClose as one form wrapping the whole table with a checkbox (name=ids) per row and a "Close selected (bulk)" submit; no per-row confirmation, selection survives no state.
++- **Source citations**: tasks.jsp:38-39 (hidden action=bulkClose), tasks.jsp:47 (checkbox), tasks.jsp:75-78 (submit button)
++- **Actors and preconditions**: Authenticated user viewing /tasks.
++- **Trigger**: Check rows, submit the bulk form.
++- **Effects or refusal**: POST as in R-BULK-002.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-BULK-005
+diff --git a/rules/DATA.md b/rules/DATA.md
+new file mode 100644
+index 0000000..a3c6c55
+--- /dev/null
++++ b/rules/DATA.md
+@@ -0,0 +1,81 @@
++# DATA — database constraints / DAO mappings / technical & unreachable branches
++
++## R-DATA-001
++- **ID**: R-DATA-001
++- **Statement**: The schema (three tables, identity PKs) is owned by the Postgres container init, not the app: the app only waits for connectivity (30 x 1s retries, then RuntimeException).
++- **Source citations**: schema.sql:1-7; Database.java:12-14,42-59; BootstrapListener.java:10-13
++- **Actors and preconditions**: Container orchestration; app startup.
++- **Trigger**: contextInitialized.
++- **Effects or refusal**: App refuses to start if DB unreachable after ~30s; never creates or migrates tables.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-DATA-001
++
++## R-DATA-002
++- **ID**: R-DATA-002
++- **Statement**: `person`: username VARCHAR(64) NOT NULL UNIQUE, full_name VARCHAR(128) NOT NULL, password VARCHAR(128) NOT NULL, role CHECK in (ADMIN,MANAGER,MEMBER,VIEWER). Seeded: admin/mgr/dev/view with passwords equal to usernames.
++- **Source citations**: schema.sql:9-16; seed.sql:44-48; Role.java:7-11
++- **Actors and preconditions**: DB init.
++- **Trigger**: Any person write outside these bounds.
++- **Effects or refusal**: Constraint violation -> SQLException -> RuntimeException -> HTTP 500 via the calling servlet.
++- **Observed versus intended**: Observed. Passwords stored/compared in plaintext (PersonDao.java:18) — legacy smell, defect D-008.
++- **Linked EARS IDs**: S-DATA-002, S-AUTH-004
++
++## R-DATA-003
++- **ID**: R-DATA-003
++- **Statement**: `project`: name VARCHAR(128) NOT NULL, description VARCHAR(1024) NULL, state NOT NULL DEFAULT 'ACTIVE' CHECK (ACTIVE,ARCHIVED), owner_id NOT NULL FK -> person. The servlet forces 'ACTIVE' on create; only archive() writes ARCHIVED (forward-only; no code path back to ACTIVE).
++- **Source citations**: schema.sql:18-26; ProjectDao.java:57-72 (create), 75-84 (archive)
++- **Actors and preconditions**: DB + app writes.
++- **Trigger**: Project create/archive.
++- **Effects or refusal**: State machine enforced by WHERE state='ACTIVE'; invalid values only via direct DB (no web path).
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-DATA-003, S-PROJ-002
++
++## R-DATA-004
++- **ID**: R-DATA-004
++- **Statement**: `task`: title VARCHAR(256) NOT NULL, description VARCHAR(4000) NULL, status NOT NULL DEFAULT 'OPEN' CHECK (OPEN,IN_PROGRESS,PENDING_APPROVAL,DONE), priority NOT NULL DEFAULT 'MEDIUM' CHECK (LOW,MEDIUM,HIGH), assignee_id NULL FK -> person, project_id NOT NULL FK -> project, due_date DATE NULL, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP.
++- **Source citations**: schema.sql:28-42
++- **Actors and preconditions**: DB + app writes.
++- **Trigger**: Any task insert/update violating width/CHECK/FK/NOT NULL.
++- **Effects or refusal**: SQLException -> RuntimeException -> HTTP 500; no partial write (single statements).
++- **Observed versus intended**: Observed. The app relies on these as the last line of defense (see R-FORM-005/007/008 500-paths).
++- **Linked EARS IDs**: S-DATA-004, S-FORM-005, S-FORM-010
++
++## R-DATA-005
++- **ID**: R-DATA-005
++- **Statement**: Task read mapping joins project (INNER) and assignee (LEFT): assigneeName/projectName are transient display fields; assignee_id uses getLong+wasNull for null; due_date -> ISO string or null; updated_at is truncated to 19 chars (seconds) before display/API.
++- **Source citations**: TaskDao.java:15-20 (BASE), 220-238 (map: 227-228 wasNull, 232-233 date, 234-236 timestamp trim)
++- **Actors and preconditions**: Any task read path.
++- **Trigger**: findAll/findById/search.
++- **Effects or refusal**: NULL assignee/due preserved as Java null; updatedAt loses sub-second precision.
++- **Observed versus intended**: Observed. substring(0,19) assumes full timestamp format (always true for JDBC Timestamp).
++- **Linked EARS IDs**: S-DATA-005, S-API-004
++
++## R-DATA-006
++- **ID**: R-DATA-006
++- **Statement**: Task writes: create INSERTs with status as provided (web layer always OPEN) and returns generated keys; update rewrites title/description/priority/assignee_id/due_date and sets updated_at=CURRENT_TIMESTAMP but never touches status; updateStatus writes status+updated_at only; bulkClose is one UPDATE with an IN-list and WHERE status <> 'DONE'. Nullable values written via setNull (BIGINT/DATE).
++- **Source citations**: TaskDao.java:75-95 (create), 97-112 (update), 114-125 (updateStatus), 128-147 (bulkClose), 174-188 (setNullableLong/setNullableDate)
++- **Actors and preconditions**: Web layer via TaskDao.
++- **Trigger**: Any task mutation.
++- **Effects or refusal**: updated_at bumped on every write path; status and fields are disjoint per method.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-DATA-006, S-FORM-009, S-BULK-002
++
++## R-DATA-007
++- **ID**: R-DATA-007
++- **Statement**: Technical/unreachable branches: `TaskDao.findByProject` and `ProjectDao.findById` have no caller in the web layer; `Database.awaitReady` interruption path returns silently; `oracle_ro` is a SELECT-only DB role recreated per compose-up (no app path); `LifecycleTest` drives `updateStatus` directly, bypassing servlet guards (OPEN->DONE succeeds at DAO level).
++- **Source citations**: TaskDao.java:31-33; ProjectDao.java:33-43; Database.java:50-55; oracle-ro.sql:64-75; src/test/java/com/acme/tracker/LifecycleTest.java:27-55
++- **Actors and preconditions**: Code readers / DB admins; no HTTP surface.
++- **Trigger**: n/a (inventory coverage of technical paths).
++- **Effects or refusal**: No user-observable behavior; guards are presentation-layer only.
++- **Observed versus intended**: Observed — recorded so the engineer does not treat LifecycleTest's unguarded transition as a web-accessible rule.
++- **Linked EARS IDs**: S-DATA-007
++
++## R-DATA-008
++- **ID**: R-DATA-008
++- **Statement**: JSP-observable output contract: authenticated pages share _header.jspf (nav, user identity, logout); statuses carry badge classes status-<STATUS>; the form page shows "(unassigned)" for NULL assignee and "—" for NULL due date; the "Saved." banner keys on param saved=1; footer version string v1.0.
++- **Source citations**: _header.jspf:43-53; task-form.jsp:9-16 (badge css), 29 (saved), 37,39 (null placeholders); tasks.jsp/footer lines 89; login.jsp:35
++- **Actors and preconditions**: Authenticated rendering.
++- **Trigger**: Page requests.
++- **Effects or refusal**: Pure view output; no mutation.
++- **Observed versus intended**: Observed. Note: EL `${...}` is not HTML-escaped — stored-XSS candidate D-004 for titles containing markup.
++- **Linked EARS IDs**: S-DATA-008, S-QUERY-008, S-FORM-008
+diff --git a/rules/FORM.md b/rules/FORM.md
+new file mode 100644
+index 0000000..317b33e
+--- /dev/null
++++ b/rules/FORM.md
+@@ -0,0 +1,91 @@
++# FORM — task form read / create / edit / validation / defaults / nullable fields
++
++## R-FORM-001
++- **ID**: R-FORM-001
++- **Statement**: GET `/tasks/form` with no `id` renders a blank "New task" form; with `id` it renders the task detail panel plus a pre-filled edit form; projects and people selects are always populated.
++- **Source citations**: TaskFormServlet.java:26-35; task-form.jsp:26-33,64-115
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: GET /tasks/form[?id=n].
++- **Effects or refusal**: HTTP 200; no mutation.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-FORM-001
++
++## R-FORM-002
++- **ID**: R-FORM-002
++- **Statement**: GET `/tasks/form?id=<unknown>` silently renders the "New task" form (the `task` attribute is null, so the JSP takes the new-task branch) instead of a 404; `id=abc` throws NumberFormatException -> HTTP 500.
++- **Source citations**: TaskFormServlet.java:29-31 (`Long.parseLong`); task-form.jsp:27 (`c:otherwise` New task)
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: GET /tasks/form?id=999 (no such row) / id=abc.
++- **Effects or refusal**: 200 "New task" (misleading) / HTTP 500 respectively; no mutation.
++- **Observed versus intended**: OBSERVED: not-found is silently mislabeled as "New task". INTENDED: a not-found signal. Defect candidate D-003.
++- **Linked EARS IDs**: S-FORM-002
++
++## R-FORM-003
++- **ID**: R-FORM-003
++- **Statement**: POST `/tasks/form` requires a non-blank `title` (trimmed); blank/null -> re-render form with error "Title is required" at HTTP 200, nothing persisted.
++- **Source citations**: TaskFormServlet.java:41-48,77-87
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: POST with title="" or missing.
++- **Effects or refusal**: 200 with error attr; no DB write; form re-populated with project/person selects.
++- **Observed versus intended**: Observed (mirrors task.title NOT NULL, schema.sql:30).
++- **Linked EARS IDs**: S-FORM-003
++
++## R-FORM-004
++- **ID**: R-FORM-004
++- **Statement**: POST `/tasks/form` requires `projectId` to be present and to exist; violation -> re-render with "A task must belong to an existing project"; existence is state-blind, so ARCHIVED projects are accepted; non-numeric projectId -> HTTP 500.
++- **Source citations**: TaskFormServlet.java:50-53; ProjectDao.java:45-55
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: POST with projectId missing/empty/999/abc.
++- **Effects or refusal**: 200 error render (missing/unknown), 500 (non-numeric); no DB write.
++- **Observed versus intended**: Observed. Cross-ref R-PROJ-007 / defect D-002 for the archived-project gap.
++- **Linked EARS IDs**: S-FORM-004
++
++## R-FORM-005
++- **ID**: R-FORM-005
++- **Statement**: `priority` is defaulted to MEDIUM when absent or empty, but any other arbitrary value passes the servlet unchecked and only fails at the DB CHECK constraint -> RuntimeException -> HTTP 500.
++- **Source citations**: TaskFormServlet.java:58,89-91; TaskDao.java:83; schema.sql:34-35
++- **Actors and preconditions**: Authenticated user (crafted POST; the HTML form only offers LOW/MEDIUM/HIGH — task-form.jsp:96-103).
++- **Trigger**: POST priority=URGENT with valid title/projectId.
++- **Effects or refusal**: HTTP 500; no row persisted (INSERT fails).
++- **Observed versus intended**: OBSERVED: server-side validation gap between form whitelist and DB CHECK. INTENDED: presumably a 400-style refusal. Defect candidate D-004.
++- **Linked EARS IDs**: S-FORM-005
++
++## R-FORM-006
++- **ID**: R-FORM-006
++- **Statement**: `assigneeId` is nullable: absent/empty -> SQL NULL (unassigned); a non-numeric value -> HTTP 500; a value not present in `person` -> FK violation -> HTTP 500.
++- **Source citations**: TaskFormServlet.java:60-61; TaskDao.java:84,174-180; schema.sql:41 (fk_task_assignee)
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: POST with assigneeId="" / assigneeId=x / assigneeId=9999.
++- **Effects or refusal**: NULL stored / 500 / 500 respectively.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-FORM-006
++
++## R-FORM-007
++- **ID**: R-FORM-007
++- **Statement**: `dueDate` is nullable: absent/empty -> SQL NULL; malformed date (non-ISO) -> IllegalArgumentException from java.sql.Date.valueOf -> HTTP 500.
++- **Source citations**: TaskFormServlet.java:62; TaskDao.java:86,182-188
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: POST dueDate="" / dueDate=17/06/2026.
++- **Effects or refusal**: NULL stored / 500; no partial write.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-FORM-007
++
++## R-FORM-008
++- **ID**: R-FORM-008
++- **Statement**: POST with no `id` creates a task with status forced to OPEN and returns the generated id; POST with `id` updates title/description/priority/assignee/dueDate and NEVER changes status, and bumps updated_at; both land on `/tasks/form?id=<id>&saved=1`.
++- **Source citations**: TaskFormServlet.java:64-74; TaskDao.java:66 (OPEN), 97-112 (UPDATE without status column)
++- **Actors and preconditions**: Authenticated user; existing task for the edit case.
++- **Trigger**: POST /tasks/form.
++- **Effects or refusal**: Task persisted; 302 to form with saved=1; JSP shows "Saved." banner (task-form.jsp:29).
++- **Observed versus intended**: Observed. Title/description > column widths (256/4000) hit DB limits -> 500 (boundary, schema.sql:30-31).
++- **Linked EARS IDs**: S-FORM-008, S-FORM-009, S-FORM-010
++
++## R-FORM-009
++- **ID**: R-FORM-009
++- **Statement**: The detail panel on the form page shows the status badge, project name, assignee name or "(unassigned)" when NULL, priority, due date or "—" when NULL, and updatedAt trimmed to seconds.
++- **Source citations**: task-form.jsp:32-62 (assignee line 37, due line 39); TaskDao.java:234-236
++- **Actors and preconditions**: Authenticated user; GET with a valid id.
++- **Trigger**: Render.
++- **Effects or refusal**: Observable null-handling in the view; no mutation.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-FORM-001, S-FORM-006
+diff --git a/rules/LIFE.md b/rules/LIFE.md
+new file mode 100644
+index 0000000..7fd983c
+--- /dev/null
++++ b/rules/LIFE.md
+@@ -0,0 +1,101 @@
++# LIFE — task lifecycle: start / submit / approve / reject / reopen, state guards, not-found, unknown actions
++
++## R-LIFE-001
++- **ID**: R-LIFE-001
++- **Statement**: POST `/tasks/action` with `action=start` on a task whose current status is OPEN sets status IN_PROGRESS and bumps updated_at; any other current status is refused with HTTP 409 naming both statuses.
++- **Source citations**: TaskActionServlet.java:40-43,101-109; TaskDao.java:115-125
++- **Actors and preconditions**: Authenticated user (any role); existing task id.
++- **Trigger**: POST action=start&id=<n>.
++- **Effects or refusal**: OPEN -> IN_PROGRESS with updated_at refresh, 302 /tasks (or /tasks/form?id=n when return=detail, TaskActionServlet.java:66-73); otherwise HTTP 409 "Cannot start a task in status <current> (expected OPEN)" and no write.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-LIFE-001
++
++## R-LIFE-002
++- **ID**: R-LIFE-002
++- **Statement**: `action=submit` requires current IN_PROGRESS -> PENDING_APPROVAL; refusal otherwise (409).
++- **Source citations**: TaskActionServlet.java:44-47
++- **Actors and preconditions**: Authenticated user, any role (no gate on submit).
++- **Trigger**: POST action=submit&id=<n>.
++- **Effects or refusal**: IN_PROGRESS -> PENDING_APPROVAL (updated_at refreshed) or 409 "Cannot submit ... (expected IN_PROGRESS)".
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-LIFE-002
++
++## R-LIFE-003
++- **ID**: R-LIFE-003
++- **Statement**: `action=approve` requires an ADMIN/MANAGER user (403 otherwise) AND current status PENDING_APPROVAL (409 otherwise); on success status -> DONE.
++- **Source citations**: TaskActionServlet.java:48-52,91-98; AuthFilter.java:40-46; Role.java:12-14
++- **Actors and preconditions**: Authenticated user; role checked before guard; filter also rejects early.
++- **Trigger**: POST action=approve&id=<n>.
++- **Effects or refusal**: PENDING_APPROVAL -> DONE / 403 (MEMBER, VIEWER) / 409 (wrong status).
++- **Observed versus intended**: Observed. Approval policy applies ONLY here and to reject — not to bulkClose or any other path.
++- **Linked EARS IDs**: S-LIFE-005
++
++## R-LIFE-004
++- **ID**: R-LIFE-004
++- **Statement**: `action=reject` has the same role and status requirements as approve but sends the task back to IN_PROGRESS.
++- **Source citations**: TaskActionServlet.java:53-57
++- **Actors and preconditions**: Same as R-LIFE-003.
++- **Trigger**: POST action=reject&id=<n>.
++- **Effects or refusal**: PENDING_APPROVAL -> IN_PROGRESS / 403 / 409.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-LIFE-006
++
++## R-LIFE-005
++- **ID**: R-LIFE-005
++- **Statement**: `action=reopen` requires current DONE -> OPEN (the only backward transition); refusal otherwise (409).
++- **Source citations**: TaskActionServlet.java:58-61
++- **Actors and preconditions**: Authenticated user, any role.
++- **Trigger**: POST action=reopen&id=<n>.
++- **Effects or refusal**: DONE -> OPEN / 409 "Cannot reopen ... (expected DONE)".
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-LIFE-007
++
++## R-LIFE-006
++- **ID**: R-LIFE-006
++- **Statement**: Any lifecycle action for an unknown task id returns HTTP 404 "No such task"; a non-numeric id returns HTTP 500; a missing/unknown `action` returns HTTP 400 ("Unknown action: <value>", value rendered as the string null when the param is absent).
++- **Source citations**: TaskActionServlet.java:31-36,62-64
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: POST with id=999 / id=abc / action=teleport / no action param.
++- **Effects or refusal**: 404 / 500 / 400 / 400 respectively; no writes.
++- **Observed versus intended**: Observed. Unknown action echo is unescaped into the 400 body (minor).
++- **Linked EARS IDs**: S-LIFE-003, S-LIFE-004
++
++## R-LIFE-007
++- **ID**: R-LIFE-007
++- **Statement**: After a successful single-task action the servlet redirects to `/tasks` by default, or `/tasks/form?id=<n>` when `return=detail` (the detail-view transition buttons).
++- **Source citations**: TaskActionServlet.java:66-73; task-form.jsp:43-59 (buttons carry hidden return=detail); tasks.jsp:57-69 (list buttons use per-row forms without return)
++- **Actors and preconditions**: Authenticated user; successful guard pass.
++- **Trigger**: POST action=... [&return=detail].
++- **Effects or refusal**: 302 to the chosen target; no body.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-LIFE-008
++
++## R-LIFE-008
++- **ID**: R-LIFE-008
++- **Statement**: The UI renders only the buttons valid for the row's current status (start when OPEN, submit when IN_PROGRESS, approve+reject when PENDING_APPROVAL, reopen when DONE) in both list and detail views — the JSP mirrors of the servlet guards.
++- **Source citations**: tasks.jsp:57-69; task-form.jsp:46-58; schema.sql:32-33 (authoritative status values); TaskStatus.java:9-13
++- **Actors and preconditions**: Authenticated user viewing tasks.jsp or task-form.jsp.
++- **Trigger**: Page render.
++- **Effects or refusal**: Exactly one transition group visible per row; direct POSTs can still attempt any action (server-side guards are the authority).
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-LIFE-009
++
++## R-LIFE-009
++- **ID**: R-LIFE-009
++- **Statement**: At DAO level `updateStatus` writes any status unconditionally (raw write, no guard) — the existing LifecycleTest uses this to jump OPEN->DONE directly; the servlet guards exist only in the web layer.
++- **Source citations**: TaskDao.java:114-125; src/test/java/com/acme/tracker/LifecycleTest.java:27-55
++- **Actors and preconditions**: Java caller of TaskDao (no HTTP path).
++- **Trigger**: tasks.updateStatus(id, DONE) on an OPEN task.
++- **Effects or refusal**: Status changes with no refusal; demonstrates guards are presentation-layer only.
++- **Observed versus intended**: Observed; inventory note, not a defect.
++- **Linked EARS IDs**: (none — technical observation, no web-observable spec)
++
++## R-LIFE-010
++- **ID**: R-LIFE-010
++- **Statement**: `/tasks/action` accepts POST only: the servlet overrides `doPost` exclusively, so a GET falls through to the HttpServlet default and is refused with HTTP 405 Method Not Allowed; no state change and no action dispatch.
++- **Source citations**: TaskActionServlet.java:18-23 (only doPost overridden); javax.servlet.http.HttpServlet default method handling; web.xml servlet-mapping taskAction -> /tasks/action
++- **Actors and preconditions**: Authenticated user (AuthFilter maps /*); any role.
++- **Trigger**: GET /tasks/action.
++- **Effects or refusal**: HTTP 405 Method Not Allowed; no DB write, no redirect.
++- **Observed versus intended**: Observed (executed engineer evidence). Mutations are POST-only by construction.
++- **Linked EARS IDs**: S-LIFE-010
+diff --git a/rules/PROJ.md b/rules/PROJ.md
+new file mode 100644
+index 0000000..b32c7dc
+--- /dev/null
++++ b/rules/PROJ.md
+@@ -0,0 +1,71 @@
++# PROJ — projects list / create / archive / validation
++
++## R-PROJ-001
++- **ID**: R-PROJ-001
++- **Statement**: GET `/projects` lists ALL projects (ACTIVE and ARCHIVED) ordered by name, joined with owner full name, and forwards projects.jsp.
++- **Source citations**: ProjectServlet.java:23-28; ProjectDao.java:19-31 (`ORDER BY p.name`); projects.jsp:135-156
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: GET /projects.
++- **Effects or refusal**: HTTP 200 table with id/name/description/state/owner; no mutation.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-PROJ-001
++
++## R-PROJ-002
++- **ID**: R-PROJ-002
++- **Statement**: POST `/projects` with `action=archive&id=<n>` sets state='ARCHIVED' only where state is currently 'ACTIVE'; for an unknown id or an already-ARCHIVED project the UPDATE matches zero rows and the servlet still redirects with no error.
++- **Source citations**: ProjectServlet.java:33-37; ProjectDao.java:75-84
++- **Actors and preconditions**: Authenticated user (any role — no gate, see R-AUTH-008).
++- **Trigger**: POST /projects action=archive.
++- **Effects or refusal**: project.state -> ARCHIVED (forward-only; no unarchive path exists anywhere in source); 302 /projects; silent no-op when target is not ACTIVE.
++- **Observed versus intended**: Observed. Silent no-op on unknown id is observed behavior; intended behavior is unstated in source — flagged as a gap.
++- **Linked EARS IDs**: S-PROJ-002, S-PROJ-003
++
++## R-PROJ-003
++- **ID**: R-PROJ-003
++- **Statement**: POST `/projects` archive with a missing or non-numeric `id` throws NumberFormatException -> HTTP 500.
++- **Source citations**: ProjectServlet.java:34 (`Long.parseLong(req.getParameter("id"))`)
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: POST /projects action=archive without id, or id=abc.
++- **Effects or refusal**: HTTP 500; no state change.
++- **Observed versus intended**: Observed; refusal path is unhandled (defect candidate D-005 family).
++- **Linked EARS IDs**: S-PROJ-004
++
++## R-PROJ-004
++- **ID**: R-PROJ-004
++- **Statement**: POST `/projects` (no action param) creates a project: name required, blank/null after trim -> HTTP 400 "Project name is required"; otherwise name is trimmed and inserted with state 'ACTIVE' and ownerId = session user's id; 302 /projects on success.
++- **Source citations**: ProjectServlet.java:38-50; ProjectDao.java:57-72 (`VALUES (?, ?, 'ACTIVE', ?)`)
++- **Actors and preconditions**: Authenticated user of any role.
++- **Trigger**: POST /projects with name.
++- **Effects or refusal**: New project row (state ACTIVE, owner = current user); 302 /projects; HTTP 400 refusal on blank name.
++- **Observed versus intended**: Observed. Note no name-length pre-check; a name > 128 chars hits the DB VARCHAR(128) and surfaces as HTTP 500 (schema.sql:20).
++- **Linked EARS IDs**: S-PROJ-005, S-PROJ-006
++
++## R-PROJ-005
++- **ID**: R-PROJ-005
++- **Statement**: Project `description` is stored as-submitted: absent -> NULL, blank -> empty string; it is never trimmed and never length-checked in the servlet.
++- **Source citations**: ProjectServlet.java:47; ProjectDao.java:61-62; schema.sql:21 (VARCHAR(1024) NULL)
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: POST /projects with/without description.
++- **Effects or refusal**: NULL vs '' observable in projects.jsp description column.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-PROJ-006
++
++## R-PROJ-006
++- **ID**: R-PROJ-006
++- **Statement**: projects.jsp renders the Archive button only for ACTIVE projects and always renders a "Delete" link targeting `/projects/delete?id=<n>` — but no servlet is mapped to `/projects/delete`, so the link yields HTTP 404.
++- **Source citations**: projects.jsp:145-151 (Archive), projects.jsp:152 (Delete link); web.xml:71-78 (only `/projects` is mapped)
++- **Actors and preconditions**: Authenticated user viewing /projects.
++- **Trigger**: Clicking Delete (GET /projects/delete).
++- **Effects or refusal**: HTTP 404 from the container; no mutation.
++- **Observed versus intended**: OBSERVED: dead affordance returning 404. INTENDED: presumably deletion or no link. Defect candidate D-001 with reproducible case.
++- **Linked EARS IDs**: S-PROJ-007
++
++## R-PROJ-007
++- **ID**: R-PROJ-007
++- **Statement**: Archiving a project does NOT restrict any task operation on it: the task form validates project existence only (`exists` matches any id regardless of state), so tasks can be created in and edited while belonging to an ARCHIVED project.
++- **Source citations**: TaskFormServlet.java:50-53; ProjectDao.java:45-55 (`SELECT 1 FROM project WHERE id = ?` — no state predicate); schema.sql:22-23 (state values)
++- **Actors and preconditions**: Authenticated user; project 3 'Legacy Archive' is seeded ARCHIVED (seed.sql:54).
++- **Trigger**: POST /tasks/form with projectId=3.
++- **Effects or refusal**: Task created/updated normally; no refusal.
++- **Observed versus intended**: OBSERVED: archived projects still accept tasks. INTENDED: unstated in source; flagged as defect candidate D-002 (observed-vs-intended gap for the engineer to confirm).
++- **Linked EARS IDs**: S-PROJ-008, S-FORM-004
+diff --git a/rules/QUERY.md b/rules/QUERY.md
+new file mode 100644
+index 0000000..b251e13
+--- /dev/null
++++ b/rules/QUERY.md
+@@ -0,0 +1,61 @@
++# QUERY — task list status/assignee filters and every whitelisted/default sort
++
++## R-QUERY-001
++- **ID**: R-QUERY-001
++- **Statement**: GET `/tasks` with no filter params returns ALL tasks (filters are optional; empty WHERE). Filtering is centralized through TaskDao.search even for the default list.
++- **Source citations**: TaskListServlet.java:24-32 (comment lines 28-30); TaskDao.java:40-56
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: GET /tasks.
++- **Effects or refusal**: HTTP 200 with every task row; default sort applied.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-QUERY-001
++
++## R-QUERY-002
++- **ID**: R-QUERY-002
++- **Statement**: `status` filter, when non-empty, becomes an exact-match parameterized predicate `t.status = ?`; a value that is not one of the four statuses yields an EMPTY list (HTTP 200) — no whitelist check and no error; empty string means no filter.
++- **Source citations**: TaskListServlet.java:24; TaskDao.java:44-47; tasks.jsp:18-23 (UI options: all + OPEN/IN_PROGRESS/PENDING_APPROVAL/DONE)
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: GET /tasks?status=DONE, /tasks?status=, /tasks?status=BOGUS.
++- **Effects or refusal**: DONE-only list / all tasks / empty list respectively; no mutation ever.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-QUERY-002
++
++## R-QUERY-003
++- **ID**: R-QUERY-003
++- **Statement**: `assignee` filter, when non-empty, becomes parameterized `t.assignee_id = ?`; non-numeric value -> NumberFormatException -> HTTP 500; empty string means no filter. The filter is on assignee id, not name.
++- **Source citations**: TaskListServlet.java:25,31; TaskDao.java:48-51
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: GET /tasks?assignee=3, /tasks?assignee=, /tasks?assignee=abc.
++- **Effects or refusal**: Tasks assigned to person 3 / all tasks / 500 respectively.
++- **Observed versus intended**: Observed (500 on bad input, defect candidate D-005 family).
++- **Linked EARS IDs**: S-QUERY-003
++
++## R-QUERY-004
++- **ID**: R-QUERY-004
++- **Statement**: `sort` is a UI token whitelisted in TaskDao.orderClause; combined filters AND together. Tokens: `updated` (default) updated_at DESC; `status` status then updated_at DESC; `priority` semantic HIGH>MEDIUM>LOW via CASE (NOT alphabetical) then updated_at DESC; `due` and `due_date` due_date then updated_at DESC (NULLs sort per DB ordering); `title` title then id; `id` id. Any other token silently falls back to the default.
++- **Source citations**: TaskDao.java:56,154-172 (each branch cited: 155-157, 158-161, 162-164, 165-167, 168-170, 171); TaskListServlet.java:36 (sortBy attr)
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: GET /tasks?sort=<token>, alone or combined with status/assignee.
++- **Effects or refusal**: Deterministic ordering per token; no mutation; unknown token = default order, no error.
++- **Observed versus intended**: Observed. Sort token never concatenated from user input (injection-safe by whitelist, TaskDao.java:55-56).
++- **Linked EARS IDs**: S-QUERY-004, S-QUERY-005, S-QUERY-006, S-QUERY-007
++
++## R-QUERY-005
++- **ID**: R-QUERY-005
++- **Statement**: The JSP renders the filter/sort toolbar with auto-submit selects: status options (all) + the four statuses; sort options exactly updated/status/priority/due/title/id; the selected option mirrors the served `sortBy` attribute (raw sort param echoed into the comparison only).
++- **Source citations**: tasks.jsp:15-35; TaskListServlet.java:35-36
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: GET /tasks render.
++- **Effects or refusal**: Toolbar state reflects current query; no mutation.
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-QUERY-008
++
++## R-QUERY-006
++- **ID**: R-QUERY-006
++- **Statement**: The task list table renders per row: checkbox, id, linked title (link to /tasks/form?id=), project name, assignee name, status, priority, due date, updatedAt, and transition buttons; assignee/due render blank when NULL (display join via LEFT JOIN person).
++- **Source citations**: tasks.jsp:40-72; TaskDao.java:15-20 (LEFT JOIN), 227-233 (null mapping)
++- **Actors and preconditions**: Authenticated user.
++- **Trigger**: List render.
++- **Effects or refusal**: Observable view; NULL assignee_id/due_date show as empty cells (task 4 has no due date).
++- **Observed versus intended**: Observed.
++- **Linked EARS IDs**: S-QUERY-001, S-QUERY-003
+diff --git a/rules/app-inventory.json b/rules/app-inventory.json
+new file mode 100644
+index 0000000..f121e34
+--- /dev/null
++++ b/rules/app-inventory.json
+@@ -0,0 +1,1013 @@
++{
++  "version": 2,
++  "run": "05",
++  "generatedBy": "rule-analyst",
++  "applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
++  "sourceRoot": "~/app (frozen read-only copy)",
++  "defectLedger": "findings/ledger.json",
++  "notes": [
++    "All citations are file:line into the frozen app at commit eee783057ec28d28fb36ec05484de9b4b40ceb9c.",
++    "No authorization exists anywhere except the approve/reject role gate. Do not infer VIEWER restrictions, archival-state restrictions, or approval policy on other paths.",
++    "Execution evidence integrated from engineer d002 (refs/campaign/orchestrator @ 2fdf5c069b86fdca1094544730e391e5b1c61d26): 129/129 pass. See executionEvidence; planned-only specs are named gaps there.",
++    "Engineer's provisional EARS IDs in reports/tests/mapping.json are engineer-local; the engineer reconciles them to analyst IDs. Links below use accepted analyst S-IDs.",
++    "d005 refresh: engineer gap-closure batch (56f9601, integrated at 065f18d) executed 8 more specs, all passing in a 137/137 run; executionEvidence updated to that run. Rechecked planned-only and partial notes against the 137-test mapping \u2014 genuinely still uncovered: S-AUTH-003 (no session-lacking-user-attribute test), S-AUTH-009 (no VIEWER non-approve/reject mutation test), S-DATA-001 and S-DATA-007 (not HTTP-observable by design), S-PROJ-006 empty-string-description boundary, S-FORM-005 priority=URGENT CHECK-500, S-FORM-010 description>4000 clause, S-API-002 assignee/sort-ignored clause, S-API-005 literal-newline raw case, S-DATA-004 CHECK/NOT NULL cases, and the spec-silence extensions (S-PROJ-001 archive-button suppression, S-BULK-002 unknown-id handling)."
++  ],
++  "routes": [
++    {
++      "route": "/login",
++      "handler": "com.acme.tracker.web.LoginServlet",
++      "mapping": "src/main/webapp/WEB-INF/web.xml:26-33",
++      "authExempt": true,
++      "methods": {
++        "GET": "renders WEB-INF/jsp/login.jsp (LoginServlet.java:17-20)",
++        "POST": "params username,password; authenticate via plaintext SQL compare (PersonDao.java:16-29); success -> session attr user, 302 /tasks (LoginServlet.java:23-35); failure -> 200 re-render login.jsp with error 'Invalid credentials' (LoginServlet.java:28-31)"
++      },
++      "validation": "none server-side beyond the DB lookup; null params simply fail the lookup",
++      "execution": {
++        "specs": [
++          "S-AUTH-004",
++          "S-AUTH-005",
++          "S-AUTH-006",
++          "S-DATA-002"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs"
++      }
++    },
++    {
++      "route": "/logout",
++      "handler": "com.acme.tracker.web.LogoutServlet",
++      "mapping": "src/main/webapp/WEB-INF/web.xml:35-42",
++      "authExempt": false,
++      "methods": {
++        "GET": "invalidates session if present, 302 /login (LogoutServlet.java:12-18)"
++      },
++      "validation": "safe with no session (getSession(false), LogoutServlet.java:13)",
++      "execution": {
++        "specs": [
++          "S-AUTH-007"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs"
++      }
++    },
++    {
++      "route": "/tasks",
++      "handler": "com.acme.tracker.web.TaskListServlet",
++      "mapping": "src/main/webapp/WEB-INF/web.xml:44-51",
++      "authExempt": false,
++      "methods": {
++        "GET": "params status,assignee,sort; delegates to TaskDao.search (TaskListServlet.java:24-32); forwards tasks.jsp with statusFilter and sortBy attrs (TaskListServlet.java:34-37)"
++      },
++      "filters": {
++        "status": "exact-match WHERE t.status = ? when non-empty (TaskDao.java:44-47); any unknown value yields empty list, no error",
++        "assignee": "empty string treated as no filter; non-numeric -> HTTP 500 NumberFormatException (TaskListServlet.java:31)"
++      },
++      "sortTokens": {
++        "updated": "t.updated_at DESC (default; also explicit token) (TaskDao.java:171)",
++        "status": "t.status, t.updated_at DESC (TaskDao.java:155-157)",
++        "priority": "semantic CASE HIGH=0,MEDIUM=1,else 2, then t.updated_at DESC (TaskDao.java:158-161)",
++        "due": "t.due_date, t.updated_at DESC (TaskDao.java:162-164)",
++        "due_date": "alias of due (TaskDao.java:162)",
++        "title": "t.title, t.id (TaskDao.java:165-167)",
++        "id": "t.id (TaskDao.java:168-170)",
++        "unknown-or-missing": "falls back to default t.updated_at DESC; sort token is whitelisted, never concatenated (TaskDao.java:56,154-172)"
++      },
++      "execution": {
++        "specs": [
++          "S-QUERY-001",
++          "S-QUERY-002",
++          "S-QUERY-003",
++          "S-QUERY-004",
++          "S-QUERY-005",
++          "S-QUERY-006",
++          "S-QUERY-007"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs",
++        "plannedGaps": [
++          "S-QUERY-008 (render-only, planned)"
++        ]
++      }
++    },
++    {
++      "route": "/tasks/form",
++      "handler": "com.acme.tracker.web.TaskFormServlet",
++      "mapping": "src/main/webapp/WEB-INF/web.xml:53-60",
++      "authExempt": false,
++      "methods": {
++        "GET": "optional id param: task attr set via findById else blank new-task form; always loads projects + people for selects (TaskFormServlet.java:26-35); unknown id renders 'New task' (task-form.jsp:27 c:otherwise); non-numeric id -> HTTP 500",
++        "POST": "create when id absent, edit when id present (TaskFormServlet.java:65-72)"
++      },
++      "validation": {
++        "title": "required after trim -> 200 re-render with 'Title is required' (TaskFormServlet.java:41-48,85-87)",
++        "projectId": "must be present and exist -> 200 re-render with 'A task must belong to an existing project' (TaskFormServlet.java:50-53); non-numeric -> HTTP 500; NO state check so ARCHIVED projects accepted (ProjectDao.java:45-55)",
++        "priority": "no servlet validation; defaults MEDIUM when absent/empty (TaskFormServlet.java:58,89-91); arbitrary string -> DB CHECK violation -> HTTP 500 (schema.sql:34-35)",
++        "assigneeId": "empty -> NULL (TaskFormServlet.java:60-61); non-numeric -> HTTP 500; nonexistent id -> FK violation -> HTTP 500",
++        "dueDate": "empty -> NULL (TaskDao.java:182-188); malformed ISO date -> IllegalArgumentException -> HTTP 500",
++        "description": "stored as-is; absent -> NULL, empty string -> empty string (TaskFormServlet.java:57)",
++        "status": "always OPEN on create (TaskFormServlet.java:66); never changed on edit (TaskDao.java:97-112)"
++      },
++      "redirect": "302 /tasks/form?id=<savedId>&saved=1; JSP shows 'Saved.' banner when param.saved=1 (TaskFormServlet.java:74; task-form.jsp:29)",
++      "execution": {
++        "specs": [
++          "S-FORM-001",
++          "S-FORM-002",
++          "S-FORM-003",
++          "S-FORM-004",
++          "S-FORM-005",
++          "S-FORM-006",
++          "S-FORM-007",
++          "S-FORM-008",
++          "S-FORM-009"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs",
++        "plannedGaps": [
++          "S-FORM-010 (width overflow, planned)",
++          "S-PROJ-008 (archived-project acceptance, planned)"
++        ]
++      }
++    },
++    {
++      "route": "/tasks/action",
++      "handler": "com.acme.tracker.web.TaskActionServlet",
++      "mapping": "src/main/webapp/WEB-INF/web.xml:62-69",
++      "authExempt": false,
++      "methods": {
++        "POST": "param action drives a state machine (TaskActionServlet.java:23-74)"
++      },
++      "actions": {
++        "start": "requires current OPEN else 409; -> IN_PROGRESS (TaskActionServlet.java:40-43)",
++        "submit": "requires current IN_PROGRESS else 409; -> PENDING_APPROVAL (TaskActionServlet.java:44-47)",
++        "approve": "role-gated ADMIN/MANAGER (403 otherwise) + requires current PENDING_APPROVAL else 409; -> DONE (TaskActionServlet.java:48-52; AuthFilter.java:40-46; Role.java:12-14)",
++        "reject": "role-gated ADMIN/MANAGER (403 otherwise) + requires current PENDING_APPROVAL else 409; -> IN_PROGRESS (TaskActionServlet.java:53-57)",
++        "reopen": "requires current DONE else 409; -> OPEN (TaskActionServlet.java:58-61)",
++        "bulkClose": "see bulkClose section; no role gate",
++        "unknown-or-null": "HTTP 400 'Unknown action: <action>' (TaskActionServlet.java:62-64)"
++      },
++      "shared": "unknown id -> 404 'No such task' (TaskActionServlet.java:33-36); non-numeric id -> HTTP 500; success redirects to /tasks or /tasks/form?id=<id> when return=detail (TaskActionServlet.java:66-73); each update bumps updated_at (TaskDao.java:115-125)",
++      "execution": {
++        "specs": [
++          "S-LIFE-001",
++          "S-LIFE-002",
++          "S-LIFE-003",
++          "S-LIFE-004",
++          "S-LIFE-005",
++          "S-LIFE-006",
++          "S-LIFE-007",
++          "S-LIFE-008",
++          "S-BULK-001",
++          "S-BULK-002",
++          "S-BULK-003",
++          "S-AUTH-008"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs",
++        "plannedGaps": [
++          "S-LIFE-009 (render-only, planned)",
++          "S-BULK-004 (D-002 bypass, planned)"
++        ]
++      }
++    },
++    {
++      "route": "/projects",
++      "handler": "com.acme.tracker.web.ProjectServlet",
++      "mapping": "src/main/webapp/WEB-INF/web.xml:71-78",
++      "authExempt": false,
++      "methods": {
++        "GET": "lists all projects ordered by name with owner join, plus people; forwards projects.jsp (ProjectServlet.java:23-28; ProjectDao.java:19-31)",
++        "POST": "param action=archive archives; otherwise creates (ProjectServlet.java:31-51)"
++      },
++      "actions": {
++        "archive": "UPDATE state='ARCHIVED' WHERE id=? AND state='ACTIVE' (ProjectDao.java:75-84); unknown or already-ARCHIVED id silently no-ops then 302 /projects; missing/non-numeric id -> HTTP 500 (ProjectServlet.java:34)",
++        "create": "name required non-blank after trim else HTTP 400 'Project name is required' (ProjectServlet.java:39-43); description as-is (null if absent); ownerId=session user id; state forced 'ACTIVE' (ProjectServlet.java:44-50; ProjectDao.java:57-72)"
++      },
++      "roles": "no role gate on archive or create; any authenticated user (whole ProjectServlet)",
++      "execution": {
++        "specs": [
++          "S-PROJ-001",
++          "S-PROJ-002",
++          "S-PROJ-003",
++          "S-PROJ-004",
++          "S-PROJ-005",
++          "S-PROJ-006",
++          "S-PROJ-007",
++          "S-DATA-003"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs",
++        "plannedGaps": [
++          "S-PROJ-008 (planned)"
++        ]
++      }
++    },
++    {
++      "route": "/api/tasks",
++      "handler": "com.acme.tracker.web.ApiTaskServlet",
++      "mapping": "src/main/webapp/WEB-INF/web.xml:80-87",
++      "authExempt": true,
++      "methods": {
++        "GET": "hand-rolled JSON array of all tasks, or filtered by status param (ApiTaskServlet.java:23-49); content-type application/json UTF-8 (ApiTaskServlet.java:29-30)"
++      },
++      "fields": "id,title,status,priority,assigneeId,projectId,dueDate,updatedAt; assigneeId and dueDate emitted as JSON null when NULL (ApiTaskServlet.java:41,43); strings escaped only for backslash and double-quote (ApiTaskServlet.java:51-54); description NOT exposed",
++      "roles": "unauthenticated by design (AuthFilter.java:28 exempts /api/)",
++      "execution": {
++        "specs": [
++          "S-API-001",
++          "S-API-002",
++          "S-API-003",
++          "S-API-004",
++          "S-API-005",
++          "S-AUTH-001"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs"
++      }
++    },
++    {
++      "route": "/ (welcome file index.jsp)",
++      "handler": "index.jsp",
++      "mapping": "src/main/webapp/WEB-INF/web.xml:89-91",
++      "methods": {
++        "GET": "302 to /tasks (index.jsp:1)"
++      },
++      "execution": {
++        "specs": [
++          "S-AUTH-002"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "note": "executed as engineer S-AUTH-009 (test_auth.UnauthenticatedAccessTests.test_s_auth_009_index_redirects_to_login_for_anonymous); see executionEvidence.specs.S-AUTH-002"
++      }
++    }
++  ],
++  "auth": {
++    "filter": "AuthFilter mapped to /* (web.xml:20-23)",
++    "exemptions": [
++      "/login exact (AuthFilter.java:28)",
++      "/api/* prefix (AuthFilter.java:28)",
++      "*.css suffix (AuthFilter.java:28)"
++    ],
++    "sessionCheck": "session attr 'user' must be a Person else 302 /login (AuthFilter.java:33-38)",
++    "roleGate": "only approve/reject on /tasks/action are role-gated to ADMIN/MANAGER, enforced in filter and again in servlet (AuthFilter.java:40-46; TaskActionServlet.java:91-98)",
++    "roleModel": "ADMIN,MANAGER,MEMBER,VIEWER; canApprove() = ADMIN||MANAGER (Role.java:7-14); role values also CHECK-constrained in schema.sql:14-15",
++    "logout": "GET /logout invalidates session (LogoutServlet.java:12-18)",
++    "passwordStorage": "plaintext comparison in SQL (PersonDao.java:16-29)",
++    "execution": {
++      "specs": [
++        "S-AUTH-001",
++        "S-AUTH-002",
++        "S-AUTH-004",
++        "S-AUTH-005",
++        "S-AUTH-006",
++        "S-AUTH-007",
++        "S-AUTH-008",
++        "S-DATA-002"
++      ],
++      "result": "pass (run 05, engineer d002, 129/129)",
++      "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs",
++      "plannedGaps": [
++        "S-AUTH-003 (planned)",
++        "S-AUTH-009 (planned)",
++        "S-AUTH-010 (render-only, planned)"
++      ]
++    }
++  },
++  "bulkClose": {
++    "entry": "POST /tasks/action action=bulkClose, ids as repeated params (TaskActionServlet.java:76-88)",
++    "empty": "no ids -> 302 /tasks with zero mutation (TaskActionServlet.java:78-81; TaskDao.java:129-131)",
++    "effect": "single UPDATE ... SET status='DONE' WHERE status <> 'DONE' AND id IN (...) (TaskDao.java:128-147)",
++    "mixedStates": "OPEN/IN_PROGRESS/PENDING_APPROVAL all closed; already-DONE rows silently skipped; no count or feedback",
++    "roles": "no role gate; VIEWER/MEMBER can close PENDING_APPROVAL tasks (defect D-002)",
++    "errors": "non-numeric id in ids -> HTTP 500 NumberFormatException (TaskActionServlet.java:84)",
++    "execution": {
++      "specs": [
++        "S-BULK-001",
++        "S-BULK-002",
++        "S-BULK-003"
++      ],
++      "result": "pass (run 05, engineer d002, 129/129)",
++      "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs",
++      "plannedGaps": [
++        "S-BULK-004 (D-002 bypass, planned)",
++        "S-BULK-005 (render-only, planned)"
++      ]
++    }
++  },
++  "schema": {
++    "source": "src/main/resources/db/schema.sql (loaded by Postgres container init; app never creates schema, Database.java:12-14)",
++    "person": "id identity PK; username VARCHAR(64) NOT NULL UNIQUE; full_name VARCHAR(128) NOT NULL; password VARCHAR(128) NOT NULL; role CHECK in ADMIN/MANAGER/MEMBER/VIEWER (schema.sql:9-16)",
++    "project": "id identity PK; name VARCHAR(128) NOT NULL; description VARCHAR(1024) NULL; state NOT NULL DEFAULT 'ACTIVE' CHECK ACTIVE/ARCHIVED; owner_id NOT NULL FK person (schema.sql:18-26)",
++    "task": "id identity PK; title VARCHAR(256) NOT NULL; description VARCHAR(4000) NULL; status NOT NULL DEFAULT 'OPEN' CHECK OPEN/IN_PROGRESS/PENDING_APPROVAL/DONE; priority NOT NULL DEFAULT 'MEDIUM' CHECK LOW/MEDIUM/HIGH; assignee_id NULL FK person; project_id NOT NULL FK project; due_date DATE NULL; updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP (schema.sql:28-42)",
++    "execution": {
++      "specs": [
++        "S-DATA-003"
++      ],
++      "result": "pass (run 05, engineer d002, 129/129)",
++      "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs",
++      "plannedGaps": [
++        "S-DATA-004 (partial: only FK-500 executed, see executionEvidence.specs.S-DATA-004)"
++      ]
++    }
++  },
++  "daoMappings": {
++    "taskBase": "JOIN project p, LEFT JOIN person a exposes assigneeName/projectName transient display fields (TaskDao.java:15-20)",
++    "nullHandling": "assignee_id rs.getLong + wasNull -> null (TaskDao.java:227-228); due_date DATE -> ISO string or null (TaskDao.java:232-233); setNullableLong/setNullableDate write SQL NULL for empty (TaskDao.java:174-188)",
++    "updatedAt": "trimmed to seconds 'yyyy-MM-dd HH:mm:ss' (TaskDao.java:234-236)",
++    "create": "INSERT returns generated id (TaskDao.java:75-95)",
++    "update": "UPDATE title/description/priority/assignee/due_date + updated_at=CURRENT_TIMESTAMP; status untouched (TaskDao.java:97-112)",
++    "technical": "findByProject has no web caller (TaskDao.java:31-33); ProjectDao.findById has no web caller (ProjectDao.java:33-43); Database.awaitReady retries 30x1s then RuntimeException (Database.java:42-59); BootstrapListener waits for DB at startup (BootstrapListener.java:10-13); oracle_ro SELECT-only role (oracle-ro.sql:71-75)",
++    "execution": {
++      "specs": [
++        "S-DATA-005",
++        "S-DATA-006"
++      ],
++      "result": "pass (run 05, engineer d002, 129/129)",
++      "detail": "executionEvidence.specs in this file maps each S-ID to the executed engineer test IDs",
++      "plannedGaps": [
++        "S-DATA-007 (DAO-level, not HTTP-reachable, planned)"
++      ]
++    }
++  },
++  "seed": {
++    "people": "admin/Ada Admin/ADMIN, mgr/Morgan Manager/MANAGER, dev/Devon Member/MEMBER, view/Vic Viewer/VIEWER; passwords equal usernames (seed.sql:44-48)",
++    "projects": "1 Apollo ACTIVE owner 2; 2 Borealis ACTIVE owner 1; 3 Legacy Archive ARCHIVED owner 1 (seed.sql:51-54)",
++    "tasks": "1 Design login page OPEN HIGH; 2 Wire up SSO IN_PROGRESS HIGH; 3 Migrate invoices PENDING_APPROVAL MEDIUM; 4 Archive old data DONE LOW; updated_at staggered 3h apart for deterministic default sort (seed.sql:59-63)"
++  },
++  "jspObservable": [
++    "login.jsp: error paragraph when error attr set (login.jsp:20); form posts username/password (login.jsp:22-32)",
++    "_header.jspf: nav Tasks/Projects/+ New task; shows user.fullName (user.role) and logout link (_header.jspf:43-53)",
++    "tasks.jsp: filter select with (all)+4 statuses (tasks.jsp:16-23); sort select with 6 tokens updated/status/priority/due/title/id (tasks.jsp:26-33); checkbox name=ids per row (tasks.jsp:47); transition buttons rendered only for the row's current status (tasks.jsp:57-69); bulkClose form wraps table with hidden action=bulkClose (tasks.jsp:38-39,75-78); per-row hidden forms id=act-<id> target /tasks/action (tasks.jsp:81-86)",
++    "task-form.jsp: detail panel with status badge, project, assignee '(unassigned)' when null, priority, due '\u2014' when null, updatedAt (task-form.jsp:32-62); transitions with hidden return=detail (task-form.jsp:43-59); 'Saved.' banner on param.saved=1 (task-form.jsp:29); title/title-star label, description textarea, project select, assignee select with (unassigned) empty option, priority select LOW/MEDIUM/HIGH, date input (task-form.jsp:64-115)",
++    "projects.jsp: table id/name/description/state/owner; Archive form button only when state ACTIVE (projects.jsp:145-151); Delete link to /projects/delete?id= which has NO servlet mapping -> HTTP 404 (projects.jsp:152 vs web.xml:71-78, defect D-001); create form name/description (projects.jsp:158-170)",
++    "EL output in JSPs is not HTML-escaped: ${t.title} etc. render raw (tasks.jsp:48-55, task-form.jsp:27) -> stored-XSS candidate (defect D-004)"
++  ],
++  "technicalJavaPaths": [
++    "Database.java: static env config DB_URL/DB_USER/DB_PASSWORD with defaults, explicit driver registration, awaitReady retry loop (Database.java:17-59)",
++    "BootstrapListener.java: contextInitialized -> Database.awaitReady (BootstrapListener.java:10-13)",
++    "TaskStatus.java: stringly-typed status constants OPEN/IN_PROGRESS/PENDING_APPROVAL/DONE, authoritative values in schema CHECK (TaskStatus.java:9-13)",
++    "Role.java: enum + canApprove() (Role.java:7-14)",
++    "model POJOs Person/Project/Task: plain getters/setters, no behavior"
++  ],
++  "noExecutableCounterpart": [
++    "AuthFilter (needs full HTTP session harness; app tests only cover DAO)",
++    "All 7 servlets (no web-layer tests exist)",
++    "All JSPs (render-only, no executable tests)",
++    "TaskDao.findByProject, ProjectDao.findById (dead code, no caller)",
++    "oracle_ro role grants (DB-side, no Java path)",
++    "src/test/java/com/acme/tracker/LifecycleTest.java:27-55 exercises DAO updateStatus directly and BYPASSES servlet guards (OPEN->DONE succeeds at DAO level) - inventory-only observation, not an executable analyst test"
++  ],
++  "defectCandidateIds": [
++    "D-001",
++    "D-002",
++    "D-003",
++    "D-004",
++    "D-005",
++    "D-006",
++    "D-007",
++    "D-008",
++    "D-009",
++    "D-010"
++  ],
++  "unexamined": [],
++  "executionEvidence": {
++    "run": "05",
++    "suiteResult": "pass (run 05, engineer d004, 137/137)",
++    "source": "refs/campaign/orchestrator @ 065f18d59875a58a777e212fd12d31d61c693e1e: reports/tests/mapping.json (137 tests, unmapped=[]; 5 former ear:null tests linked engineer-side in parallel), reports/coverage/summary.json (counters unchanged vs d002 run)",
++    "coverage": {
++      "BRANCH": "168/188",
++      "LINE": "452/500",
++      "INSTRUCTION": "1993/2155",
++      "METHOD": "103/108",
++      "CLASS": "17/17"
++    },
++    "executedTestCount": 135,
++    "specs": {
++      "S-AUTH-001": {
++        "executedTests": [
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_007_api_tasks_is_exempt_from_authentication",
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_008_styles_css_is_exempt_from_authentication"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-AUTH-002": {
++        "executedTests": [
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_001_unauth_get_tasks_redirects_to_login",
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_002_unauth_get_task_form_redirects_to_login",
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_003_unauth_post_task_action_redirects_without_mutation",
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_004_unauth_get_projects_redirects_to_login",
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_005_unauth_post_projects_redirects_without_mutation",
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_006_unauth_logout_redirects_to_login",
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_009_index_redirects_to_login_for_anonymous",
++          "test_bulk_close.BulkCloseTests.test_s_bulk_009_bulk_close_requires_authentication"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-AUTH-003": {
++        "planned": [
++          "T-AUTH-003"
++        ],
++        "result": "planned \u2014 NOT executed",
++        "gap": "no engineer test exercises a session lacking the user attribute"
++      },
++      "S-AUTH-004": {
++        "executedTests": [
++          "test_auth.LoginTests.test_s_auth_011_login_with_valid_member_credentials_redirects_to_tasks",
++          "test_auth.LoginTests.test_s_auth_014_login_session_is_scoped_to_one_client",
++          "test_auth.LoginTests.test_s_auth_015_login_as_each_seeded_role_succeeds"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-AUTH-005": {
++        "executedTests": [
++          "test_auth.LoginTests.test_s_auth_012_login_shows_error_for_wrong_password",
++          "test_auth.LoginTests.test_s_auth_013_login_shows_error_for_unknown_username"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-AUTH-006": {
++        "executedTests": [
++          "test_auth.LoginTests.test_s_auth_010_login_page_renders_sign_in_form"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-AUTH-007": {
++        "executedTests": [
++          "test_auth.LogoutTests.test_s_auth_016_logout_invalidates_session_and_redirects_to_login",
++          "test_auth.LogoutTests.test_s_auth_017_logout_without_session_redirects_to_login",
++          "test_auth.UnauthenticatedAccessTests.test_s_auth_006_unauth_logout_redirects_to_login"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-AUTH-008": {
++        "executedTests": [
++          "test_auth.ApproveRoleTests.test_s_auth_018_member_cannot_approve_gets_403_without_mutation",
++          "test_auth.ApproveRoleTests.test_s_auth_019_viewer_cannot_approve_gets_403_without_mutation",
++          "test_auth.ApproveRoleTests.test_s_auth_020_member_cannot_reject_gets_403_without_mutation"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-AUTH-009": {
++        "planned": [
++          "T-AUTH-009"
++        ],
++        "result": "planned \u2014 NOT executed",
++        "gap": "no engineer test posts a non-approve/reject mutation as VIEWER"
++      },
++      "S-AUTH-010": {
++        "executedTests": [
++          "test_auth.LoginTests.test_s_auth_023_authenticated_header_shows_full_name_role_and_logout"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-PROJ-001": {
++        "executedTests": [
++          "test_projects.ProjectCreateTests.test_s_proj_009_created_project_appears_in_name_ordered_list",
++          "test_projects.ProjectListTests.test_s_proj_001_projects_page_lists_seeded_projects_ordered_by_name",
++          "test_projects.ProjectListTests.test_s_proj_002_projects_page_marks_archived_project_without_archive_button"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "partialCoverageNote": "eng S-PROJ-002 (archived row renders without archive button) is an extension: analyst spec is silent on button suppression"
++      },
++      "S-PROJ-002": {
++        "executedTests": [
++          "test_projects.ProjectArchiveTests.test_s_proj_010_archive_active_project_persists_archived_state"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-PROJ-003": {
++        "executedTests": [
++          "test_projects.ProjectArchiveTests.test_s_proj_011_archive_is_idempotent_guarded_to_active_state",
++          "test_projects.ProjectArchiveTests.test_s_proj_012_archive_unknown_project_id_redirects_without_error"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-PROJ-004": {
++        "executedTests": [
++          "test_projects.ProjectArchiveTests.test_s_proj_013_archive_with_malformed_id_yields_500_error_page"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-PROJ-005": {
++        "executedTests": [
++          "test_projects.ProjectCreateTests.test_s_proj_003_create_project_persists_active_project_owned_by_current_user",
++          "test_projects.ProjectCreateTests.test_s_proj_004_create_project_trims_surrounding_whitespace_from_name",
++          "test_projects.ProjectCreateTests.test_s_proj_005_create_project_without_name_is_refused_with_400",
++          "test_projects.ProjectCreateTests.test_s_proj_006_create_project_with_whitespace_only_name_is_refused_with_400",
++          "test_projects.ProjectCreateTests.test_s_proj_007_create_project_with_omitted_name_field_is_refused_with_400",
++          "test_projects.ProjectCreateTests.test_s_proj_009_created_project_appears_in_name_ordered_list"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-PROJ-006": {
++        "executedTests": [
++          "test_projects.ProjectCreateTests.test_s_proj_008_create_project_without_description_persists_null_description"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "partialCoverageNote": "executed half: omitted description -> NULL (eng S-PROJ-008); empty-string boundary not executed (rechecked 137-run mapping: no empty-description test)"
++      },
++      "S-PROJ-007": {
++        "executedTests": [
++          "test_projects.ProjectArchiveTests.test_s_proj_014_projects_delete_link_targets_an_unmapped_route"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-PROJ-008": {
++        "executedTests": [
++          "test_projects.ProjectTaskStateTests.test_s_proj_015_task_create_and_edit_in_archived_project_are_accepted"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-FORM-001": {
++        "executedTests": [
++          "test_task_form.TaskFormDisplayTests.test_s_form_001_blank_form_renders_new_task_with_defaults",
++          "test_task_form.TaskFormDisplayTests.test_s_form_002_form_with_id_prefills_existing_task",
++          "test_task_form.TaskFormDisplayTests.test_s_form_006_empty_id_parameter_renders_blank_form"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-FORM-002": {
++        "executedTests": [
++          "test_task_form.TaskFormDisplayTests.test_s_form_003_form_with_unknown_id_renders_blank_new_task_form",
++          "test_task_form.TaskFormDisplayTests.test_s_form_004_form_with_malformed_id_yields_500"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-FORM-003": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_010_create_with_blank_title_is_refused_without_mutation",
++          "test_task_form.TaskCreateTests.test_s_form_011_create_with_whitespace_only_title_is_refused_without_mutation",
++          "test_task_form.TaskEditTests.test_s_form_022_edit_with_blank_title_is_refused_without_mutation"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-FORM-004": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_012_create_without_project_is_refused_without_mutation",
++          "test_task_form.TaskCreateTests.test_s_form_013_create_with_unknown_project_is_refused_without_mutation",
++          "test_task_form.TaskCreateTests.test_s_form_014_create_with_malformed_project_id_yields_500",
++          "test_task_form.TaskEditTests.test_s_form_023_edit_with_unknown_project_is_refused_without_mutation"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-FORM-005": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_007_create_minimal_task_defaults_status_priority_and_nullables"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "partialCoverageNote": "executed half: priority defaults MEDIUM (eng S-FORM-007); priority=URGENT CHECK-500 not executed"
++      },
++      "S-FORM-006": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_007_create_minimal_task_defaults_status_priority_and_nullables",
++          "test_task_form.TaskCreateTests.test_s_form_016_create_with_unknown_assignee_violates_fk_yields_500",
++          "test_task_form.TaskEditTests.test_s_form_021_edit_can_clear_assignee_and_due_date"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-FORM-007": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_007_create_minimal_task_defaults_status_priority_and_nullables",
++          "test_task_form.TaskCreateTests.test_s_form_015_create_with_malformed_due_date_yields_500",
++          "test_task_form.TaskEditTests.test_s_form_021_edit_can_clear_assignee_and_due_date"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-FORM-008": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_007_create_minimal_task_defaults_status_priority_and_nullables",
++          "test_task_form.TaskCreateTests.test_s_form_008_create_full_task_persists_every_field",
++          "test_task_form.TaskCreateTests.test_s_form_017_new_task_is_open_even_when_status_field_is_posted",
++          "test_task_form.TaskFormDisplayTests.test_s_form_005_saved_banner_shown_after_redirect_with_saved_flag"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-FORM-009": {
++        "executedTests": [
++          "test_task_form.TaskEditTests.test_s_form_018_edit_persists_field_changes_and_redirects_to_detail",
++          "test_task_form.TaskEditTests.test_s_form_019_edit_preserves_status",
++          "test_task_form.TaskEditTests.test_s_form_020_edit_does_not_move_project",
++          "test_task_form.TaskEditTests.test_s_form_021_edit_can_clear_assignee_and_due_date"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-FORM-010": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_025_title_at_column_width_boundary_persists_and_over_boundary_is_refused"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)",
++        "partialCoverageNote": "title half executed (256 persists / 257->500 no row); description>4000 overflow clause not executed (rechecked 137-run mapping)"
++      },
++      "S-LIFE-001": {
++        "executedTests": [
++          "test_task_actions.StateGuardTests.test_s_act_009_start_refused_when_not_open_409_without_mutation",
++          "test_task_actions.TaskLifecycleTests.test_s_act_001_start_moves_open_task_to_in_progress_and_redirects_to_list",
++          "test_task_actions.TaskLifecycleTests.test_s_act_006_full_lifecycle_walk_persists_each_step",
++          "test_task_actions.TaskLifecycleTests.test_s_act_007_action_bumps_updated_at"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-LIFE-002": {
++        "executedTests": [
++          "test_task_actions.StateGuardTests.test_s_act_010_submit_refused_when_not_in_progress_409",
++          "test_task_actions.TaskLifecycleTests.test_s_act_002_submit_moves_in_progress_task_to_pending_approval",
++          "test_task_actions.TaskLifecycleTests.test_s_act_006_full_lifecycle_walk_persists_each_step"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-LIFE-003": {
++        "executedTests": [
++          "test_task_actions.ActionErrorBoundaryTests.test_s_act_015_action_on_nonexistent_task_returns_404_without_mutation",
++          "test_task_actions.ActionErrorBoundaryTests.test_s_act_018_malformed_task_id_yields_500",
++          "test_task_actions.ActionErrorBoundaryTests.test_s_act_019_missing_task_id_yields_500"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-LIFE-004": {
++        "executedTests": [
++          "test_task_actions.ActionErrorBoundaryTests.test_s_act_016_unknown_action_returns_400_without_mutation",
++          "test_task_actions.ActionErrorBoundaryTests.test_s_act_017_missing_action_returns_400"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-LIFE-005": {
++        "executedTests": [
++          "test_auth.ApproveRoleTests.test_s_auth_021_manager_can_approve_persistent_effect",
++          "test_task_actions.StateGuardTests.test_s_act_011_approve_refused_when_not_pending_409",
++          "test_task_actions.TaskLifecycleTests.test_s_act_003_approve_moves_pending_task_to_done",
++          "test_task_actions.TaskLifecycleTests.test_s_act_006_full_lifecycle_walk_persists_each_step"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-LIFE-006": {
++        "executedTests": [
++          "test_auth.ApproveRoleTests.test_s_auth_022_admin_can_reject_persistent_effect",
++          "test_task_actions.StateGuardTests.test_s_act_012_reject_refused_when_done_409",
++          "test_task_actions.TaskLifecycleTests.test_s_act_004_reject_moves_pending_task_back_to_in_progress",
++          "test_task_actions.TaskLifecycleTests.test_s_act_006_full_lifecycle_walk_persists_each_step"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-LIFE-007": {
++        "executedTests": [
++          "test_task_actions.StateGuardTests.test_s_act_013_reopen_refused_when_not_done_409",
++          "test_task_actions.StateGuardTests.test_s_act_014_all_transitions_refused_on_done_task_except_reopen",
++          "test_task_actions.TaskLifecycleTests.test_s_act_005_reopen_moves_done_task_back_to_open",
++          "test_task_actions.TaskLifecycleTests.test_s_act_006_full_lifecycle_walk_persists_each_step"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-LIFE-008": {
++        "executedTests": [
++          "test_task_actions.TaskLifecycleTests.test_s_act_008_return_detail_redirects_to_task_detail_page",
++          "test_task_form.TaskEditTests.test_s_form_018_edit_persists_field_changes_and_redirects_to_detail"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-LIFE-009": {
++        "executedTests": [
++          "test_task_actions.TaskLifecycleTests.test_s_act_021_list_shows_exactly_the_valid_transition_buttons_per_status"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-BULK-001": {
++        "executedTests": [
++          "test_bulk_close.BulkCloseTests.test_s_bulk_001_bulk_close_without_ids_redirects_and_mutates_nothing"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-BULK-002": {
++        "executedTests": [
++          "test_bulk_close.BulkCloseTests.test_s_bulk_002_bulk_close_single_selected_open_task",
++          "test_bulk_close.BulkCloseTests.test_s_bulk_003_bulk_close_all_selected_tasks",
++          "test_bulk_close.BulkCloseTests.test_s_bulk_006_bulk_close_with_unknown_ids_ignores_them",
++          "test_bulk_close.BulkCloseTests.test_s_bulk_007_bulk_close_only_unknown_ids_is_a_safe_noop",
++          "test_bulk_close.BulkCloseTests.test_s_bulk_008_bulk_close_with_malformed_id_yields_500"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "partialCoverageNote": "eng S-BULK-006/007 (unknown ids ignored) are extensions: analyst spec is silent on unknown-id handling"
++      },
++      "S-BULK-003": {
++        "executedTests": [
++          "test_bulk_close.BulkCloseTests.test_s_bulk_004_bulk_close_skips_already_done_tasks",
++          "test_bulk_close.BulkCloseTests.test_s_bulk_005_bulk_close_mixed_states_closes_only_non_done"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-BULK-004": {
++        "executedTests": [
++          "test_bulk_close.BulkCloseTests.test_s_bulk_010_member_bulk_close_bypasses_approval_on_pending_task"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-BULK-005": {
++        "executedTests": [
++          "test_bulk_close.BulkCloseTests.test_s_bulk_011_bulk_close_form_renders_checkbox_per_row_and_submit_button"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-QUERY-001": {
++        "executedTests": [
++          "test_task_list.TaskFilterTests.test_s_list_025_empty_sort_parameter_uses_the_default_order",
++          "test_task_list.TaskListOrderTests.test_s_list_001_default_list_is_most_recently_updated_first",
++          "test_task_list.TaskListOrderTests.test_s_list_002_sort_updated_equals_default",
++          "test_task_list.TaskListOrderTests.test_s_list_011_list_shows_all_columns_for_each_row"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-QUERY-002": {
++        "executedTests": [
++          "test_task_list.TaskFilterTests.test_s_list_012_status_filter_open_returns_only_open_tasks",
++          "test_task_list.TaskFilterTests.test_s_list_013_status_filter_in_progress",
++          "test_task_list.TaskFilterTests.test_s_list_014_status_filter_pending_approval",
++          "test_task_list.TaskFilterTests.test_s_list_015_status_filter_done",
++          "test_task_list.TaskFilterTests.test_s_list_016_unknown_status_value_returns_empty_list",
++          "test_task_list.TaskFilterTests.test_s_list_017_empty_status_filter_returns_all_tasks"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-QUERY-003": {
++        "executedTests": [
++          "test_task_list.TaskFilterTests.test_s_list_018_assignee_filter_returns_that_users_tasks_only",
++          "test_task_list.TaskFilterTests.test_s_list_019_assignee_filter_for_admin",
++          "test_task_list.TaskFilterTests.test_s_list_020_assignee_filter_unknown_id_returns_empty",
++          "test_task_list.TaskFilterTests.test_s_list_023_malformed_assignee_filter_yields_500",
++          "test_task_list.TaskFilterTests.test_s_list_026_empty_assignee_parameter_means_no_filter"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-QUERY-004": {
++        "executedTests": [
++          "test_task_list.TaskFilterTests.test_s_list_021_combined_status_and_assignee_filter",
++          "test_task_list.TaskFilterTests.test_s_list_022_combined_filter_matching_nothing_returns_empty",
++          "test_task_list.TaskListOrderTests.test_s_list_003_sort_status_orders_alphabetically_with_updated_tiebreak"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-QUERY-005": {
++        "executedTests": [
++          "test_task_list.TaskListOrderTests.test_s_list_004_sort_priority_is_semantic_high_medium_low"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-QUERY-006": {
++        "executedTests": [
++          "test_task_list.TaskListOrderTests.test_s_list_002_sort_updated_equals_default",
++          "test_task_list.TaskListOrderTests.test_s_list_005_sort_due_puts_null_due_dates_last",
++          "test_task_list.TaskListOrderTests.test_s_list_006_sort_due_date_token_is_whitelisted_like_due",
++          "test_task_list.TaskListOrderTests.test_s_list_007_sort_title_orders_alphabetically_with_id_tiebreak",
++          "test_task_list.TaskListOrderTests.test_s_list_008_sort_id_orders_by_identifier",
++          "test_task_list.TaskListOrderTests.test_s_list_009_unknown_sort_token_falls_back_to_updated_desc"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-QUERY-007": {
++        "executedTests": [
++          "test_task_list.TaskListOrderTests.test_s_list_010_mutation_bumps_task_to_top_of_default_order"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-QUERY-008": {
++        "executedTests": [
++          "test_task_list.TaskFilterTests.test_s_list_027_toolbar_renders_six_sort_options_and_reflects_selection"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-API-001": {
++        "executedTests": [
++          "test_api.ApiReadbackTests.test_s_api_001_api_returns_all_seed_tasks_without_authentication"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-API-002": {
++        "executedTests": [
++          "test_api.ApiFilterTests.test_s_api_006_status_filter_returns_only_matching_rows",
++          "test_api.ApiFilterTests.test_s_api_007_status_filter_pending_approval",
++          "test_api.ApiFilterTests.test_s_api_008_unknown_status_value_returns_empty_array",
++          "test_api.ApiFilterTests.test_s_api_009_empty_status_filter_returns_all_rows"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "partialCoverageNote": "status-filter clauses executed; assignee/sort-ignored clause not executed"
++      },
++      "S-API-003": {
++        "executedTests": [
++          "test_api.ApiReadbackTests.test_s_api_002_api_rows_carry_the_documented_field_set",
++          "test_api.ApiReadbackTests.test_s_api_003_api_readback_matches_persisted_seed_values",
++          "test_api.ApiReadbackTests.test_s_api_005_api_reflects_persisted_mutations"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-API-004": {
++        "executedTests": [
++          "test_api.ApiEscapingAndNullTests.test_s_api_010_null_assignee_and_due_date_serialize_as_json_null"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-API-005": {
++        "executedTests": [
++          "test_api.ApiEscapingAndNullTests.test_s_api_011_quotes_and_backslashes_are_escaped_to_valid_json",
++          "test_api.ApiEscapingAndNullTests.test_s_api_013_api_body_is_always_valid_json_even_with_hostile_titles"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "partialCoverageNote": "quote/backslash escape executed; literal-newline raw case not executed (see D-008)"
++      },
++      "S-DATA-001": {
++        "planned": [
++          "T-DATA-001"
++        ],
++        "result": "planned \u2014 NOT executed",
++        "gap": "startup/DB-wait not HTTP-observable; engineer suite is HTTP-only"
++      },
++      "S-DATA-002": {
++        "executedTests": [
++          "test_auth.LoginTests.test_s_auth_012_login_shows_error_for_wrong_password",
++          "test_auth.LoginTests.test_s_auth_015_login_as_each_seeded_role_succeeds"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-DATA-003": {
++        "executedTests": [
++          "test_projects.ProjectArchiveTests.test_s_proj_010_archive_active_project_persists_archived_state",
++          "test_projects.ProjectArchiveTests.test_s_proj_011_archive_is_idempotent_guarded_to_active_state",
++          "test_projects.ProjectCreateTests.test_s_proj_003_create_project_persists_active_project_owned_by_current_user"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-DATA-004": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_016_create_with_unknown_assignee_violates_fk_yields_500"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)",
++        "partialCoverageNote": "FK half executed (eng S-FORM-016) and title-width half executed via S-FORM-010 (eng S-FORM-025, 257->500 no row); CHECK (priority=URGENT) and NOT NULL cases not executed (rechecked 137-run mapping)"
++      },
++      "S-DATA-005": {
++        "executedTests": [
++          "test_api.ApiEscapingAndNullTests.test_s_api_010_null_assignee_and_due_date_serialize_as_json_null",
++          "test_api.ApiReadbackTests.test_s_api_002_api_rows_carry_the_documented_field_set",
++          "test_task_list.TaskListOrderTests.test_s_list_011_list_shows_all_columns_for_each_row"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-DATA-006": {
++        "executedTests": [
++          "test_api.ApiReadbackTests.test_s_api_005_api_reflects_persisted_mutations",
++          "test_task_actions.TaskLifecycleTests.test_s_act_007_action_bumps_updated_at",
++          "test_task_form.TaskEditTests.test_s_form_019_edit_preserves_status",
++          "test_task_list.TaskListOrderTests.test_s_list_010_mutation_bumps_task_to_top_of_default_order"
++        ],
++        "result": "pass (run 05, engineer d002, 129/129)"
++      },
++      "S-DATA-007": {
++        "planned": [
++          "T-DATA-007"
++        ],
++        "result": "planned \u2014 NOT executed",
++        "gap": "DAO-level updateStatus not reachable via HTTP; engineer suite is HTTP-only"
++      },
++      "S-DATA-008": {
++        "executedTests": [
++          "test_task_list.TaskFilterTests.test_s_data_001_masthead_status_badge_and_null_placeholders_render",
++          "test_task_list.TaskFilterTests.test_s_list_024_task_titles_are_rendered_unescaped_in_html"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)",
++        "partialCoverageNote": "badge + null placeholders render on task-form.jsp detail page, not list rows (engineer d004)"
++      },
++      "S-API-006": {
++        "executedTests": [
++          "test_api.ApiReadbackTests.test_s_api_004_api_default_order_is_updated_desc"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-API-007": {
++        "executedTests": [
++          "test_api.ApiEscapingAndNullTests.test_s_api_012_html_special_characters_pass_through_unescaped"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-API-008": {
++        "executedTests": [
++          "test_api.ApiEscapingAndNullTests.test_s_api_014_api_ignores_post_method"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-FORM-011": {
++        "executedTests": [
++          "test_task_form.TaskCreateTests.test_s_form_009_create_trims_surrounding_whitespace_from_title"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-FORM-012": {
++        "executedTests": [
++          "test_task_form.TaskEditTests.test_s_form_024_edit_nonexistent_id_creates_nothing"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-LIFE-010": {
++        "executedTests": [
++          "test_task_actions.ActionErrorBoundaryTests.test_s_act_020_action_rejects_get_method"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      },
++      "S-QUERY-009": {
++        "executedTests": [
++          "test_task_list.TaskFilterTests.test_s_list_024_task_titles_are_rendered_unescaped_in_html"
++        ],
++        "result": "pass (run 05, engineer d004, 137/137)"
++      }
++    },
++    "engineerTestsBeyondAnalystSpecs": [
++      {
++        "engineerTest": "test_api.ApiReadbackTests.test_s_api_004_api_default_order_is_updated_desc",
++        "engineerProvisionalEar": "S-API-004",
++        "analystSpecId": "S-API-006",
++        "analystRuleIds": [
++          "R-API-002",
++          "R-QUERY-001"
++        ],
++        "kind": "intended-requirement",
++        "note": "API default order not stated by any analyst spec"
++      },
++      {
++        "engineerTest": "test_api.ApiEscapingAndNullTests.test_s_api_012_html_special_characters_pass_through_unescaped",
++        "engineerProvisionalEar": "S-API-012",
++        "analystSpecId": "S-API-007",
++        "analystRuleIds": [
++          "R-API-005"
++        ],
++        "kind": "characterization",
++        "intendedness": "disputed (D-008)",
++        "note": "no analyst spec states HTML passthrough; recorded as executed evidence for D-008"
++      },
++      {
++        "engineerTest": "test_api.ApiEscapingAndNullTests.test_s_api_014_api_ignores_post_method",
++        "engineerProvisionalEar": "S-API-014",
++        "analystSpecId": "S-API-008",
++        "analystRuleIds": [
++          "R-API-006"
++        ],
++        "kind": "intended-requirement",
++        "note": "no analyst spec states API method handling"
++      },
++      {
++        "engineerTest": "test_task_actions.ActionErrorBoundaryTests.test_s_act_020_action_rejects_get_method",
++        "engineerProvisionalEar": "S-ACT-020",
++        "analystSpecId": "S-LIFE-010",
++        "analystRuleIds": [
++          "R-LIFE-010"
++        ],
++        "kind": "intended-requirement",
++        "note": "no analyst spec states method restriction on /tasks/action (inventory: POST-only)"
++      },
++      {
++        "engineerTest": "test_task_form.TaskCreateTests.test_s_form_009_create_trims_surrounding_whitespace_from_title",
++        "engineerProvisionalEar": "S-FORM-009",
++        "analystSpecId": "S-FORM-011",
++        "analystRuleIds": [
++          "R-FORM-003",
++          "R-FORM-008"
++        ],
++        "kind": "intended-requirement",
++        "note": "no analyst spec states task-title trimming (only project-name trim in S-PROJ-005)"
++      },
++      {
++        "engineerTest": "test_task_form.TaskEditTests.test_s_form_024_edit_nonexistent_id_creates_nothing",
++        "engineerProvisionalEar": "S-FORM-024",
++        "analystSpecId": "S-FORM-012",
++        "analystRuleIds": [
++          "R-FORM-008"
++        ],
++        "kind": "characterization",
++        "intendedness": "disputed (D-010)",
++        "note": "no analyst spec covers POST edit with nonexistent id; recorded as executed evidence for D-010"
++      },
++      {
++        "engineerTest": "test_task_list.TaskFilterTests.test_s_list_024_task_titles_are_rendered_unescaped_in_html",
++        "engineerProvisionalEar": "S-LIST-024",
++        "analystSpecId": "S-QUERY-009",
++        "analystRuleIds": [
++          "R-DATA-008",
++          "R-QUERY-006"
++        ],
++        "kind": "characterization",
++        "intendedness": "disputed (D-004)",
++        "note": "no analyst spec states HTML escaping; recorded as executed evidence for D-004"
++      }
++    ],
++    "specMismatches": [
++      {
++        "kind": "id-space collision (numbering only, no behavioral conflict)",
++        "detail": "Engineer provisional S-BULK-002 means 'bulk close single selected open task'; analyst S-BULK-002 is 'bulk close selected ids; non-numeric id -> 500'. Engineer numbering is its own provisional space (engineer LIST ~= analyst QUERY, engineer ACT ~= analyst LIFE; AUTH/PROJ/FORM/API numbers do not align 1:1). Per orchestrator: engineer reconciles its mapping.json to analyst IDs; analyst specs are NOT rewritten."
++      },
++      {
++        "kind": "intended-vs-characterization labeling difference",
++        "detail": "Analyst S-QUERY-006 states the unknown-sort fallback to updated_at DESC as intended behavior; engineer labels the same observed behavior kind=characterization and raises it as an ambiguity (engineer findings item 3, ledger D-009). Observed behavior itself agrees; only the intendedness label differs."
++      },
++      {
++        "kind": "no behavioral contradiction found",
++        "detail": "For every spec with executed tests, engineer observations agree with analyst spec statements (including observed-mislabel specs S-FORM-002 and S-PROJ-007)."
++      }
++    ],
++    "beyondSpecTestCount": 7,
++    "executedTestCountBasis": "137-run mapping minus the 2 conflict-flagged enumeration tests (S-QUERY-003, S-QUERY-005, adjudicated under findings/ledger.json); includes the 5 former ear:null tests now referenced as executed under accepted spec IDs (S-API-008, S-FORM-012, S-LIFE-010, S-AUTH-004, S-PROJ-001)"
++  }
++}
+diff --git a/specs/API.md b/specs/API.md
+new file mode 100644
+index 0000000..22d4ce5
+--- /dev/null
++++ b/specs/API.md
+@@ -0,0 +1,68 @@
++# API — specifications
++
++## S-API-001
++- **ID**: S-API-001
++- **EARS statement**: WHEN GET /api/tasks is requested without any session, THE SYSTEM SHALL return HTTP 200 application/json with the task array (access-exemption case).
++- **Linked rule IDs**: R-API-001
++- **Fixtures and inputs**: Fresh anonymous client; GET /api/tasks.
++- **Observable assertions**: 200; Content-Type application/json; body is a JSON array of 4 seeded tasks.
++- **Executable test IDs**: T-API-001 (planned)
++
++## S-API-002
++- **ID**: S-API-002
++- **EARS statement**: WHEN GET /api/tasks?status=<valid status>, THE SYSTEM SHALL return only matching tasks; WHEN status is empty or absent, all tasks; WHEN status is unknown, an empty array with HTTP 200; assignee/sort params are ignored.
++- **Linked rule IDs**: R-API-002
++- **Fixtures and inputs**: status=DONE; status=; status=BOGUS; assignee=3&sort=title.
++- **Observable assertions**: [task 4] / [4 tasks] / [] / [4 tasks].
++- **Executable test IDs**: T-API-002 (planned)
++
++## S-API-003
++- **ID**: S-API-003
++- **EARS statement**: WHEN the API returns a task, THE SYSTEM SHALL include exactly the fields id,title,status,priority,assigneeId,projectId,dueDate,updatedAt and no description.
++- **Linked rule IDs**: R-API-003
++- **Fixtures and inputs**: GET /api/tasks.
++- **Observable assertions**: Every object has exactly those 8 keys; updatedAt matches /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.
++- **Executable test IDs**: T-API-003 (planned)
++
++## S-API-004
++- **ID**: S-API-004
++- **EARS statement**: WHEN a task has NULL assignee_id or due_date, THE SYSTEM SHALL emit JSON null for assigneeId/dueDate (null-handling case).
++- **Linked rule IDs**: R-API-004
++- **Fixtures and inputs**: GET /api/tasks (seed task 4: assignee 1... actually assignee_id=1, due_date NULL — for a NULL assignee, unassign task 4 via the form first).
++- **Observable assertions**: Task 4 object contains "dueDate":null; after unassigning, "assigneeId":null; body parses as JSON.
++- **Executable test IDs**: T-API-004 (planned)
++
++## S-API-005
++- **ID**: S-API-005
++- **EARS statement**: WHEN an exposed string contains a double quote or backslash, THE SYSTEM SHALL escape it and the body stays valid JSON; WHEN it contains a newline or control char, THE SYSTEM SHALL emit it raw and the body ceases to be valid JSON (observed defect, escaping boundary).
++- **Linked rule IDs**: R-API-005
++- **Fixtures and inputs**: POST /tasks/form title=Quote"Test&projectId=1 -> GET /api/tasks parses; POST title=Line1\nLine2 (literal newline) -> GET /api/tasks fails JSON parse.
++- **Observable assertions**: First body parses and title round-trips; second body contains a raw line break inside a string token.
++- **Executable test IDs**: T-API-005 (planned)
++
++## S-API-006
++- **ID**: S-API-006
++- **EARS statement**: WHEN GET /api/tasks is requested without a status filter, THE SYSTEM SHALL return every task in the default order updated_at DESC (newest first), matching the UI list default.
++- **Linked rule IDs**: R-API-002, R-QUERY-001
++- **Fixtures and inputs**: GET /api/tasks (seeded tasks 1-4 with staggered updated_at 09:00,12:00,15:00,18:00 — seed.sql:59-63).
++- **Observable assertions**: HTTP 200; JSON array ordered 4,3,2,1 by id.
++- **Executable test IDs**: test_api.ApiReadbackTests.test_s_api_004_api_default_order_is_updated_desc (executed, engineer)
++- **Note**: engineer provisional ID S-API-004 (their numbering) — no analyst spec previously stated the API default order. Intended-requirement spec.
++
++## S-API-007
++- **ID**: S-API-007
++- **EARS statement**: (characterization) WHEN an exposed string contains HTML-significant characters (<, >, &), THE SYSTEM SHALL emit them unescaped in the JSON body — esc() escapes only backslash and double-quote (ApiTaskServlet.java:51-54).
++- **Linked rule IDs**: R-API-005
++- **Fixtures and inputs**: Task title containing `<b>&amp;</b>`-style markup stored via POST /tasks/form; GET /api/tasks.
++- **Observable assertions**: JSON body contains the raw characters; body still parses as JSON; readback equals the stored string.
++- **Executable test IDs**: test_api.ApiEscapingAndNullTests.test_s_api_012_html_special_characters_pass_through_unescaped (executed, engineer; D-008 evidence)
++- **Intendedness disputed (run 05)**: recorded as observed behavior only; intendedness disputed under defect D-008 (quote/backslash-only escaping). The intended requirement (spec-correct JSON/HTML escaping) is deliberately NOT written here as if sourced. Engineer provisional ID S-API-012.
++
++## S-API-008
++- **ID**: S-API-008
++- **EARS statement**: WHEN POST /api/tasks is requested, THE SYSTEM SHALL respond HTTP 405 Method Not Allowed and write nothing (the endpoint implements GET only).
++- **Linked rule IDs**: R-API-006
++- **Fixtures and inputs**: POST /api/tasks (empty or arbitrary body) as any client.
++- **Observable assertions**: HTTP 405; task row count unchanged.
++- **Executable test IDs**: test_api.ApiEscapingAndNullTests.test_s_api_014_api_ignores_post_method (executed, engineer)
++- **Note**: engineer provisional ID S-API-014 — no analyst spec previously stated API method handling. Intended-requirement spec.
+diff --git a/specs/AUTH.md b/specs/AUTH.md
+new file mode 100644
+index 0000000..9fce017
+--- /dev/null
++++ b/specs/AUTH.md
+@@ -0,0 +1,81 @@
++# AUTH — specifications
++
++## S-AUTH-001
++- **ID**: S-AUTH-001
++- **EARS statement**: WHEN a request targets `/login`, `/api/*`, or a `.css` path, THE SYSTEM SHALL forward it to the servlet without any session check.
++- **Linked rule IDs**: R-AUTH-001
++- **Fixtures and inputs**: Anonymous HTTP client; GET /login, GET /api/tasks, GET /styles.css.
++- **Observable assertions**: HTTP 200 (or API JSON) returned; no 302 to /login; no Set-Cookie requirement.
++- **Executable test IDs**: T-AUTH-001 (planned)
++
++## S-AUTH-002
++- **ID**: S-AUTH-002
++- **EARS statement**: WHEN an unauthenticated request targets any other path, THE SYSTEM SHALL respond 302 to the login page before any servlet logic runs.
++- **Linked rule IDs**: R-AUTH-001, R-AUTH-002
++- **Fixtures and inputs**: Anonymous client; GET /tasks, GET /projects, POST /tasks/action.
++- **Observable assertions**: 302 with Location ending `/login`; no DB mutation occurs.
++- **Executable test IDs**: T-AUTH-002 (planned)
++
++## S-AUTH-003
++- **ID**: S-AUTH-003
++- **EARS statement**: WHEN a session exists but lacks the `user` attribute, THE SYSTEM SHALL treat the request as unauthenticated and redirect to /login.
++- **Linked rule IDs**: R-AUTH-002
++- **Fixtures and inputs**: Fresh session (e.g. via GET /login) then GET /tasks.
++- **Observable assertions**: 302 to /login.
++- **Executable test IDs**: T-AUTH-003 (planned)
++
++## S-AUTH-004
++- **ID**: S-AUTH-004
++- **EARS statement**: WHEN POST /login carries credentials matching a person row, THE SYSTEM SHALL create a session with attribute `user` and redirect to /tasks.
++- **Linked rule IDs**: R-AUTH-003
++- **Fixtures and inputs**: POST username=dev, password=dev.
++- **Observable assertions**: 302 to /tasks; subsequent GET /tasks returns 200 with "Devon Member" in the header.
++- **Executable test IDs**: T-AUTH-004 (planned)
++
++## S-AUTH-005
++- **ID**: S-AUTH-005
++- **EARS statement**: WHEN POST /login carries invalid credentials, THE SYSTEM SHALL re-render the login form with "Invalid credentials" and not create a session user.
++- **Linked rule IDs**: R-AUTH-004
++- **Fixtures and inputs**: POST username=dev, password=wrong.
++- **Observable assertions**: HTTP 200; body contains "Invalid credentials"; GET /tasks afterwards still 302s to /login.
++- **Executable test IDs**: T-AUTH-005 (planned)
++
++## S-AUTH-006
++- **ID**: S-AUTH-006
++- **EARS statement**: WHEN GET /login is requested, THE SYSTEM SHALL render the sign-in form without mutating any data.
++- **Linked rule IDs**: R-AUTH-005
++- **Fixtures and inputs**: GET /login.
++- **Observable assertions**: HTTP 200; body contains name="username" and name="password" inputs.
++- **Executable test IDs**: T-AUTH-006 (planned)
++
++## S-AUTH-007
++- **ID**: S-AUTH-007
++- **EARS statement**: WHEN GET /logout is requested, THE SYSTEM SHALL invalidate the session and redirect to /login; when no session exists it SHALL still redirect without error.
++- **Linked rule IDs**: R-AUTH-006
++- **Fixtures and inputs**: Authenticated session; then GET /logout; then GET /tasks. Repeat with no session.
++- **Observable assertions**: 302 to /login in both cases; after logout GET /tasks is 302 to /login.
++- **Executable test IDs**: T-AUTH-007 (planned)
++
++## S-AUTH-008
++- **ID**: S-AUTH-008
++- **EARS statement**: WHEN a user whose role is not ADMIN or MANAGER posts action=approve or action=reject to /tasks/action, THE SYSTEM SHALL respond HTTP 403 and leave the task status unchanged.
++- **Linked rule IDs**: R-AUTH-007
++- **Fixtures and inputs**: Login as dev (MEMBER); task 3 is seeded PENDING_APPROVAL; POST /tasks/action id=3&action=approve.
++- **Observable assertions**: HTTP 403; GET /api/tasks shows task 3 still PENDING_APPROVAL.
++- **Executable test IDs**: T-AUTH-008 (planned)
++
++## S-AUTH-009
++- **ID**: S-AUTH-009
++- **EARS statement**: WHEN an authenticated VIEWER posts any non-approve/reject mutation (task create, bulkClose, project archive), THE SYSTEM SHALL execute it exactly as for any other role.
++- **Linked rule IDs**: R-AUTH-008
++- **Fixtures and inputs**: Login as view (VIEWER); POST /tasks/form with valid title+projectId=1.
++- **Observable assertions**: 302 then task exists (readback via /tasks/form?id=); no 403.
++- **Executable test IDs**: T-AUTH-009 (planned)
++
++## S-AUTH-010
++- **ID**: S-AUTH-010
++- **EARS statement**: WHEN an authenticated page renders, THE SYSTEM SHALL display the user's full name, role, and a logout link in the header.
++- **Linked rule IDs**: R-AUTH-009
++- **Fixtures and inputs**: Login as mgr; GET /tasks.
++- **Observable assertions**: Body contains "Morgan Manager (MANAGER)" and href to /logout.
++- **Executable test IDs**: T-AUTH-010 (planned)
+diff --git a/specs/BULK.md b/specs/BULK.md
+new file mode 100644
+index 0000000..51d823b
+--- /dev/null
++++ b/specs/BULK.md
+@@ -0,0 +1,41 @@
++# BULK — specifications
++
++## S-BULK-001
++- **ID**: S-BULK-001
++- **EARS statement**: WHEN action=bulkClose is posted with no ids, THE SYSTEM SHALL redirect to /tasks without modifying any task.
++- **Linked rule IDs**: R-BULK-001
++- **Fixtures and inputs**: POST /tasks/action action=bulkClose.
++- **Observable assertions**: 302 /tasks; API readback identical before/after.
++- **Executable test IDs**: T-BULK-001 (planned)
++
++## S-BULK-002
++- **ID**: S-BULK-002
++- **EARS statement**: WHEN action=bulkClose is posted with selected ids, THE SYSTEM SHALL set all selected non-DONE tasks to DONE in one update and redirect; WHEN any id is non-numeric, THE SYSTEM SHALL respond HTTP 500 without changing anything.
++- **Linked rule IDs**: R-BULK-002
++- **Fixtures and inputs**: (a) ids=1&ids=2; (b) ids=1&ids=abc.
++- **Observable assertions**: (a) 302; tasks 1,2 DONE in readback; (b) 500; both unchanged.
++- **Executable test IDs**: T-BULK-002 (planned)
++
++## S-BULK-003
++- **ID**: S-BULK-003
++- **EARS statement**: WHEN the bulkClose selection mixes statuses including DONE, THE SYSTEM SHALL close the non-DONE rows and leave DONE rows untouched, reporting nothing (mixed-state boundary).
++- **Linked rule IDs**: R-BULK-003
++- **Fixtures and inputs**: ids=3&ids=4 (task 3 PENDING_APPROVAL, task 4 DONE).
++- **Observable assertions**: 302; task 3 DONE, task 4 still DONE with unchanged updated_at.
++- **Executable test IDs**: T-BULK-003 (planned)
++
++## S-BULK-004
++- **ID**: S-BULK-004
++- **EARS statement**: WHEN a MEMBER posts action=bulkClose containing a PENDING_APPROVAL task, THE SYSTEM SHALL close it without a 403 (observed approval bypass, defect D-002 — expected per approval policy: 403).
++- **Linked rule IDs**: R-BULK-004, R-AUTH-008
++- **Fixtures and inputs**: Login as dev (MEMBER); POST action=bulkClose&ids=3.
++- **Observable assertions**: 302; task 3 DONE in readback; no 403 anywhere.
++- **Executable test IDs**: T-BULK-004 (planned)
++
++## S-BULK-005
++- **ID**: S-BULK-005
++- **EARS statement**: WHEN the task list renders, THE SYSTEM SHALL provide one bulkClose form with per-row checkboxes (render-only, no-mutation case).
++- **Linked rule IDs**: R-BULK-005
++- **Fixtures and inputs**: GET /tasks.
++- **Observable assertions**: form with hidden action=bulkClose; one checkbox name=ids value=<task id> per row; "Close selected (bulk)" button.
++- **Executable test IDs**: T-BULK-005 (planned)
+diff --git a/specs/DATA.md b/specs/DATA.md
+new file mode 100644
+index 0000000..3cc5e10
+--- /dev/null
++++ b/specs/DATA.md
+@@ -0,0 +1,65 @@
++# DATA — specifications
++
++## S-DATA-001
++- **ID**: S-DATA-001
++- **EARS statement**: WHEN the application starts, THE SYSTEM SHALL wait for the external database (retrying ~30s) and SHALL NOT create or alter any schema itself.
++- **Linked rule IDs**: R-DATA-001
++- **Fixtures and inputs**: Deployment against a schema-loaded Postgres (schema.sql+seed.sql+oracle-ro.sql).
++- **Observable assertions**: App serves requests once DB is up; task/project/person tables pre-exist with seed rows; no DDL from the app side.
++- **Executable test IDs**: T-DATA-001 (planned)
++
++## S-DATA-002
++- **ID**: S-DATA-002
++- **EARS statement**: WHEN login credentials match a seeded person row (plaintext compare), THE SYSTEM SHALL authenticate all four roles; anything else is refused with "Invalid credentials".
++- **Linked rule IDs**: R-DATA-002, R-AUTH-003, R-AUTH-004
++- **Fixtures and inputs**: POST /login for admin/admin, mgr/mgr, dev/dev, view/view; one wrong-password case.
++- **Observable assertions**: Four 302s to /tasks; failure case 200 with error text.
++- **Executable test IDs**: T-DATA-002 (planned)
++
++## S-DATA-003
++- **ID**: S-DATA-003
++- **EARS statement**: WHEN a project is created via the web, THE SYSTEM SHALL store state ACTIVE; WHEN archived, THE SYSTEM SHALL move it to ARCHIVED with no forward path back (DB CHECK + WHERE state='ACTIVE').
++- **Linked rule IDs**: R-DATA-003, R-PROJ-002, R-PROJ-004
++- **Fixtures and inputs**: Create then archive one project; re-archive it.
++- **Observable assertions**: state transitions ACTIVE->ARCHIVED only; second archive is a silent no-op.
++- **Executable test IDs**: T-DATA-003 (planned)
++
++## S-DATA-004
++- **ID**: S-DATA-004
++- **EARS statement**: WHEN a task write violates a column constraint (width, CHECK, FK, NOT NULL), THE SYSTEM SHALL surface HTTP 500 through the servlet and leave the table unchanged (constraint-backstop case).
++- **Linked rule IDs**: R-DATA-004, R-FORM-005, R-FORM-010
++- **Fixtures and inputs**: priority=URGENT; title 257 chars; assigneeId=9999; projectId=999.
++- **Observable assertions**: All HTTP 500; row counts unchanged.
++- **Executable test IDs**: T-DATA-004 (planned)
++
++## S-DATA-005
++- **ID**: S-DATA-005
++- **EARS statement**: WHEN tasks are read back, THE SYSTEM SHALL map NULL assignee_id/due_date to nulls, expose joined assigneeName/projectName for display, and truncate updated_at to whole seconds.
++- **Linked rule IDs**: R-DATA-005
++- **Fixtures and inputs**: GET /tasks and GET /api/tasks after unassigning task 4.
++- **Observable assertions**: Task 4: unassigned display, dueDate null in API, updatedAt with 19-char format.
++- **Executable test IDs**: T-DATA-005 (planned)
++
++## S-DATA-006
++- **ID**: S-DATA-006
++- **EARS statement**: WHEN any task mutation runs (create/update/updateStatus/bulkClose), THE SYSTEM SHALL refresh updated_at; field-editing updates SHALL NOT change status and status updates SHALL NOT change fields.
++- **Linked rule IDs**: R-DATA-006, R-FORM-008, R-LIFE-001
++- **Fixtures and inputs**: Edit task 1 fields; then start it.
++- **Observable assertions**: updated_at advances on both writes; status unchanged by the edit, fields unchanged by start (readback compare).
++- **Executable test IDs**: T-DATA-006 (planned)
++
++## S-DATA-007
++- **ID**: S-DATA-007
++- **EARS statement**: (technical coverage) WHEN TaskDao.updateStatus is called directly, THE SYSTEM SHALL write any status without guard — inventory-only observation; no web-observable assertion.
++- **Linked rule IDs**: R-DATA-007
++- **Fixtures and inputs**: Java-level DAO call OPEN->DONE (mirrors LifecycleTest.java:27-39).
++- **Observable assertions**: DAO-level status change succeeds with no 409 semantics.
++- **Executable test IDs**: T-DATA-007 (planned)
++
++## S-DATA-008
++- **ID**: S-DATA-008
++- **EARS statement**: WHEN authenticated pages render, THE SYSTEM SHALL show the shared masthead/nav with user identity and logout, status badges keyed to status, and null placeholders ((unassigned) / —) where applicable.
++- **Linked rule IDs**: R-DATA-008, R-FORM-009, R-AUTH-009
++- **Fixtures and inputs**: GET /tasks, GET /tasks/form?id=4 (task 4 has no due date).
++- **Observable assertions**: Header shows user + logout; badge class status-<STATUS>; "—" in due cell for task 4; "(unassigned)" after unassigning.
++- **Executable test IDs**: T-DATA-008 (planned)
+diff --git a/specs/FORM.md b/specs/FORM.md
+new file mode 100644
+index 0000000..7801e2c
+--- /dev/null
++++ b/specs/FORM.md
+@@ -0,0 +1,99 @@
++# FORM — specifications
++
++## S-FORM-001
++- **ID**: S-FORM-001
++- **EARS statement**: WHEN GET /tasks/form is requested without id, THE SYSTEM SHALL render the New task form; WHEN id names an existing task, THE SYSTEM SHALL pre-fill every field and show the detail panel.
++- **Linked rule IDs**: R-FORM-001
++- **Fixtures and inputs**: (a) GET /tasks/form; (b) GET /tasks/form?id=2 (seed: Wire up SSO, IN_PROGRESS, HIGH, assignee 3, project 1, due 2026-06-20).
++- **Observable assertions**: (a) heading "New task", empty title input; (b) heading "Task #2: Wire up SSO", status badge IN_PROGRESS, title input value "Wire up SSO", priority HIGH selected.
++- **Executable test IDs**: T-FORM-001 (planned)
++
++## S-FORM-002
++- **ID**: S-FORM-002
++- **EARS statement**: WHEN GET /tasks/form?id names a nonexistent task, THE SYSTEM SHALL render the New task form (observed mislabel); WHEN id is non-numeric, THE SYSTEM SHALL return HTTP 500.
++- **Linked rule IDs**: R-FORM-002
++- **Fixtures and inputs**: GET /tasks/form?id=999; GET /tasks/form?id=abc.
++- **Observable assertions**: (a) 200 with "New task"; (b) HTTP 500.
++- **Executable test IDs**: T-FORM-002 (planned)
++
++## S-FORM-003
++- **ID**: S-FORM-003
++- **EARS statement**: WHEN POST /tasks/form has a blank title, THE SYSTEM SHALL re-render the form with "Title is required" and persist nothing.
++- **Linked rule IDs**: R-FORM-003
++- **Fixtures and inputs**: POST title="   " projectId=1 (and title absent).
++- **Observable assertions**: 200; body contains "Title is required"; task count unchanged.
++- **Executable test IDs**: T-FORM-003 (planned)
++
++## S-FORM-004
++- **ID**: S-FORM-004
++- **EARS statement**: WHEN POST /tasks/form has a missing, empty, or nonexistent projectId, THE SYSTEM SHALL re-render with "A task must belong to an existing project"; WHEN projectId is non-numeric, THE SYSTEM SHALL return HTTP 500.
++- **Linked rule IDs**: R-FORM-004
++- **Fixtures and inputs**: POST title=T with projectId= (empty), projectId=999, projectId=abc.
++- **Observable assertions**: 200 error render for first two; 500 for last; nothing persisted.
++- **Executable test IDs**: T-FORM-004 (planned)
++
++## S-FORM-005
++- **ID**: S-FORM-005
++- **EARS statement**: WHEN POST /tasks/form omits priority, THE SYSTEM SHALL store MEDIUM; WHEN priority is not LOW/MEDIUM/HIGH, THE SYSTEM SHALL fail with HTTP 500 from the DB CHECK and persist nothing (observed gap, defect D-004).
++- **Linked rule IDs**: R-FORM-005
++- **Fixtures and inputs**: (a) POST title=T&projectId=1 (no priority); (b) POST title=U&projectId=1&priority=URGENT.
++- **Observable assertions**: (a) created, priority MEDIUM; (b) HTTP 500, no new row.
++- **Executable test IDs**: T-FORM-005 (planned)
++
++## S-FORM-006
++- **ID**: S-FORM-006
++- **EARS statement**: WHEN POST /tasks/form has empty assigneeId, THE SYSTEM SHALL store NULL (unassigned); WHEN assigneeId is non-numeric or references no person, THE SYSTEM SHALL return HTTP 500.
++- **Linked rule IDs**: R-FORM-006
++- **Fixtures and inputs**: (a) assigneeId=; (b) assigneeId=x; (c) assigneeId=9999.
++- **Observable assertions**: (a) created with '(unassigned)' in detail panel and assigneeId null in API readback; (b),(c) HTTP 500.
++- **Executable test IDs**: T-FORM-006 (planned)
++
++## S-FORM-007
++- **ID**: S-FORM-007
++- **EARS statement**: WHEN POST /tasks/form has empty dueDate, THE SYSTEM SHALL store NULL; WHEN dueDate is not an ISO date, THE SYSTEM SHALL return HTTP 500.
++- **Linked rule IDs**: R-FORM-007
++- **Fixtures and inputs**: (a) dueDate=; (b) dueDate=31/12/2026.
++- **Observable assertions**: (a) created, dueDate null in API; (b) HTTP 500.
++- **Executable test IDs**: T-FORM-007 (planned)
++
++## S-FORM-008
++- **ID**: S-FORM-008
++- **EARS statement**: WHEN POST /tasks/form carries no id, THE SYSTEM SHALL create the task with status OPEN and redirect to /tasks/form?id=<new>&saved=1.
++- **Linked rule IDs**: R-FORM-008
++- **Fixtures and inputs**: POST title=Fresh&projectId=1&priority=LOW&assigneeId=3&dueDate=2026-12-01.
++- **Observable assertions**: 302 with saved=1; detail shows status OPEN; "Saved." banner visible.
++- **Executable test IDs**: T-FORM-008 (planned)
++
++## S-FORM-009
++- **ID**: S-FORM-009
++- **EARS statement**: WHEN POST /tasks/form carries an existing id, THE SYSTEM SHALL update title/description/priority/assignee/dueDate but leave status unchanged and bump updated_at.
++- **Linked rule IDs**: R-FORM-008
++- **Fixtures and inputs**: Task id=1 (OPEN, HIGH); POST id=1&title=Renamed&projectId=1&priority=LOW&assigneeId=&dueDate=.
++- **Observable assertions**: 302 saved=1; detail shows title Renamed, priority LOW, unassigned, no due date, status STILL OPEN; updated_at advanced vs API readback baseline.
++- **Executable test IDs**: T-FORM-009 (planned)
++
++## S-FORM-010
++- **ID**: S-FORM-010
++- **EARS statement**: WHEN a stored field exceeds its column width (title>256, description>4000), THE SYSTEM SHALL fail with HTTP 500 from the DB and persist nothing (boundary).
++- **Linked rule IDs**: R-FORM-008
++- **Fixtures and inputs**: POST title=<257 chars>&projectId=1; POST title=T&projectId=1&description=<4001 chars>.
++- **Observable assertions**: HTTP 500; no row created.
++- **Executable test IDs**: T-FORM-010 (planned)
++
++## S-FORM-011
++- **ID**: S-FORM-011
++- **EARS statement**: WHEN POST /tasks/form creates a task whose title carries leading/trailing whitespace, THE SYSTEM SHALL store the title trimmed.
++- **Linked rule IDs**: R-FORM-003, R-FORM-008
++- **Fixtures and inputs**: POST title=`  Trimmed title  `&projectId=1 (surrounding spaces in the parameter).
++- **Observable assertions**: 302 saved=1; API readback shows title `Trimmed title` with no surrounding whitespace.
++- **Executable test IDs**: test_task_form.TaskCreateTests.test_s_form_009_create_trims_surrounding_whitespace_from_title (executed, engineer)
++- **Note**: engineer provisional ID S-FORM-009 collides by number only with analyst S-FORM-009 (edit semantics) — analyst numbering is authoritative. Intended-requirement spec (trim rule sourced from R-FORM-003, TaskFormServlet.java:41-48,77-87).
++
++## S-FORM-012
++- **ID**: S-FORM-012
++- **EARS statement**: (characterization) WHEN POST /tasks/form carries an id that names no task, THE SYSTEM SHALL answer 302 /tasks/form?id=<id>&saved=1 as if saved, persist nothing, and create no row.
++- **Linked rule IDs**: R-FORM-008
++- **Fixtures and inputs**: POST id=999&title=X&projectId=1 (no task 999); then GET /api/tasks.
++- **Observable assertions**: 302 with saved=1 despite zero-row UPDATE; no task 999 in readback; row count unchanged.
++- **Executable test IDs**: test_task_form.TaskEditTests.test_s_form_024_edit_nonexistent_id_creates_nothing (executed, engineer; D-010 evidence)
++- **Intendedness disputed (run 05)**: recorded as observed behavior only; intendedness disputed under defect D-010 (ghost update). The intended requirement (404 or explicit refusal for a nonexistent edit target) is deliberately NOT written here as if sourced — analyst specs previously covered only the GET counterpart (S-FORM-002). Engineer provisional ID S-FORM-024.
+diff --git a/specs/LIFE.md b/specs/LIFE.md
+new file mode 100644
+index 0000000..4d0e1ea
+--- /dev/null
++++ b/specs/LIFE.md
+@@ -0,0 +1,82 @@
++# LIFE — specifications
++
++## S-LIFE-001
++- **ID**: S-LIFE-001
++- **EARS statement**: WHEN action=start is posted for a task in status OPEN, THE SYSTEM SHALL set it to IN_PROGRESS and refresh updated_at; WHEN the task is in any other status, THE SYSTEM SHALL respond HTTP 409 and not write.
++- **Linked rule IDs**: R-LIFE-001
++- **Fixtures and inputs**: Task 1 seeded OPEN; POST action=start&id=1. Then repeat on task 2 (IN_PROGRESS) and task 4 (DONE).
++- **Observable assertions**: First call 302; API readback shows task 1 IN_PROGRESS with newer updatedAt; repeats give 409 with "expected OPEN"; task 2/4 unchanged.
++- **Executable test IDs**: T-LIFE-001 (planned)
++
++## S-LIFE-002
++- **ID**: S-LIFE-002
++- **EARS statement**: WHEN action=submit is posted for a task in status IN_PROGRESS, THE SYSTEM SHALL set it to PENDING_APPROVAL; otherwise THE SYSTEM SHALL respond HTTP 409.
++- **Linked rule IDs**: R-LIFE-002
++- **Fixtures and inputs**: Task 2 seeded IN_PROGRESS; POST action=submit&id=2. Repeat on task 1 (OPEN).
++- **Observable assertions**: 302 then readback PENDING_APPROVAL; repeat 409 "expected IN_PROGRESS".
++- **Executable test IDs**: T-LIFE-002 (planned)
++
++## S-LIFE-003
++- **ID**: S-LIFE-003
++- **EARS statement**: WHEN a lifecycle action names an unknown task id, THE SYSTEM SHALL respond HTTP 404 "No such task"; WHEN the id is non-numeric, THE SYSTEM SHALL respond HTTP 500.
++- **Linked rule IDs**: R-LIFE-006
++- **Fixtures and inputs**: POST action=start&id=999; POST action=start&id=abc.
++- **Observable assertions**: 404 / 500; no rows changed.
++- **Executable test IDs**: T-LIFE-003 (planned)
++
++## S-LIFE-004
++- **ID**: S-LIFE-004
++- **EARS statement**: WHEN the action parameter is absent or not a recognized token, THE SYSTEM SHALL respond HTTP 400 naming the action and write nothing.
++- **Linked rule IDs**: R-LIFE-006
++- **Fixtures and inputs**: POST /tasks/action (no action); POST action=teleport&id=1.
++- **Observable assertions**: 400; body contains "Unknown action: teleport" / "Unknown action: null".
++- **Executable test IDs**: T-LIFE-004 (planned)
++
++## S-LIFE-005
++- **ID**: S-LIFE-005
++- **EARS statement**: WHEN an ADMIN or MANAGER posts action=approve for a PENDING_APPROVAL task, THE SYSTEM SHALL set it to DONE; WHEN the actor's role is MEMBER or VIEWER, THE SYSTEM SHALL respond HTTP 403; WHEN the status differs, HTTP 409.
++- **Linked rule IDs**: R-LIFE-003, R-AUTH-007
++- **Fixtures and inputs**: Task 3 seeded PENDING_APPROVAL; approve as admin (ADMIN) -> then as dev (MEMBER) on a freshly submitted task.
++- **Observable assertions**: 302 + readback DONE; MEMBER attempt 403; wrong-status attempt 409.
++- **Executable test IDs**: T-LIFE-005 (planned)
++
++## S-LIFE-006
++- **ID**: S-LIFE-006
++- **EARS statement**: WHEN an authorized approver posts action=reject for a PENDING_APPROVAL task, THE SYSTEM SHALL set it back to IN_PROGRESS; unauthorized actors get 403, wrong status gets 409.
++- **Linked rule IDs**: R-LIFE-004, R-AUTH-007
++- **Fixtures and inputs**: Task 3 PENDING_APPROVAL; reject as mgr (MANAGER); reject as view (VIEWER).
++- **Observable assertions**: 302 + readback IN_PROGRESS; VIEWER attempt 403.
++- **Executable test IDs**: T-LIFE-006 (planned)
++
++## S-LIFE-007
++- **ID**: S-LIFE-007
++- **EARS statement**: WHEN action=reopen is posted for a DONE task, THE SYSTEM SHALL set it to OPEN; for any other status THE SYSTEM SHALL respond HTTP 409.
++- **Linked rule IDs**: R-LIFE-005
++- **Fixtures and inputs**: Task 4 seeded DONE; POST action=reopen&id=4. Repeat on task 1.
++- **Observable assertions**: 302 + readback OPEN; repeat 409 "expected DONE".
++- **Executable test IDs**: T-LIFE-007 (planned)
++
++## S-LIFE-008
++- **ID**: S-LIFE-008
++- **EARS statement**: WHEN a successful action post includes return=detail, THE SYSTEM SHALL redirect to /tasks/form?id=<id>; otherwise THE SYSTEM SHALL redirect to /tasks.
++- **Linked rule IDs**: R-LIFE-007
++- **Fixtures and inputs**: POST action=start&id=1&return=detail; then POST action=submit&id=1 (no return).
++- **Observable assertions**: Location headers /tasks/form?id=1 and /tasks respectively.
++- **Executable test IDs**: T-LIFE-008 (planned)
++
++## S-LIFE-009
++- **ID**: S-LIFE-009
++- **EARS statement**: WHEN the task list renders, THE SYSTEM SHALL show exactly the transition buttons valid for each row's current status (no-mutation observation case).
++- **Linked rule IDs**: R-LIFE-008
++- **Fixtures and inputs**: GET /tasks unfiltered (seeded tasks 1-4 span all four statuses).
++- **Observable assertions**: Row 1 shows only Start; row 2 only Submit; row 3 Approve+Reject; row 4 Reopen.
++- **Executable test IDs**: T-LIFE-009 (planned)
++
++## S-LIFE-010
++- **ID**: S-LIFE-010
++- **EARS statement**: WHEN GET /tasks/action is requested, THE SYSTEM SHALL respond HTTP 405 Method Not Allowed and write nothing (the endpoint implements POST only).
++- **Linked rule IDs**: R-LIFE-010
++- **Fixtures and inputs**: GET /tasks/action (with or without action/id params), authenticated.
++- **Observable assertions**: HTTP 405; task row count unchanged.
++- **Executable test IDs**: test_task_actions.ActionErrorBoundaryTests.test_s_act_020_action_rejects_get_method (executed, engineer)
++- **Note**: engineer provisional ID S-ACT-020 (their ACT family) — mapped to the analyst LIFE family per the established mapping (engineer ACT ~= analyst LIFE). Intended-requirement spec.
+diff --git a/specs/PROJ.md b/specs/PROJ.md
+new file mode 100644
+index 0000000..bfc2385
+--- /dev/null
++++ b/specs/PROJ.md
+@@ -0,0 +1,65 @@
++# PROJ — specifications
++
++## S-PROJ-001
++- **ID**: S-PROJ-001
++- **EARS statement**: WHEN GET /projects is requested, THE SYSTEM SHALL render all projects (ACTIVE and ARCHIVED) ordered by name with owner full name.
++- **Linked rule IDs**: R-PROJ-001
++- **Fixtures and inputs**: Login any user; GET /projects. Seeded projects 1 Apollo, 2 Borealis (ACTIVE), 3 Legacy Archive (ARCHIVED).
++- **Observable assertions**: HTTP 200; rows include all three names; 'Legacy Archive' row shows state ARCHIVED; order Apollo, Borealis, Legacy Archive.
++- **Executable test IDs**: T-PROJ-001 (planned)
++
++## S-PROJ-002
++- **ID**: S-PROJ-002
++- **EARS statement**: WHEN POST /projects action=archive targets an ACTIVE project, THE SYSTEM SHALL set its state to ARCHIVED and redirect to /projects.
++- **Linked rule IDs**: R-PROJ-002
++- **Fixtures and inputs**: POST action=archive&id=1.
++- **Observable assertions**: 302 /projects; GET /projects shows Apollo ARCHIVED.
++- **Executable test IDs**: T-PROJ-002 (planned)
++
++## S-PROJ-003
++- **ID**: S-PROJ-003
++- **EARS statement**: WHEN POST /projects action=archive targets an unknown or already-ARCHIVED project, THE SYSTEM SHALL redirect to /projects without error and without changing state.
++- **Linked rule IDs**: R-PROJ-002
++- **Fixtures and inputs**: POST action=archive&id=999; POST action=archive&id=3 (already ARCHIVED).
++- **Observable assertions**: 302 both times; project 3 still ARCHIVED; no new rows.
++- **Executable test IDs**: T-PROJ-003 (planned)
++
++## S-PROJ-004
++- **ID**: S-PROJ-004
++- **EARS statement**: WHEN POST /projects action=archive is sent without a numeric id, THE SYSTEM SHALL fail with HTTP 500 and change nothing (observed unhandled refusal).
++- **Linked rule IDs**: R-PROJ-003
++- **Fixtures and inputs**: POST action=archive (no id); POST action=archive&id=abc.
++- **Observable assertions**: HTTP 500; project states unchanged.
++- **Executable test IDs**: T-PROJ-004 (planned)
++
++## S-PROJ-005
++- **ID**: S-PROJ-005
++- **EARS statement**: WHEN POST /projects carries a blank name, THE SYSTEM SHALL respond HTTP 400 "Project name is required" and create nothing; WHEN the name is non-blank, THE SYSTEM SHALL create a project with state ACTIVE owned by the current user and redirect.
++- **Linked rule IDs**: R-PROJ-004
++- **Fixtures and inputs**: (a) POST name="   "; (b) POST name="  Beta  " description="d".
++- **Observable assertions**: (a) 400, no new row; (b) 302; GET /projects shows "Beta" (trimmed) state ACTIVE owner = acting user.
++- **Executable test IDs**: T-PROJ-005 (planned)
++
++## S-PROJ-006
++- **ID**: S-PROJ-006
++- **EARS statement**: WHEN POST /projects omits description, THE SYSTEM SHALL store NULL; WHEN description is empty string, THE SYSTEM SHALL store '' (boundary/null handling).
++- **Linked rule IDs**: R-PROJ-005
++- **Fixtures and inputs**: POST name=Gamma (no description); POST name=Delta&description=.
++- **Observable assertions**: Both create successfully; description column empty on screen for both (NULL and '' render identically; distinguish via API/DB if available — else record as screen-equivalent).
++- **Executable test IDs**: T-PROJ-006 (planned)
++
++## S-PROJ-007
++- **ID**: S-PROJ-007
++- **EARS statement**: WHEN a user clicks the Delete link for a project, THE SYSTEM SHALL return HTTP 404 because no handler is mapped to /projects/delete (defect D-001, observed).
++- **Linked rule IDs**: R-PROJ-006
++- **Fixtures and inputs**: Authenticated GET /projects/delete?id=1.
++- **Observable assertions**: HTTP 404; project 1 still exists and unchanged.
++- **Executable test IDs**: T-PROJ-007 (planned)
++
++## S-PROJ-008
++- **ID**: S-PROJ-008
++- **EARS statement**: WHEN a task is created or edited with projectId pointing at an ARCHIVED project, THE SYSTEM SHALL accept it (observed; no state check exists).
++- **Linked rule IDs**: R-PROJ-007
++- **Fixtures and inputs**: POST /tasks/form title=Ghost&projectId=3 (project 3 ARCHIVED).
++- **Observable assertions**: 302 to form?id=...&saved=1; task persisted with project_name 'Legacy Archive'.
++- **Executable test IDs**: T-PROJ-008 (planned)
+diff --git a/specs/QUERY.md b/specs/QUERY.md
+new file mode 100644
+index 0000000..020a598
+--- /dev/null
++++ b/specs/QUERY.md
+@@ -0,0 +1,77 @@
++# QUERY — specifications
++
++## S-QUERY-001
++- **ID**: S-QUERY-001
++- **EARS statement**: WHEN GET /tasks is requested with no filters, THE SYSTEM SHALL list every task ordered by updated_at descending (default sort), newest first.
++- **Linked rule IDs**: R-QUERY-001, R-QUERY-004
++- **Fixtures and inputs**: GET /tasks (seeded tasks 1-4 with staggered updated_at 09:00,12:00,15:00,18:00 — seed.sql:59-63).
++- **Observable assertions**: HTTP 200; row order 4,3,2,1 by default; all columns populated; task 4 due cell blank.
++- **Executable test IDs**: T-QUERY-001 (planned)
++
++## S-QUERY-002
++- **ID**: S-QUERY-002
++- **EARS statement**: WHEN GET /tasks?status=<one of the four statuses>, THE SYSTEM SHALL list only tasks in that status; WHEN status is empty THE SYSTEM SHALL list all; WHEN status is unknown THE SYSTEM SHALL list none and return 200 (no error).
++- **Linked rule IDs**: R-QUERY-002
++- **Fixtures and inputs**: status=DONE; status=; status=BOGUS.
++- **Observable assertions**: Only task 4 / all tasks / empty table respectively.
++- **Executable test IDs**: T-QUERY-002 (planned)
++
++## S-QUERY-003
++- **ID**: S-QUERY-003
++- **EARS statement**: WHEN GET /tasks?assignee=<id>, THE SYSTEM SHALL list only tasks assigned to that person; WHEN assignee is empty, all tasks; WHEN non-numeric, HTTP 500.
++- **Linked rule IDs**: R-QUERY-003
++- **Fixtures and inputs**: assignee=3 (tasks 1,2,3 seeded — seed.sql:18-20 all carry assignee_id 3); assignee=; assignee=abc.
++- **Observable assertions**: Rows 3,2,1 only (default updated_at DESC within the filter) / all / 500.
++- **Executable test IDs**: T-QUERY-003 (planned)
++- **Corrected (run 05)**: fixtures/observables enumerated the wrong seed rows — seed.sql:18-20 assigns tasks 1, 2 AND 3 to person 3, and the executed test asserts rows [3,2,1]; EARS statement unchanged.
++
++## S-QUERY-004
++- **ID**: S-QUERY-004
++- **EARS statement**: WHEN GET /tasks?sort=status, THE SYSTEM SHALL order rows by status then updated_at DESC; combined filters AND together (e.g. status=PENDING_APPROVAL&assignee=3).
++- **Linked rule IDs**: R-QUERY-004, R-QUERY-002, R-QUERY-003
++- **Fixtures and inputs**: sort=status; then status=PENDING_APPROVAL&assignee=3.
++- **Observable assertions**: Deterministic order for the seed set; combined query returns exactly task 3.
++- **Executable test IDs**: T-QUERY-004 (planned)
++
++## S-QUERY-005
++- **ID**: S-QUERY-005
++- **EARS statement**: WHEN GET /tasks?sort=priority, THE SYSTEM SHALL order HIGH before MEDIUM before LOW (semantic CASE order, not alphabetical), updated_at DESC within a group.
++- **Linked rule IDs**: R-QUERY-004
++- **Fixtures and inputs**: sort=priority over seeded tasks (HIGH 1,2; MEDIUM 3; LOW 4).
++- **Observable assertions**: Row order 2,1,3,4 (HIGH group newest-first: task 2 @12:00 before task 1 @09:00).
++- **Executable test IDs**: T-QUERY-005 (planned)
++- **Corrected (run 05)**: prior observable "Row order 1,2,3,4" contradicted the spec's own updated_at-DESC-within-group rule — task 2 @12:00 is newer than task 1 @09:00, so the HIGH group orders 2,1.
++
++## S-QUERY-006
++- **ID**: S-QUERY-006
++- **EARS statement**: WHEN sort is due, due_date, title, or id, THE SYSTEM SHALL apply the matching whitelisted clause; WHEN sort is unknown, THE SYSTEM SHALL silently use the default updated_at DESC with HTTP 200.
++- **Linked rule IDs**: R-QUERY-004
++- **Fixtures and inputs**: sort=due; sort=due_date; sort=title; sort=id; sort=BOGUS.
++- **Observable assertions**: Task 3 (earliest due 2026-06-10) first under due; title order; id ascending; BOGUS behaves like default with no error.
++- **Executable test IDs**: T-QUERY-006 (planned); test_task_list.TaskListSortTests.test_s_list_009_unknown_sort_token_falls_back_to_updated_desc (executed, engineer)
++- **Intendedness disputed (run 05)**: stated here as a characterization of observed behavior; the engineer labels the same behavior characterization and raises it as ambiguity D-009 (unknown sort: 400 vs silent fallback) — the "intended" wording is NOT a sourced requirement.
++
++## S-QUERY-007
++- **ID**: S-QUERY-007
++- **EARS statement**: WHEN the default sort is in effect after a mutation, THE SYSTEM SHALL show the mutated task first (updated_at refreshed on write).
++- **Linked rule IDs**: R-QUERY-001, R-LIFE-001
++- **Fixtures and inputs**: POST action=start&id=1 then GET /tasks.
++- **Observable assertions**: Task 1 appears at the top of the list.
++- **Executable test IDs**: T-QUERY-007 (planned)
++
++## S-QUERY-008
++- **ID**: S-QUERY-008
++- **EARS statement**: WHEN the task list renders, THE SYSTEM SHALL show the filter/sort toolbar with the six whitelisted sort options and reflect the current selection (render-only).
++- **Linked rule IDs**: R-QUERY-005
++- **Fixtures and inputs**: GET /tasks?sort=priority&status=OPEN.
++- **Observable assertions**: Priority option selected; OPEN option selected; options list exactly updated/status/priority/due/title/id.
++- **Executable test IDs**: T-QUERY-008 (planned)
++
++## S-QUERY-009
++- **ID**: S-QUERY-009
++- **EARS statement**: (characterization) WHEN a task title contains HTML markup and the task list renders, THE SYSTEM SHALL emit the markup unescaped into the HTML body (plain EL interpolation, no escaping).
++- **Linked rule IDs**: R-DATA-008, R-QUERY-006
++- **Fixtures and inputs**: POST /tasks/form with title `<script>alert(1)</script>` and projectId=1; then GET /tasks.
++- **Observable assertions**: HTML body contains the raw markup (no `&lt;`/`&gt;` entities) in the row title cell.
++- **Executable test IDs**: test_task_list.TaskFilterTests.test_s_list_024_task_titles_are_rendered_unescaped_in_html (executed, engineer; D-004 evidence)
++- **Intendedness disputed (run 05)**: recorded as observed behavior only; intendedness disputed under defect D-004 (stored-XSS candidate). The intended requirement (escaped output, e.g. JSTL c:out) is deliberately NOT written here as if sourced. Engineer provisional ID S-LIST-024; analyst QUERY family covers the engineer LIST family.

@@ -1,0 +1,86 @@
+cs-sandbox: ready: firecracker v1.17.0, guest kernel 7.2.5-200.fc44.x86_64, base filesystem 5.9 GiB
+created orchestrator-36f5ca10 (type=agent, engine=firecracker)
+  shell: ssh orchestrator-36f5ca10.task-tracker-05-36f5ca10
+  lent: fireworks api key (the credential stays on the host, in /home/rishi/.cs-keys/fireworks)
+  side calls: blocked to api.anthropic.com, api.fireworks.ai, api.openai.com, chatgpt.com, ab.chatgpt.com, models.opencode.ai (--block-side-calls=false to allow them)
+  snapshot: /home/rishi/.tmp/firecracker-deploy/runs/05/inputs/app -> ~/app (read-only, frozen at create)
+  snapshot: /home/rishi/.tmp/firecracker-deploy/runs/05/inputs/runtime -> ~/runtime (read-only, frozen at create)
+  repo:     ~/outputs on branch cs-sandbox/orchestrator-36f5ca10.task-tracker-05-36f5ca10
+cs-sandbox: ready: firecracker v1.17.0, guest kernel 7.2.5-200.fc44.x86_64, base filesystem 5.9 GiB
+created rule-analyst-36f5ca10 (type=agent, engine=firecracker)
+  shell: ssh rule-analyst-36f5ca10.task-tracker-05-36f5ca10
+  lent: fireworks api key (the credential stays on the host, in /home/rishi/.cs-keys/fireworks)
+  side calls: blocked to api.anthropic.com, api.fireworks.ai, api.openai.com, chatgpt.com, ab.chatgpt.com, models.opencode.ai (--block-side-calls=false to allow them)
+  snapshot: /home/rishi/.tmp/firecracker-deploy/runs/05/inputs/app -> ~/app (read-only, frozen at create)
+  snapshot: /home/rishi/.tmp/firecracker-deploy/runs/05/inputs/runtime -> ~/runtime (read-only, frozen at create)
+  repo:     ~/outputs on branch cs-sandbox/rule-analyst-36f5ca10.task-tracker-05-36f5ca10
+cs-sandbox: ready: firecracker v1.17.0, guest kernel 7.2.5-200.fc44.x86_64, base filesystem 5.9 GiB
+created test-engineer-36f5ca10 (type=agent, engine=firecracker)
+  shell: ssh test-engineer-36f5ca10.task-tracker-05-36f5ca10
+  lent: fireworks api key (the credential stays on the host, in /home/rishi/.cs-keys/fireworks)
+  side calls: blocked to api.anthropic.com, api.fireworks.ai, api.openai.com, chatgpt.com, ab.chatgpt.com, models.opencode.ai (--block-side-calls=false to allow them)
+  snapshot: /home/rishi/.tmp/firecracker-deploy/runs/05/inputs/app -> ~/app (read-only, frozen at create)
+  snapshot: /home/rishi/.tmp/firecracker-deploy/runs/05/inputs/runtime -> ~/runtime (read-only, frozen at create)
+  repo:     ~/outputs on branch cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10
+cs-sandbox: ready: firecracker v1.17.0, guest kernel 7.2.5-200.fc44.x86_64, base filesystem 5.9 GiB
+created verifier-36f5ca10 (type=agent, engine=firecracker)
+  shell: ssh verifier-36f5ca10.task-tracker-05-36f5ca10
+  lent: fireworks api key (the credential stays on the host, in /home/rishi/.cs-keys/fireworks)
+  side calls: blocked to api.anthropic.com, api.fireworks.ai, api.openai.com, chatgpt.com, ab.chatgpt.com, models.opencode.ai (--block-side-calls=false to allow them)
+  snapshot: /home/rishi/.tmp/firecracker-deploy/runs/05/inputs/app -> ~/app (read-only, frozen at create)
+  snapshot: /home/rishi/.tmp/firecracker-deploy/runs/05/inputs/runtime -> ~/runtime (read-only, frozen at create)
+  repo:     ~/outputs on branch cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10
+cs-campaign doctor — task-tracker-05
+
+member harness (the tools the members actually run):
+  [32mok[0m  member orchestrator runs the tools cs-sandbox v0.0.0-20261025044344-a0df4c558d44 ships (25 match)
+  [32mok[0m  member rule-analyst runs the tools cs-sandbox v0.0.0-20261025044344-a0df4c558d44 ships (25 match)
+  [32mok[0m  member test-engineer runs the tools cs-sandbox v0.0.0-20261025044344-a0df4c558d44 ships (25 match)
+  [32mok[0m  member verifier runs the tools cs-sandbox v0.0.0-20261025044344-a0df4c558d44 ships (25 match)
+
+instantiation (manifest, controls, guard, member CLIs):
+  [32mok[0m  manifest fidelity: 3 agents match the campaign record exactly
+  [32mok[0m  orchestrator controls installed (guest binary, doctrine)
+  [32mok[0m  guard fires: cs-claude-remote-output against rule-analyst (opencode) refused with the true diagnosis
+  [32mok[0m  member rule-analyst answers with its declared CLI (opencode) present
+  [32mok[0m  member test-engineer answers with its declared CLI (opencode) present
+  [32mok[0m  member verifier answers with its declared CLI (opencode) present
+
+All good — this campaign is wired as declared; dispatch with: cs-campaign send task-tracker-05
+Session:  task-tracker-05-36f5ca10bdfa7d53-orchestrator
+Running:  background (PID 3844958)
+Log:      /home/rishi/.cs-opencode-remote-logs/task-tracker-05-36f5ca10bdfa7d53-orchestrator.log
+Check:    cs-opencode-remote-output task-tracker-05-36f5ca10bdfa7d53-orchestrator
+Session:  task-tracker-05-36f5ca10bdfa7d53-rule-analyst
+Running:  background (PID 3845046)
+Log:      /home/rishi/.cs-opencode-remote-logs/task-tracker-05-36f5ca10bdfa7d53-rule-analyst.log
+Check:    cs-opencode-remote-output task-tracker-05-36f5ca10bdfa7d53-rule-analyst
+Session:  task-tracker-05-36f5ca10bdfa7d53-verifier
+Running:  background (PID 3845001)
+Log:      /home/rishi/.cs-opencode-remote-logs/task-tracker-05-36f5ca10bdfa7d53-verifier.log
+Check:    cs-opencode-remote-output task-tracker-05-36f5ca10bdfa7d53-verifier
+Session:  task-tracker-05-36f5ca10bdfa7d53-test-engineer
+Running:  background (PID 3845024)
+Log:      /home/rishi/.cs-opencode-remote-logs/task-tracker-05-36f5ca10bdfa7d53-test-engineer.log
+Check:    cs-opencode-remote-output task-tracker-05-36f5ca10bdfa7d53-test-engineer
+ok  readback orchestrator (opencode) read its briefing on model fireworks-ai/accounts/fireworks/models/glm-5p3-flash, header timeout 60s (model confirmed by the answering turn; the header timeout shows only when a call times out)
+      goal:  From scratch, discover the business rules of the frozen task-tracker-demo app (commit eee783057ec28d28fb36ec05484de9b4b40ceb9c), build an external real-HTTP Python test suite covering every operation family, independently verify it, and report honest coverage and findings by the deadline.
+      scope: I own whole-app integration, dispatching and adjudicating my three teammates' work, and the reports (run-summary.json, attempts.json) and findings/ledger.json; I must not implement tests myself, edit the frozen app or its build, or weaken tests to force passing.
+      owes:  The campaign requires me to dispatch, judge, and integrate teammate work, commit everything to my own branch and durable outputs, and close each dispatch with a reply; if I end a turn without replying or fail to commit, my unsaved reasoning and work are lost when my machine is destroyed at campaign end.
+ok  readback rule-analyst (opencode) read its briefing on model fireworks-ai/accounts/fireworks/models/glm-5p3-flash, header timeout 60s (model confirmed by the answering turn; the header timeout shows only when a call times out)
+      goal:  Analyze the task-tracker application source at ~/app to discover every rule family afresh and document them as stable-ID, source-cited, testable specifications so implementation and verification can proceed in parallel.
+      scope: I own rules/, specs/, rules/app-inventory.json, and evidence/analyst/ on my branch; I must not edit the application, own executable tests, or touch anything outside my branch and the campaign output directory.
+      owes:  Each dispatch must be closed with a cs-campaign-member reply and my work committed to my branch and written to ~/.local/share/cs-campaign/output, because the machine is destroyed at campaign end and uncommitted or unreplied work is lost.
+ok  readback test-engineer (opencode) read its briefing on model fireworks-ai/accounts/fireworks/models/glm-5p3-flash (confirmed by the answering turn)
+      goal:  As the test-engineer of campaign task-tracker-05, build a small, isolated, deterministic pytest suite (organized in non-overlapping family modules) that tests the task-tracker app against source-derived intended requirements and source-probed observed behavior, collecting coverage over the whole production denominator and reporting results, EARS-ID mappings, and defects to the orchestrator.
+      scope: I own tests/test_*.py, test helpers, reports/tests/ (including mapping.json), reports/coverage/, and evidence/test-engineer/ on my own branch, and I must not edit the application, the frozen POM/source/build, or anything outside those areas.
+      owes:  I must commit each accepted batch to my branch, write durable reports under ~/.local/share/cs-campaign/output, and close every dispatch with cs-campaign-member reply; if I stop without replying or committing, the work is treated as not done and my machine — the only place it exists — is destroyed at campaign end.
+ok  readback verifier (opencode) read its briefing on model fireworks-ai/accounts/fireworks/models/glm-5p3-flash (confirmed by the answering turn)
+      goal:  As the independent verifier of campaign task-tracker-05, I must run the submitted whole-app test suite against my own independently started runtime of the app at ~/app, reproduce and inspect its evidence per operation family, and honestly report executed coverage and gaps rather than grant blanket acceptance.
+      scope: I own evidence/verifier/ and reports/verification/ on my own branch cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10, and I must not author or modify submitted tests, rules, or app sources.
+      owes:  Every dispatch must be closed with cs-campaign-member reply and my work committed to my branch plus durable files in ~/.local/share/cs-campaign/output, because an unreplied turn reads as stopped and gets me prodded/continued, and anything uncommitted is destroyed when the machine is destroyed at campaign end.
+Session:  task-tracker-05-36f5ca10bdfa7d53-orchestrator
+Running:  background (PID 3850064)
+Log:      /home/rishi/.cs-opencode-remote-logs/task-tracker-05-36f5ca10bdfa7d53-orchestrator.log
+Check:    cs-opencode-remote-output task-tracker-05-36f5ca10bdfa7d53-orchestrator
+campaign task-tracker-05 created — mission m1 opened on the orchestrator (group task-tracker-05-36f5ca10)

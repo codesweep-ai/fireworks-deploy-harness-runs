@@ -1,0 +1,12 @@
+timestamp=2026-11-02T23:14:49.990Z level=INFO run=cdb4aa86 message="creating instance" directory=/home/rishi/.tmp/firecracker-deploy
+timestamp=2026-11-02T23:14:49.991Z level=INFO run=cdb4aa86 message=fromDirectory directory=/home/rishi/.tmp/firecracker-deploy
+timestamp=2026-11-02T23:14:50.019Z level=INFO run=cdb4aa86 message=bootstrapping directory=/home/rishi/.tmp/firecracker-deploy
+timestamp=2026-11-02T23:14:50.025Z level=INFO run=cdb4aa86 message=loading path=/home/rishi/.tmp/firecracker-deploy/runs/05/scratch/opencode/config/opencode/config.json
+timestamp=2026-11-02T23:14:50.026Z level=INFO run=cdb4aa86 message=loading path=/home/rishi/.tmp/firecracker-deploy/runs/05/scratch/opencode/config/opencode/opencode.json
+timestamp=2026-11-02T23:14:50.026Z level=INFO run=cdb4aa86 message=loading path=/home/rishi/.tmp/firecracker-deploy/runs/05/scratch/opencode/config/opencode/opencode.jsonc
+timestamp=2026-11-02T23:14:50.035Z level=INFO run=cdb4aa86 message=loading path=/home/rishi/.opencode/opencode.json
+timestamp=2026-11-02T23:14:50.035Z level=INFO run=cdb4aa86 message=loading path=/home/rishi/.opencode/opencode.jsonc
+timestamp=2026-11-02T23:14:50.150Z level=INFO run=cdb4aa86 message="all LSPs are disabled"
+timestamp=2026-11-02T23:14:50.151Z level=INFO run=cdb4aa86 message="all formatters are disabled"
+timestamp=2026-11-02T23:14:50.151Z level=INFO run=cdb4aa86 message=init
+timestamp=2026-11-02T23:14:50.696Z level=ERROR run=cdb4aa86 message="Failed to fetch models.dev" cause="Cause([Fail(HttpClientError: Transport error (GET https://models.opencode.ai/api.json) (cause: Error: Unable to connect. Is the computer able to access the url?))])"

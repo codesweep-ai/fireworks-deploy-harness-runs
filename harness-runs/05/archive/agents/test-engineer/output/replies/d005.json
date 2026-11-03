@@ -1,0 +1,13 @@
+{
+  "dispatch": "d005",
+  "phase": "done",
+  "note": "d005/e04 done (attempt 1). Commit **6dd956f** on cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10 — branch fast-forwarded to the integrated tree 065f18d first (refs/campaign/orchestrator was already in my clone; origin itself still publishes only main).\n\nMapping changes (tests/build_mapping.py + rebuilt reports/tests/mapping.json, no other files): test_s_api_014→S-API-008, test_s_act_020→S-LIFE-010, test_s_form_024→S-FORM-012 (the three ear:null tests the dispatch named); secondary links added as instructed: test_s_form_009→+S-FORM-011, test_s_list_024→+S-QUERY-009, test_s_api_012→+S-API-007. ACCEPTED_IDS extended to the 2b09f92 universe. S-QUERY-003/S-QUERY-005 conflict texts now quote the corrected observables ([3,2,1] / [2,1,3,4], matching the executed tests) and mark both conflicts resolved at 2b09f92; reconciled.commit → 065f18d with a d005 note.\n\nCounts: `python3 tests/build_mapping.py` → **137 mapped, 0 unmapped**; `python3 harness/runtime.py test` → **137 tests, OK** (27.2s).\n\nOne expected-count discrepancy, flagged not papered over: **2 tests remain ear:null** (dispatch expected 0) — test_s_auth_014 (cross-client session scoping) and test_s_proj_002 (archive-button render for archived rows). The 2b09f92 batch's 7 new specs cover neither behavior; fabricating links would corrupt the mapping, so they stay null in `unmappedAccepted`. Also noted: new S-API-006 names test_s_api_004 as its executable test (that test maps to S-API-002, same statement) — say the word and I'll add the secondary link. Details: ~/.local/share/cs-campaign/output/d005-mapping-sync.md\n",
+  "at": "2026-11-02T23:51:05.46704366Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "6dd956f84717570599ff1daa0c621ffe5fe57541",
+      "treeDiffersFromBase": true
+    }
+  ]
+}

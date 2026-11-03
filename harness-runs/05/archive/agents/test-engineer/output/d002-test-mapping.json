@@ -1,0 +1,1530 @@
+{
+  "provisional": true,
+  "note": "EARS ids are provisional S-<FAMILY>-NNN derived from the frozen app source (commit eee783057ec28d28fb36ec05484de9b4b40ceb9c) while analyst rule ids are pending; reconcile when the orchestrator passes accepted analyst ids. kind=characterization marks observed-behavior cases labelled separately from intended requirements.",
+  "families": {
+    "AUTH": "authentication/session/logout/access exemptions",
+    "PROJ": "projects list/create/archive/validation",
+    "FORM": "task form read/create/edit/validation/defaults/nullable fields",
+    "ACT": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+    "BULK": "bulk close empty/selected/mixed states/roles",
+    "LIST": "task status-assignee filters and every whitelisted/default sort",
+    "API": "public JSON API readback/filter/escaping/nulls"
+  },
+  "testCount": 129,
+  "unmapped": [],
+  "tests": [
+    {
+      "test": "test_api.ApiEscapingAndNullTests.test_s_api_010_null_assignee_and_due_date_serialize_as_json_null",
+      "ear": "S-API-010",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-010 \u2014 A task with no assignee and no due date serializes assigneeId and dueDate as JSON null.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiEscapingAndNullTests.test_s_api_011_quotes_and_backslashes_are_escaped_to_valid_json",
+      "ear": "S-API-011",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-011 \u2014 A title containing double quotes and backslashes is escaped in the JSON output; the payload parses and round-trips exactly.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiEscapingAndNullTests.test_s_api_012_html_special_characters_pass_through_unescaped",
+      "ear": "S-API-012",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "characterization",
+      "statement": "S-API-012 [characterization] \u2014 The hand-rolled esc() only escapes backslash and quote; HTML-significant characters (<, >, &) pass through raw. The payload is still valid JSON.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiEscapingAndNullTests.test_s_api_013_api_body_is_always_valid_json_even_with_hostile_titles",
+      "ear": "S-API-013",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-013 \u2014 The response body parses as JSON for a table mixing escaped, null-bearing and plain rows.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiEscapingAndNullTests.test_s_api_014_api_ignores_post_method",
+      "ear": "S-API-014",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-014 \u2014 The API servlet implements GET only; POST /api/tasks is rejected with 405 and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiFilterTests.test_s_api_006_status_filter_returns_only_matching_rows",
+      "ear": "S-API-006",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-006 \u2014 GET /api/tasks?status=DONE returns only DONE rows, still updated DESC ordered.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiFilterTests.test_s_api_007_status_filter_pending_approval",
+      "ear": "S-API-007",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-007 \u2014 GET /api/tasks?status=PENDING_APPROVAL returns only [3].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiFilterTests.test_s_api_008_unknown_status_value_returns_empty_array",
+      "ear": "S-API-008",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-008 \u2014 A status value matching nothing returns a valid empty JSON array, not an error.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiFilterTests.test_s_api_009_empty_status_filter_returns_all_rows",
+      "ear": "S-API-009",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-009 \u2014 An empty status parameter means no filter: all four rows.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiReadbackTests.test_s_api_001_api_returns_all_seed_tasks_without_authentication",
+      "ear": "S-API-001",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-001 \u2014 GET /api/tasks without a session answers 200 application/json with all four seed tasks (API is exempt from auth).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiReadbackTests.test_s_api_002_api_rows_carry_the_documented_field_set",
+      "ear": "S-API-002",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-002 \u2014 Each API row exposes exactly id, title, status, priority, assigneeId, projectId, dueDate, updatedAt.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiReadbackTests.test_s_api_003_api_readback_matches_persisted_seed_values",
+      "ear": "S-API-003",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-003 \u2014 API values match the seeded database state (straight DB readback, not UI rendering).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiReadbackTests.test_s_api_004_api_default_order_is_updated_desc",
+      "ear": "S-API-004",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-004 \u2014 GET /api/tasks lists rows ordered updated_at DESC: [4, 3, 2, 1] on seed data.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_api.ApiReadbackTests.test_s_api_005_api_reflects_persisted_mutations",
+      "ear": "S-API-005",
+      "family": "public JSON API readback/filter/escaping/nulls",
+      "kind": "intended-requirement",
+      "statement": "S-API-005 \u2014 The API is a read-back of the DB: a persisted status change and a created task appear on the next read.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ApiTaskServlet.java"
+      ]
+    },
+    {
+      "test": "test_auth.ApproveRoleTests.test_s_auth_018_member_cannot_approve_gets_403_without_mutation",
+      "ear": "S-AUTH-018",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-018 \u2014 MEMBER posting action=approve gets 403 and the task stays PENDING_APPROVAL.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.ApproveRoleTests.test_s_auth_019_viewer_cannot_approve_gets_403_without_mutation",
+      "ear": "S-AUTH-019",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-019 \u2014 VIEWER posting action=approve gets 403 and the task stays PENDING_APPROVAL.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.ApproveRoleTests.test_s_auth_020_member_cannot_reject_gets_403_without_mutation",
+      "ear": "S-AUTH-020",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-020 \u2014 MEMBER posting action=reject gets 403 and the task stays PENDING_APPROVAL.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.ApproveRoleTests.test_s_auth_021_manager_can_approve_persistent_effect",
+      "ear": "S-AUTH-021",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-021 \u2014 MANAGER posting action=approve is permitted and persists DONE.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.ApproveRoleTests.test_s_auth_022_admin_can_reject_persistent_effect",
+      "ear": "S-AUTH-022",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-022 \u2014 ADMIN posting action=reject is permitted and persists IN_PROGRESS.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.LoginTests.test_s_auth_010_login_page_renders_sign_in_form",
+      "ear": "S-AUTH-010",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-010 \u2014 GET /login renders the sign-in form with username and password fields.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.LoginTests.test_s_auth_011_login_with_valid_member_credentials_redirects_to_tasks",
+      "ear": "S-AUTH-011",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-011 \u2014 POST /login with valid credentials redirects to /tasks and establishes a session.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.LoginTests.test_s_auth_012_login_shows_error_for_wrong_password",
+      "ear": "S-AUTH-012",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-012 \u2014 POST /login with a wrong password re-renders the form with an error and grants no access (a container session id may be issued, but it authenticates nothing).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.LoginTests.test_s_auth_013_login_shows_error_for_unknown_username",
+      "ear": "S-AUTH-013",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-013 \u2014 POST /login with an unknown username shows the same generic error and grants no access.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.LoginTests.test_s_auth_014_login_session_is_scoped_to_one_client",
+      "ear": "S-AUTH-014",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-014 \u2014 A session created by one client does not authenticate a different client.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.LoginTests.test_s_auth_015_login_as_each_seeded_role_succeeds",
+      "ear": "S-AUTH-015",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-015 \u2014 Each seeded account (admin/mgr/dev/view) can authenticate.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.LogoutTests.test_s_auth_016_logout_invalidates_session_and_redirects_to_login",
+      "ear": "S-AUTH-016",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-016 \u2014 GET /logout invalidates the session and redirects to /login; the old cookie no longer authenticates.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.LogoutTests.test_s_auth_017_logout_without_session_redirects_to_login",
+      "ear": "S-AUTH-017",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-017 \u2014 GET /logout with no session still redirects to /login without an error.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_001_unauth_get_tasks_redirects_to_login",
+      "ear": "S-AUTH-001",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-001 \u2014 Unauthenticated GET /tasks is redirected to /login.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_002_unauth_get_task_form_redirects_to_login",
+      "ear": "S-AUTH-002",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-002 \u2014 Unauthenticated GET /tasks/form is redirected to /login.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_003_unauth_post_task_action_redirects_without_mutation",
+      "ear": "S-AUTH-003",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-003 \u2014 Unauthenticated POST /tasks/action is redirected to /login and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_004_unauth_get_projects_redirects_to_login",
+      "ear": "S-AUTH-004",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-004 \u2014 Unauthenticated GET /projects is redirected to /login.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_005_unauth_post_projects_redirects_without_mutation",
+      "ear": "S-AUTH-005",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-005 \u2014 Unauthenticated POST /projects is redirected to /login and creates no project.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_006_unauth_logout_redirects_to_login",
+      "ear": "S-AUTH-006",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-006 \u2014 Unauthenticated GET /logout is redirected to /login (logout itself is protected).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_007_api_tasks_is_exempt_from_authentication",
+      "ear": "S-AUTH-007",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-007 \u2014 GET /api/tasks answers 200 without a session (API is exempted by AuthFilter).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_008_styles_css_is_exempt_from_authentication",
+      "ear": "S-AUTH-008",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-008 \u2014 GET /styles.css answers 200 without a session (static CSS is exempted).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_auth.UnauthenticatedAccessTests.test_s_auth_009_index_redirects_to_login_for_anonymous",
+      "ear": "S-AUTH-009",
+      "family": "authentication/session/logout/access exemptions",
+      "kind": "intended-requirement",
+      "statement": "S-AUTH-009 \u2014 Unauthenticated GET / (welcome page) is redirected to /login like other protected paths.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/AuthFilter.java",
+        "src/main/java/com/acme/tracker/web/LoginServlet.java",
+        "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+        "src/main/webapp/WEB-INF/web.xml"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_001_bulk_close_without_ids_redirects_and_mutates_nothing",
+      "ear": "S-BULK-001",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "intended-requirement",
+      "statement": "S-BULK-001 \u2014 POSTing bulkClose with no ids redirects to /tasks and leaves every task untouched.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_002_bulk_close_single_selected_open_task",
+      "ear": "S-BULK-002",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "intended-requirement",
+      "statement": "S-BULK-002 \u2014 bulkClose with one selected OPEN task persists exactly that task as DONE.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_003_bulk_close_all_selected_tasks",
+      "ear": "S-BULK-003",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "intended-requirement",
+      "statement": "S-BULK-003 \u2014 bulkClose with all four tasks selected closes every non-DONE task (statuses OPEN, IN_PROGRESS, PENDING_APPROVAL all become DONE).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_004_bulk_close_skips_already_done_tasks",
+      "ear": "S-BULK-004",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "intended-requirement",
+      "statement": "S-BULK-004 \u2014 bulkClose only writes status<>'DONE': a mixed selection leaves an already-DONE task untouched (status and updated_at unchanged).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_005_bulk_close_mixed_states_closes_only_non_done",
+      "ear": "S-BULK-005",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "intended-requirement",
+      "statement": "S-BULK-005 \u2014 bulkClose over a mixed-state selection (OPEN + IN_PROGRESS + PENDING_APPROVAL + DONE) persists DONE for the three non-DONE rows.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_006_bulk_close_with_unknown_ids_ignores_them",
+      "ear": "S-BULK-006",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "intended-requirement",
+      "statement": "S-BULK-006 \u2014 bulkClose with nonexistent ids mixed into a real selection closes the real tasks and ignores the unknown ids without error.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_007_bulk_close_only_unknown_ids_is_a_safe_noop",
+      "ear": "S-BULK-007",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "intended-requirement",
+      "statement": "S-BULK-007 \u2014 bulkClose with only nonexistent ids redirects without error and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_008_bulk_close_with_malformed_id_yields_500",
+      "ear": "S-BULK-008",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "characterization",
+      "statement": "S-BULK-008 [characterization] \u2014 bulkClose with a non-numeric id (abc) surfaces a 500 (uncaught NumberFormatException).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_bulk_close.BulkCloseTests.test_s_bulk_009_bulk_close_requires_authentication",
+      "ear": "S-BULK-009",
+      "family": "bulk close empty/selected/mixed states/roles",
+      "kind": "intended-requirement",
+      "statement": "S-BULK-009 \u2014 bulkClose without a session is redirected to /login and closes nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectArchiveTests.test_s_proj_010_archive_active_project_persists_archived_state",
+      "ear": "S-PROJ-009",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-009 \u2014 POST /projects action=archive on an ACTIVE project persists state ARCHIVED and redirects.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectArchiveTests.test_s_proj_011_archive_is_idempotent_guarded_to_active_state",
+      "ear": "S-PROJ-010",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-010 \u2014 Archiving an already-ARCHIVED project is a guarded no-op (state stays ARCHIVED, no error).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectArchiveTests.test_s_proj_012_archive_unknown_project_id_redirects_without_error",
+      "ear": "S-PROJ-011",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-011 \u2014 Archiving a nonexistent project id redirects with no visible error and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectArchiveTests.test_s_proj_013_archive_with_malformed_id_yields_500_error_page",
+      "ear": "S-PROJ-012",
+      "family": "projects list/create/archive/validation",
+      "kind": "characterization",
+      "statement": "S-PROJ-012 [characterization] \u2014 Archiving with a non-numeric id (abc) surfaces a 500 server error (uncaught NumberFormatException).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectArchiveTests.test_s_proj_014_projects_delete_link_targets_an_unmapped_route",
+      "ear": "S-PROJ-013",
+      "family": "projects list/create/archive/validation",
+      "kind": "characterization",
+      "statement": "S-PROJ-013 [characterization] \u2014 The projects page renders a Delete link to /projects/delete, but no servlet is mapped there; following it yields 404. Defect candidate: dangling destructive affordance.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectCreateTests.test_s_proj_003_create_project_persists_active_project_owned_by_current_user",
+      "ear": "S-PROJ-003",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-003 \u2014 POST /projects with a name creates an ACTIVE project owned by the signed-in user and redirects to /projects.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectCreateTests.test_s_proj_004_create_project_trims_surrounding_whitespace_from_name",
+      "ear": "S-PROJ-004",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-004 \u2014 A project name with surrounding whitespace is trimmed before persisting.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectCreateTests.test_s_proj_005_create_project_without_name_is_refused_with_400",
+      "ear": "S-PROJ-005",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-005 \u2014 POST /projects without a name is refused with 400 and persists nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectCreateTests.test_s_proj_006_create_project_with_whitespace_only_name_is_refused_with_400",
+      "ear": "S-PROJ-006",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-006 \u2014 POST /projects with a whitespace-only name is refused with 400 and persists nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectCreateTests.test_s_proj_007_create_project_with_omitted_name_field_is_refused_with_400",
+      "ear": "S-PROJ-007",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-007 \u2014 POST /projects with no name field at all (name=null) is refused with 400 and persists nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectCreateTests.test_s_proj_008_create_project_without_description_persists_null_description",
+      "ear": "S-PROJ-008",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-008 \u2014 Creating a project with no description persists a NULL description.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectCreateTests.test_s_proj_009_created_project_appears_in_name_ordered_list",
+      "ear": "S-PROJ-009",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-009 \u2014 A newly created project is listed in correct name order on /projects.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectListTests.test_s_proj_001_projects_page_lists_seeded_projects_ordered_by_name",
+      "ear": "S-PROJ-001",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-001 \u2014 GET /projects lists all seeded projects in name order with state and owner.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_projects.ProjectListTests.test_s_proj_002_projects_page_marks_archived_project_without_archive_button",
+      "ear": "S-PROJ-002",
+      "family": "projects list/create/archive/validation",
+      "kind": "intended-requirement",
+      "statement": "S-PROJ-002 \u2014 The projects page shows the Archive action only for ACTIVE projects.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+        "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+        "src/main/webapp/WEB-INF/jsp/projects.jsp"
+      ]
+    },
+    {
+      "test": "test_task_actions.ActionErrorBoundaryTests.test_s_act_015_action_on_nonexistent_task_returns_404_without_mutation",
+      "ear": "S-ACT-015",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-015 \u2014 Any action for a nonexistent task id returns 404 \"No such task\" and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.ActionErrorBoundaryTests.test_s_act_016_unknown_action_returns_400_without_mutation",
+      "ear": "S-ACT-016",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-016 \u2014 An unknown action returns 400 \"Unknown action\" and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.ActionErrorBoundaryTests.test_s_act_017_missing_action_returns_400",
+      "ear": "S-ACT-017",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "characterization",
+      "statement": "S-ACT-017 [characterization] \u2014 POSTing /tasks/action with no action parameter returns 400 \"Unknown action: null\".",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.ActionErrorBoundaryTests.test_s_act_018_malformed_task_id_yields_500",
+      "ear": "S-ACT-018",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "characterization",
+      "statement": "S-ACT-018 [characterization] \u2014 A non-numeric task id (abc) surfaces a 500 (uncaught NumberFormatException before the 404 check).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.ActionErrorBoundaryTests.test_s_act_019_missing_task_id_yields_500",
+      "ear": "S-ACT-019",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "characterization",
+      "statement": "S-ACT-019 [characterization] \u2014 POSTing an action with no id parameter surfaces a 500 (NumberFormatException on null).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.ActionErrorBoundaryTests.test_s_act_020_action_rejects_get_method",
+      "ear": "S-ACT-020",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-020 \u2014 GET /tasks/action is not supported (the servlet only implements POST).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.StateGuardTests.test_s_act_009_start_refused_when_not_open_409_without_mutation",
+      "ear": "S-ACT-009",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-009 \u2014 action=start on an IN_PROGRESS task returns 409 with the guard message and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.StateGuardTests.test_s_act_010_submit_refused_when_not_in_progress_409",
+      "ear": "S-ACT-010",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-010 \u2014 action=submit on an OPEN task returns 409 and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.StateGuardTests.test_s_act_011_approve_refused_when_not_pending_409",
+      "ear": "S-ACT-011",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-011 \u2014 action=approve on an OPEN task returns 409 and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.StateGuardTests.test_s_act_012_reject_refused_when_done_409",
+      "ear": "S-ACT-012",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-012 \u2014 action=reject on a DONE task returns 409 and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.StateGuardTests.test_s_act_013_reopen_refused_when_not_done_409",
+      "ear": "S-ACT-013",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-013 \u2014 action=reopen on an OPEN task returns 409 and mutates nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.StateGuardTests.test_s_act_014_all_transitions_refused_on_done_task_except_reopen",
+      "ear": "S-ACT-014",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-014 \u2014 A DONE task refuses start/submit with 409; only reopen applies (approve/reject need PENDING_APPROVAL).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.TaskLifecycleTests.test_s_act_001_start_moves_open_task_to_in_progress_and_redirects_to_list",
+      "ear": "S-ACT-001",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-001 \u2014 action=start on an OPEN task persists IN_PROGRESS and redirects to /tasks.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.TaskLifecycleTests.test_s_act_002_submit_moves_in_progress_task_to_pending_approval",
+      "ear": "S-ACT-002",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-002 \u2014 action=submit on an IN_PROGRESS task persists PENDING_APPROVAL.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.TaskLifecycleTests.test_s_act_003_approve_moves_pending_task_to_done",
+      "ear": "S-ACT-003",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-003 \u2014 action=approve by an approver on a PENDING_APPROVAL task persists DONE.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.TaskLifecycleTests.test_s_act_004_reject_moves_pending_task_back_to_in_progress",
+      "ear": "S-ACT-004",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-004 \u2014 action=reject by an approver on a PENDING_APPROVAL task persists IN_PROGRESS.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.TaskLifecycleTests.test_s_act_005_reopen_moves_done_task_back_to_open",
+      "ear": "S-ACT-005",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-005 \u2014 action=reopen on a DONE task persists OPEN.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.TaskLifecycleTests.test_s_act_006_full_lifecycle_walk_persists_each_step",
+      "ear": "S-ACT-006",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-006 \u2014 A task can walk the whole lifecycle: start, submit, approve, reopen, then start again.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.TaskLifecycleTests.test_s_act_007_action_bumps_updated_at",
+      "ear": "S-ACT-007",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-007 \u2014 A successful transition refreshes the task's updated_at timestamp.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_actions.TaskLifecycleTests.test_s_act_008_return_detail_redirects_to_task_detail_page",
+      "ear": "S-ACT-008",
+      "family": "task start/submit/approve/reject/reopen/state guards/not-found/unknown actions",
+      "kind": "intended-requirement",
+      "statement": "S-ACT-008 \u2014 A successful action with return=detail redirects to /tasks/form?id=<id> instead of the list.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_007_create_minimal_task_defaults_status_priority_and_nullables",
+      "ear": "S-FORM-007",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-007 \u2014 POST /tasks/form with only title+projectId persists status OPEN, priority MEDIUM, and NULL assignee/due date, then redirects to the saved task's detail.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_008_create_full_task_persists_every_field",
+      "ear": "S-FORM-008",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-008 \u2014 POST /tasks/form with every field persists title, description, priority, assignee, project and due date.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_009_create_trims_surrounding_whitespace_from_title",
+      "ear": "S-FORM-009",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-009 \u2014 A task title with surrounding whitespace is trimmed before persisting.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_010_create_with_blank_title_is_refused_without_mutation",
+      "ear": "S-FORM-010",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-010 \u2014 POST /tasks/form with an empty title re-renders the form with \"Title is required\" and persists nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_011_create_with_whitespace_only_title_is_refused_without_mutation",
+      "ear": "S-FORM-011",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-011 \u2014 A whitespace-only title is refused like an empty one and persists nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_012_create_without_project_is_refused_without_mutation",
+      "ear": "S-FORM-012",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-012 \u2014 POST /tasks/form without projectId is refused with \"A task must belong to an existing project\" and persists nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_013_create_with_unknown_project_is_refused_without_mutation",
+      "ear": "S-FORM-013",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-013 \u2014 A projectId that does not exist is refused with the project error and persists nothing.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_014_create_with_malformed_project_id_yields_500",
+      "ear": "S-FORM-014",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "characterization",
+      "statement": "S-FORM-014 [characterization] \u2014 A non-numeric projectId (abc) surfaces a 500 before validation can run.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_015_create_with_malformed_due_date_yields_500",
+      "ear": "S-FORM-015",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "characterization",
+      "statement": "S-FORM-015 [characterization] \u2014 A non-ISO dueDate (not-a-date) surfaces a 500 (uncaught IllegalArgumentException).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_016_create_with_unknown_assignee_violates_fk_yields_500",
+      "ear": "S-FORM-016",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "characterization",
+      "statement": "S-FORM-016 [characterization] \u2014 A nonexistent assigneeId surfaces a 500 (FK violation wrapped in a RuntimeException); no task is created.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskCreateTests.test_s_form_017_new_task_is_open_even_when_status_field_is_posted",
+      "ear": "S-FORM-017",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-017 \u2014 New tasks always start OPEN; there is no way to create a task directly in another status.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskEditTests.test_s_form_018_edit_persists_field_changes_and_redirects_to_detail",
+      "ear": "S-FORM-018",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-018 \u2014 POST /tasks/form with an existing id updates title, description, priority, assignee and due date, then redirects to that task's detail with saved=1.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskEditTests.test_s_form_019_edit_preserves_status",
+      "ear": "S-FORM-019",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-019 \u2014 Editing a task never changes its status (an IN_PROGRESS task stays IN_PROGRESS).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskEditTests.test_s_form_020_edit_does_not_move_project",
+      "ear": "S-FORM-020",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-020 \u2014 Editing keeps the original project even when a different projectId is posted (update() never writes project_id).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskEditTests.test_s_form_021_edit_can_clear_assignee_and_due_date",
+      "ear": "S-FORM-021",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-021 \u2014 Posting empty assignee and due date on edit persists NULLs (fields are nullable).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskEditTests.test_s_form_022_edit_with_blank_title_is_refused_without_mutation",
+      "ear": "S-FORM-022",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-022 \u2014 Editing with an empty title is refused with \"Title is required\" and leaves the task untouched.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskEditTests.test_s_form_023_edit_with_unknown_project_is_refused_without_mutation",
+      "ear": "S-FORM-023",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-023 \u2014 Editing with a nonexistent projectId is refused and leaves the task untouched.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskEditTests.test_s_form_024_edit_nonexistent_id_creates_nothing",
+      "ear": "S-FORM-024",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "characterization",
+      "statement": "S-FORM-024 [characterization] \u2014 POSTing a form with id=999 and valid fields runs an UPDATE that matches no rows: no error, no new task, no mutation.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskFormDisplayTests.test_s_form_001_blank_form_renders_new_task_with_defaults",
+      "ear": "S-FORM-001",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-001 \u2014 GET /tasks/form without id renders a blank \"New task\" form with all people and projects offered.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskFormDisplayTests.test_s_form_002_form_with_id_prefills_existing_task",
+      "ear": "S-FORM-002",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-002 \u2014 GET /tasks/form?id=1 renders the task detail pre-filled with the persisted values.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskFormDisplayTests.test_s_form_003_form_with_unknown_id_renders_blank_new_task_form",
+      "ear": "S-FORM-003",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "characterization",
+      "statement": "S-FORM-003 [characterization] \u2014 GET /tasks/form?id=999 silently renders a blank \"New task\" form instead of 404.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskFormDisplayTests.test_s_form_004_form_with_malformed_id_yields_500",
+      "ear": "S-FORM-004",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "characterization",
+      "statement": "S-FORM-004 [characterization] \u2014 GET /tasks/form?id=abc surfaces a 500 server error (uncaught NumberFormatException).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskFormDisplayTests.test_s_form_005_saved_banner_shown_after_redirect_with_saved_flag",
+      "ear": "S-FORM-005",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "intended-requirement",
+      "statement": "S-FORM-005 \u2014 The form page shows a Saved banner when redirected with saved=1 after a successful save.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_form.TaskFormDisplayTests.test_s_form_006_empty_id_parameter_renders_blank_form",
+      "ear": "S-FORM-006",
+      "family": "task form read/create/edit/validation/defaults/nullable fields",
+      "kind": "characterization",
+      "statement": "S-FORM-006 [characterization] \u2014 GET /tasks/form?id= (present but empty) is treated as \"no id\": a blank New task form renders.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/task-form.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_012_status_filter_open_returns_only_open_tasks",
+      "ear": "S-LIST-012",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-012 \u2014 GET /tasks?status=OPEN returns only the OPEN task [1].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_013_status_filter_in_progress",
+      "ear": "S-LIST-013",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-013 \u2014 GET /tasks?status=IN_PROGRESS returns only [2].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_014_status_filter_pending_approval",
+      "ear": "S-LIST-014",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-014 \u2014 GET /tasks?status=PENDING_APPROVAL returns only [3].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_015_status_filter_done",
+      "ear": "S-LIST-015",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-015 \u2014 GET /tasks?status=DONE returns only [4].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_016_unknown_status_value_returns_empty_list",
+      "ear": "S-LIST-016",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-016 \u2014 A status value outside the enum (e.g. CANCELLED) yields an empty list, not an error.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_017_empty_status_filter_returns_all_tasks",
+      "ear": "S-LIST-017",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-017 \u2014 An empty status parameter means no filter: all four tasks, default order.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_018_assignee_filter_returns_that_users_tasks_only",
+      "ear": "S-LIST-018",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-018 \u2014 GET /tasks?assignee=3 returns tasks 1, 2, 3 in updated DESC order [3, 2, 1].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_019_assignee_filter_for_admin",
+      "ear": "S-LIST-019",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-019 \u2014 GET /tasks?assignee=1 returns only task 4 (Ada's single assignment).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_020_assignee_filter_unknown_id_returns_empty",
+      "ear": "S-LIST-020",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-020 \u2014 GET /tasks?assignee=999 returns an empty list (no such person).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_021_combined_status_and_assignee_filter",
+      "ear": "S-LIST-021",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-021 \u2014 status and assignee combine conjunctively: status=IN_PROGRESS&assignee=3 returns [2].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_022_combined_filter_matching_nothing_returns_empty",
+      "ear": "S-LIST-022",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-022 \u2014 status=DONE&assignee=3 matches no task and yields an empty list without error.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_023_malformed_assignee_filter_yields_500",
+      "ear": "S-LIST-023",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "characterization",
+      "statement": "S-LIST-023 [characterization] \u2014 assignee=abc surfaces a 500 (uncaught NumberFormatException in TaskListServlet).",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_024_task_titles_are_rendered_unescaped_in_html",
+      "ear": "S-LIST-024",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "characterization",
+      "statement": "S-LIST-024 [characterization] \u2014 A task title containing HTML (<b>\u2026) is rendered raw by the list JSP (EL output is not escaped). Defect candidate: stored XSS via task title.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_025_empty_sort_parameter_uses_the_default_order",
+      "ear": "S-LIST-025",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "characterization",
+      "statement": "S-LIST-025 [characterization] \u2014 sort= (empty string) is treated as the default updated DESC order and the page labels the active sort \"updated\".",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskFilterTests.test_s_list_026_empty_assignee_parameter_means_no_filter",
+      "ear": "S-LIST-026",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-026 \u2014 assignee= (empty string) applies no assignee filter: all four tasks in default order.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_001_default_list_is_most_recently_updated_first",
+      "ear": "S-LIST-001",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-001 \u2014 GET /tasks with no sort parameter lists all tasks ordered updated_at DESC: [4, 3, 2, 1].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_002_sort_updated_equals_default",
+      "ear": "S-LIST-002",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-002 \u2014 sort=updated is an explicit whitelisted token equal to the default order: [4, 3, 2, 1].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_003_sort_status_orders_alphabetically_with_updated_tiebreak",
+      "ear": "S-LIST-003",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-003 \u2014 sort=status orders by status alphabetically (DONE, IN_PROGRESS, OPEN, PENDING_APPROVAL), updated DESC within: [4, 2, 1, 3].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_004_sort_priority_is_semantic_high_medium_low",
+      "ear": "S-LIST-004",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-004 \u2014 sort=priority orders HIGH before MEDIUM before LOW (semantic, not alphabetical), updated DESC within: [2, 1, 3, 4].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_005_sort_due_puts_null_due_dates_last",
+      "ear": "S-LIST-005",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-005 \u2014 sort=due orders due_date ascending with NULL last, updated DESC within: [3, 1, 2, 4].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_006_sort_due_date_token_is_whitelisted_like_due",
+      "ear": "S-LIST-006",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-006 \u2014 sort=due_date is an accepted alias of sort=due and produces the same order: [3, 1, 2, 4].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_007_sort_title_orders_alphabetically_with_id_tiebreak",
+      "ear": "S-LIST-007",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-007 \u2014 sort=title orders by title alphabetically then id: [4, 1, 3, 2].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_008_sort_id_orders_by_identifier",
+      "ear": "S-LIST-008",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-008 \u2014 sort=id orders by identifier ascending: [1, 2, 3, 4].",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_009_unknown_sort_token_falls_back_to_updated_desc",
+      "ear": "S-LIST-009",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "characterization",
+      "statement": "S-LIST-009 [characterization] \u2014 A non-whitelisted sort token (sort=; DROP TABLE task) silently falls back to the default updated DESC order instead of erroring.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_010_mutation_bumps_task_to_top_of_default_order",
+      "ear": "S-LIST-010",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-010 \u2014 After a transition refreshes a task's updated_at, that task leads the default (updated DESC) list.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    },
+    {
+      "test": "test_task_list.TaskListOrderTests.test_s_list_011_list_shows_all_columns_for_each_row",
+      "ear": "S-LIST-011",
+      "family": "task status-assignee filters and every whitelisted/default sort",
+      "kind": "intended-requirement",
+      "statement": "S-LIST-011 \u2014 Each list row shows id, title, project name, assignee name, status, priority and due date.",
+      "sources": [
+        "src/main/java/com/acme/tracker/web/TaskListServlet.java",
+        "src/main/java/com/acme/tracker/dao/TaskDao.java",
+        "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+      ]
+    }
+  ]
+}

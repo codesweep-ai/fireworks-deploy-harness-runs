@@ -1,0 +1,14 @@
+{
+  "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+  "seats": [
+    "orchestrator",
+    "rule-analyst",
+    "test-engineer",
+    "verifier"
+  ],
+  "fireworksContextTokens": 1048576,
+  "opencodeCatalog": "listed as active with 1048573 context tokens",
+  "opencodeLiveCall": "passed; served exact model and returned OK",
+  "reason": "One catalogued model across all seats; DeepSeek 1017 omitted from installed catalog despite a successful direct call",
+  "credentials": "Host credential used for smoke call; no credential content copied into run 05"
+}

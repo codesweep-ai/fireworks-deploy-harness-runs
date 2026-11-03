@@ -1,0 +1,13 @@
+{
+  "dispatch": "d006",
+  "phase": "done",
+  "note": "8d2b3ce8eba2a0d68722980ce7eddcf22d2e80c4\n\nd006 final mapping sync done as dispatched: test_s_auth_014 -\u003e [\"S-AUTH-004\"], test_s_proj_002 -\u003e [\"S-PROJ-001\"], orphan notes replaced with analyst-v3-adjudication link-basis notes; `python3 tests/build_mapping.py` rebuilt -\u003e 137 mapped, 0 ear:null. Mapping-only, no test changes, no suite rerun. Note: refs/campaign/orchestrator (8d5045e) was not fetchable from my clone, so the adjudication basis was taken from the dispatch text itself.\n",
+  "at": "2026-11-02T23:58:04.018356526Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "8d2b3ce8eba2a0d68722980ce7eddcf22d2e80c4",
+      "treeDiffersFromBase": true
+    }
+  ]
+}

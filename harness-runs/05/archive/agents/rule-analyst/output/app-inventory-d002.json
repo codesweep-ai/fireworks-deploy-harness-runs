@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "run": "05",
+  "generatedBy": "rule-analyst",
+  "applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "sourceRoot": "~/app (frozen read-only copy)",
+  "defectLedger": "findings/ledger.json",
+  "notes": [
+    "All citations are file:line into the frozen app at commit eee783057ec28d28fb36ec05484de9b4b40ceb9c.",
+    "No authorization exists anywhere except the approve/reject role gate. Do not infer VIEWER restrictions, archival-state restrictions, or approval policy on other paths.",
+    "Execution evidence is supplied by test-engineer/verifier; all test IDs here are planned."
+  ],
+  "routes": [
+    {
+      "route": "/login",
+      "handler": "com.acme.tracker.web.LoginServlet",
+      "mapping": "src/main/webapp/WEB-INF/web.xml:26-33",
+      "authExempt": true,
+      "methods": {
+        "GET": "renders WEB-INF/jsp/login.jsp (LoginServlet.java:17-20)",
+        "POST": "params username,password; authenticate via plaintext SQL compare (PersonDao.java:16-29); success -> session attr user, 302 /tasks (LoginServlet.java:23-35); failure -> 200 re-render login.jsp with error 'Invalid credentials' (LoginServlet.java:28-31)"
+      },
+      "validation": "none server-side beyond the DB lookup; null params simply fail the lookup"
+    },
+    {
+      "route": "/logout",
+      "handler": "com.acme.tracker.web.LogoutServlet",
+      "mapping": "src/main/webapp/WEB-INF/web.xml:35-42",
+      "authExempt": false,
+      "methods": {
+        "GET": "invalidates session if present, 302 /login (LogoutServlet.java:12-18)"
+      },
+      "validation": "safe with no session (getSession(false), LogoutServlet.java:13)"
+    },
+    {
+      "route": "/tasks",
+      "handler": "com.acme.tracker.web.TaskListServlet",
+      "mapping": "src/main/webapp/WEB-INF/web.xml:44-51",
+      "authExempt": false,
+      "methods": {
+        "GET": "params status,assignee,sort; delegates to TaskDao.search (TaskListServlet.java:24-32); forwards tasks.jsp with statusFilter and sortBy attrs (TaskListServlet.java:34-37)"
+      },
+      "filters": {
+        "status": "exact-match WHERE t.status = ? when non-empty (TaskDao.java:44-47); any unknown value yields empty list, no error",
+        "assignee": "empty string treated as no filter; non-numeric -> HTTP 500 NumberFormatException (TaskListServlet.java:31)"
+      },
+      "sortTokens": {
+        "updated": "t.updated_at DESC (default; also explicit token) (TaskDao.java:171)",
+        "status": "t.status, t.updated_at DESC (TaskDao.java:155-157)",
+        "priority": "semantic CASE HIGH=0,MEDIUM=1,else 2, then t.updated_at DESC (TaskDao.java:158-161)",
+        "due": "t.due_date, t.updated_at DESC (TaskDao.java:162-164)",
+        "due_date": "alias of due (TaskDao.java:162)",
+        "title": "t.title, t.id (TaskDao.java:165-167)",
+        "id": "t.id (TaskDao.java:168-170)",
+        "unknown-or-missing": "falls back to default t.updated_at DESC; sort token is whitelisted, never concatenated (TaskDao.java:56,154-172)"
+      }
+    },
+    {
+      "route": "/tasks/form",
+      "handler": "com.acme.tracker.web.TaskFormServlet",
+      "mapping": "src/main/webapp/WEB-INF/web.xml:53-60",
+      "authExempt": false,
+      "methods": {
+        "GET": "optional id param: task attr set via findById else blank new-task form; always loads projects + people for selects (TaskFormServlet.java:26-35); unknown id renders 'New task' (task-form.jsp:27 c:otherwise); non-numeric id -> HTTP 500",
+        "POST": "create when id absent, edit when id present (TaskFormServlet.java:65-72)"
+      },
+      "validation": {
+        "title": "required after trim -> 200 re-render with 'Title is required' (TaskFormServlet.java:41-48,85-87)",
+        "projectId": "must be present and exist -> 200 re-render with 'A task must belong to an existing project' (TaskFormServlet.java:50-53); non-numeric -> HTTP 500; NO state check so ARCHIVED projects accepted (ProjectDao.java:45-55)",
+        "priority": "no servlet validation; defaults MEDIUM when absent/empty (TaskFormServlet.java:58,89-91); arbitrary string -> DB CHECK violation -> HTTP 500 (schema.sql:34-35)",
+        "assigneeId": "empty -> NULL (TaskFormServlet.java:60-61); non-numeric -> HTTP 500; nonexistent id -> FK violation -> HTTP 500",
+        "dueDate": "empty -> NULL (TaskDao.java:182-188); malformed ISO date -> IllegalArgumentException -> HTTP 500",
+        "description": "stored as-is; absent -> NULL, empty string -> empty string (TaskFormServlet.java:57)",
+        "status": "always OPEN on create (TaskFormServlet.java:66); never changed on edit (TaskDao.java:97-112)"
+      },
+      "redirect": "302 /tasks/form?id=<savedId>&saved=1; JSP shows 'Saved.' banner when param.saved=1 (TaskFormServlet.java:74; task-form.jsp:29)"
+    },
+    {
+      "route": "/tasks/action",
+      "handler": "com.acme.tracker.web.TaskActionServlet",
+      "mapping": "src/main/webapp/WEB-INF/web.xml:62-69",
+      "authExempt": false,
+      "methods": {
+        "POST": "param action drives a state machine (TaskActionServlet.java:23-74)"
+      },
+      "actions": {
+        "start": "requires current OPEN else 409; -> IN_PROGRESS (TaskActionServlet.java:40-43)",
+        "submit": "requires current IN_PROGRESS else 409; -> PENDING_APPROVAL (TaskActionServlet.java:44-47)",
+        "approve": "role-gated ADMIN/MANAGER (403 otherwise) + requires current PENDING_APPROVAL else 409; -> DONE (TaskActionServlet.java:48-52; AuthFilter.java:40-46; Role.java:12-14)",
+        "reject": "role-gated ADMIN/MANAGER (403 otherwise) + requires current PENDING_APPROVAL else 409; -> IN_PROGRESS (TaskActionServlet.java:53-57)",
+        "reopen": "requires current DONE else 409; -> OPEN (TaskActionServlet.java:58-61)",
+        "bulkClose": "see bulkClose section; no role gate",
+        "unknown-or-null": "HTTP 400 'Unknown action: <action>' (TaskActionServlet.java:62-64)"
+      },
+      "shared": "unknown id -> 404 'No such task' (TaskActionServlet.java:33-36); non-numeric id -> HTTP 500; success redirects to /tasks or /tasks/form?id=<id> when return=detail (TaskActionServlet.java:66-73); each update bumps updated_at (TaskDao.java:115-125)"
+    },
+    {
+      "route": "/projects",
+      "handler": "com.acme.tracker.web.ProjectServlet",
+      "mapping": "src/main/webapp/WEB-INF/web.xml:71-78",
+      "authExempt": false,
+      "methods": {
+        "GET": "lists all projects ordered by name with owner join, plus people; forwards projects.jsp (ProjectServlet.java:23-28; ProjectDao.java:19-31)",
+        "POST": "param action=archive archives; otherwise creates (ProjectServlet.java:31-51)"
+      },
+      "actions": {
+        "archive": "UPDATE state='ARCHIVED' WHERE id=? AND state='ACTIVE' (ProjectDao.java:75-84); unknown or already-ARCHIVED id silently no-ops then 302 /projects; missing/non-numeric id -> HTTP 500 (ProjectServlet.java:34)",
+        "create": "name required non-blank after trim else HTTP 400 'Project name is required' (ProjectServlet.java:39-43); description as-is (null if absent); ownerId=session user id; state forced 'ACTIVE' (ProjectServlet.java:44-50; ProjectDao.java:57-72)"
+      },
+      "roles": "no role gate on archive or create; any authenticated user (whole ProjectServlet)"
+    },
+    {
+      "route": "/api/tasks",
+      "handler": "com.acme.tracker.web.ApiTaskServlet",
+      "mapping": "src/main/webapp/WEB-INF/web.xml:80-87",
+      "authExempt": true,
+      "methods": {
+        "GET": "hand-rolled JSON array of all tasks, or filtered by status param (ApiTaskServlet.java:23-49); content-type application/json UTF-8 (ApiTaskServlet.java:29-30)"
+      },
+      "fields": "id,title,status,priority,assigneeId,projectId,dueDate,updatedAt; assigneeId and dueDate emitted as JSON null when NULL (ApiTaskServlet.java:41,43); strings escaped only for backslash and double-quote (ApiTaskServlet.java:51-54); description NOT exposed",
+      "roles": "unauthenticated by design (AuthFilter.java:28 exempts /api/)"
+    },
+    {
+      "route": "/ (welcome file index.jsp)",
+      "handler": "index.jsp",
+      "mapping": "src/main/webapp/WEB-INF/web.xml:89-91",
+      "methods": { "GET": "302 to /tasks (index.jsp:1)" }
+    }
+  ],
+  "auth": {
+    "filter": "AuthFilter mapped to /* (web.xml:20-23)",
+    "exemptions": ["/login exact (AuthFilter.java:28)", "/api/* prefix (AuthFilter.java:28)", "*.css suffix (AuthFilter.java:28)"],
+    "sessionCheck": "session attr 'user' must be a Person else 302 /login (AuthFilter.java:33-38)",
+    "roleGate": "only approve/reject on /tasks/action are role-gated to ADMIN/MANAGER, enforced in filter and again in servlet (AuthFilter.java:40-46; TaskActionServlet.java:91-98)",
+    "roleModel": "ADMIN,MANAGER,MEMBER,VIEWER; canApprove() = ADMIN||MANAGER (Role.java:7-14); role values also CHECK-constrained in schema.sql:14-15",
+    "logout": "GET /logout invalidates session (LogoutServlet.java:12-18)",
+    "passwordStorage": "plaintext comparison in SQL (PersonDao.java:16-29)"
+  },
+  "bulkClose": {
+    "entry": "POST /tasks/action action=bulkClose, ids as repeated params (TaskActionServlet.java:76-88)",
+    "empty": "no ids -> 302 /tasks with zero mutation (TaskActionServlet.java:78-81; TaskDao.java:129-131)",
+    "effect": "single UPDATE ... SET status='DONE' WHERE status <> 'DONE' AND id IN (...) (TaskDao.java:128-147)",
+    "mixedStates": "OPEN/IN_PROGRESS/PENDING_APPROVAL all closed; already-DONE rows silently skipped; no count or feedback",
+    "roles": "no role gate; VIEWER/MEMBER can close PENDING_APPROVAL tasks (defect D-002)",
+    "errors": "non-numeric id in ids -> HTTP 500 NumberFormatException (TaskActionServlet.java:84)"
+  },
+  "schema": {
+    "source": "src/main/resources/db/schema.sql (loaded by Postgres container init; app never creates schema, Database.java:12-14)",
+    "person": "id identity PK; username VARCHAR(64) NOT NULL UNIQUE; full_name VARCHAR(128) NOT NULL; password VARCHAR(128) NOT NULL; role CHECK in ADMIN/MANAGER/MEMBER/VIEWER (schema.sql:9-16)",
+    "project": "id identity PK; name VARCHAR(128) NOT NULL; description VARCHAR(1024) NULL; state NOT NULL DEFAULT 'ACTIVE' CHECK ACTIVE/ARCHIVED; owner_id NOT NULL FK person (schema.sql:18-26)",
+    "task": "id identity PK; title VARCHAR(256) NOT NULL; description VARCHAR(4000) NULL; status NOT NULL DEFAULT 'OPEN' CHECK OPEN/IN_PROGRESS/PENDING_APPROVAL/DONE; priority NOT NULL DEFAULT 'MEDIUM' CHECK LOW/MEDIUM/HIGH; assignee_id NULL FK person; project_id NOT NULL FK project; due_date DATE NULL; updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP (schema.sql:28-42)"
+  },
+  "daoMappings": {
+    "taskBase": "JOIN project p, LEFT JOIN person a exposes assigneeName/projectName transient display fields (TaskDao.java:15-20)",
+    "nullHandling": "assignee_id rs.getLong + wasNull -> null (TaskDao.java:227-228); due_date DATE -> ISO string or null (TaskDao.java:232-233); setNullableLong/setNullableDate write SQL NULL for empty (TaskDao.java:174-188)",
+    "updatedAt": "trimmed to seconds 'yyyy-MM-dd HH:mm:ss' (TaskDao.java:234-236)",
+    "create": "INSERT returns generated id (TaskDao.java:75-95)",
+    "update": "UPDATE title/description/priority/assignee/due_date + updated_at=CURRENT_TIMESTAMP; status untouched (TaskDao.java:97-112)",
+    "technical": "findByProject has no web caller (TaskDao.java:31-33); ProjectDao.findById has no web caller (ProjectDao.java:33-43); Database.awaitReady retries 30x1s then RuntimeException (Database.java:42-59); BootstrapListener waits for DB at startup (BootstrapListener.java:10-13); oracle_ro SELECT-only role (oracle-ro.sql:71-75)"
+  },
+  "seed": {
+    "people": "admin/Ada Admin/ADMIN, mgr/Morgan Manager/MANAGER, dev/Devon Member/MEMBER, view/Vic Viewer/VIEWER; passwords equal usernames (seed.sql:44-48)",
+    "projects": "1 Apollo ACTIVE owner 2; 2 Borealis ACTIVE owner 1; 3 Legacy Archive ARCHIVED owner 1 (seed.sql:51-54)",
+    "tasks": "1 Design login page OPEN HIGH; 2 Wire up SSO IN_PROGRESS HIGH; 3 Migrate invoices PENDING_APPROVAL MEDIUM; 4 Archive old data DONE LOW; updated_at staggered 3h apart for deterministic default sort (seed.sql:59-63)"
+  },
+  "jspObservable": [
+    "login.jsp: error paragraph when error attr set (login.jsp:20); form posts username/password (login.jsp:22-32)",
+    "_header.jspf: nav Tasks/Projects/+ New task; shows user.fullName (user.role) and logout link (_header.jspf:43-53)",
+    "tasks.jsp: filter select with (all)+4 statuses (tasks.jsp:16-23); sort select with 6 tokens updated/status/priority/due/title/id (tasks.jsp:26-33); checkbox name=ids per row (tasks.jsp:47); transition buttons rendered only for the row's current status (tasks.jsp:57-69); bulkClose form wraps table with hidden action=bulkClose (tasks.jsp:38-39,75-78); per-row hidden forms id=act-<id> target /tasks/action (tasks.jsp:81-86)",
+    "task-form.jsp: detail panel with status badge, project, assignee '(unassigned)' when null, priority, due '—' when null, updatedAt (task-form.jsp:32-62); transitions with hidden return=detail (task-form.jsp:43-59); 'Saved.' banner on param.saved=1 (task-form.jsp:29); title/title-star label, description textarea, project select, assignee select with (unassigned) empty option, priority select LOW/MEDIUM/HIGH, date input (task-form.jsp:64-115)",
+    "projects.jsp: table id/name/description/state/owner; Archive form button only when state ACTIVE (projects.jsp:145-151); Delete link to /projects/delete?id= which has NO servlet mapping -> HTTP 404 (projects.jsp:152 vs web.xml:71-78, defect D-001); create form name/description (projects.jsp:158-170)",
+    "EL output in JSPs is not HTML-escaped: ${t.title} etc. render raw (tasks.jsp:48-55, task-form.jsp:27) -> stored-XSS candidate (defect D-004)"
+  ],
+  "technicalJavaPaths": [
+    "Database.java: static env config DB_URL/DB_USER/DB_PASSWORD with defaults, explicit driver registration, awaitReady retry loop (Database.java:17-59)",
+    "BootstrapListener.java: contextInitialized -> Database.awaitReady (BootstrapListener.java:10-13)",
+    "TaskStatus.java: stringly-typed status constants OPEN/IN_PROGRESS/PENDING_APPROVAL/DONE, authoritative values in schema CHECK (TaskStatus.java:9-13)",
+    "Role.java: enum + canApprove() (Role.java:7-14)",
+    "model POJOs Person/Project/Task: plain getters/setters, no behavior"
+  ],
+  "noExecutableCounterpart": [
+    "AuthFilter (needs full HTTP session harness; app tests only cover DAO)",
+    "All 7 servlets (no web-layer tests exist)",
+    "All JSPs (render-only, no executable tests)",
+    "TaskDao.findByProject, ProjectDao.findById (dead code, no caller)",
+    "oracle_ro role grants (DB-side, no Java path)",
+    "src/test/java/com/acme/tracker/LifecycleTest.java:27-55 exercises DAO updateStatus directly and BYPASSES servlet guards (OPEN->DONE succeeds at DAO level) - inventory-only observation, not an executable analyst test"
+  ],
+  "defectCandidateIds": ["D-001", "D-002", "D-003", "D-004", "D-005", "D-006", "D-007", "D-008"],
+  "unexamined": []
+}

@@ -1,0 +1,64 @@
+{
+  "campaign": "task-tracker-05",
+  "network": "cs-sandbox-task-tracker-05-36f5ca10",
+  "policy": {
+    "continueAttempts": 2,
+    "restarts": 1,
+    "elapsedSeconds": 3600,
+    "blindProbes": 3,
+    "pollSeconds": 5,
+    "settlingSeconds": 15,
+    "providerWaitSeconds": 60,
+    "stallSeconds": 180
+  },
+  "agents": {
+    "rule-analyst": {
+      "cli": "opencode",
+      "sandbox": "rule-analyst-36f5ca10",
+      "session": "task-tracker-05-36f5ca10bdfa7d53-rule-analyst",
+      "repos": {
+        "outputs": "cs-sandbox/rule-analyst-36f5ca10.task-tracker-05-36f5ca10"
+      },
+      "bases": {
+        "outputs": "8f713fe76a31baacf269ecf4fce814513b1ead3f"
+      },
+      "snapshots": [
+        "app",
+        "runtime"
+      ],
+      "freshPerDispatch": true
+    },
+    "test-engineer": {
+      "cli": "opencode",
+      "sandbox": "test-engineer-36f5ca10",
+      "session": "task-tracker-05-36f5ca10bdfa7d53-test-engineer",
+      "repos": {
+        "outputs": "cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10"
+      },
+      "bases": {
+        "outputs": "8f713fe76a31baacf269ecf4fce814513b1ead3f"
+      },
+      "snapshots": [
+        "app",
+        "runtime"
+      ],
+      "freshPerDispatch": true
+    },
+    "verifier": {
+      "cli": "opencode",
+      "sandbox": "verifier-36f5ca10",
+      "session": "task-tracker-05-36f5ca10bdfa7d53-verifier",
+      "repos": {
+        "outputs": "cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10"
+      },
+      "bases": {
+        "outputs": "8f713fe76a31baacf269ecf4fce814513b1ead3f"
+      },
+      "snapshots": [
+        "app",
+        "runtime"
+      ],
+      "freshPerDispatch": true
+    }
+  }
+}

@@ -1,0 +1,232 @@
+cs-sandbox: fetch orchestrator-36f5ca10.task-tracker-05-36f5ca10:outputs (cs-sandbox/orchestrator-36f5ca10.task-tracker-05-36f5ca10)
+  /home/rishi/.tmp/firecracker-deploy/runs/05/repo  cs-sandbox/orchestrator-36f5ca10.task-tracker-05-36f5ca10 -> c6bc3be report: fold independent verification into run-summary; ledger D-011; attempts final (run 05)
+outputs cs-sandbox/orchestrator-36f5ca10.task-tracker-05-36f5ca10 — tree differs from base (real changes present)
+cs-sandbox: fetch rule-analyst-36f5ca10.task-tracker-05-36f5ca10:outputs (cs-sandbox/rule-analyst-36f5ca10.task-tracker-05-36f5ca10)
+  /home/rishi/.tmp/firecracker-deploy/runs/05/repo  cs-sandbox/rule-analyst-36f5ca10.task-tracker-05-36f5ca10 -> 9c24dc3 d005: final inventory refresh — integrate engineer d004 gap-closure run (137/137): 8 specs planned->executed, S-QUERY-006 result refreshed, d004 spec links added, partial notes rechecked
+outputs cs-sandbox/rule-analyst-36f5ca10.task-tracker-05-36f5ca10 — tree differs from base (real changes present)
+cs-sandbox: fetch test-engineer-36f5ca10.task-tracker-05-36f5ca10:outputs (cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10)
+  /home/rishi/.tmp/firecracker-deploy/runs/05/repo  cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10 -> 8d2b3ce mapping: d006 final sync — link last 2 ear:null orphans per analyst inventory v3 adjudication (test_s_auth_014->S-AUTH-004, test_s_proj_002->S-PROJ-001); 137 mapped, 0 ear:null
+outputs cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10 — tree differs from base (real changes present)
+cs-sandbox: fetch verifier-36f5ca10.task-tracker-05-36f5ca10:outputs (cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10)
+  /home/rishi/.tmp/firecracker-deploy/runs/05/repo  cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10 -> e040123 verifier: integration verification at b38f8da — 3x137/137 runs, coverage exact-match, D-002/D-010 confirmed, family audit
+outputs cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10 — tree differs from base (real changes present)
+/home/rishi/.tmp/firecracker-deploy/runs/05/archive
+Updating 8f713fe..c6bc3be
+Fast-forward
+ evidence/verifier/audit-coverage.py                |   46 +
+ evidence/verifier/coverage-audit.md                |   57 +
+ evidence/verifier/integration-run.md               |  160 ++
+ evidence/verifier/probes.md                        |  150 ++
+ evidence/verifier/rows-parser.py                   |   16 +
+ evidence/verifier/source-integrity.md              |  112 ++
+ findings/d002-test-engineer-findings.md            |   89 +
+ findings/ledger.json                               |  231 +++
+ reports/attempts.json                              |  135 ++
+ .../coverage/com.acme.tracker.dao/PersonDao.html   |    1 +
+ .../com.acme.tracker.dao/PersonDao.java.html       |   55 +
+ .../coverage/com.acme.tracker.dao/ProjectDao.html  |    1 +
+ .../com.acme.tracker.dao/ProjectDao.java.html      |   97 +
+ reports/coverage/com.acme.tracker.dao/TaskDao.html |    1 +
+ .../com.acme.tracker.dao/TaskDao.java.html         |  240 +++
+ reports/coverage/com.acme.tracker.dao/index.html   |    1 +
+ .../com.acme.tracker.dao/index.source.html         |    1 +
+ .../com.acme.tracker.db/BootstrapListener.html     |    1 +
+ .../BootstrapListener.java.html                    |   20 +
+ reports/coverage/com.acme.tracker.db/Database.html |    1 +
+ .../com.acme.tracker.db/Database.java.html         |   66 +
+ reports/coverage/com.acme.tracker.db/index.html    |    1 +
+ .../coverage/com.acme.tracker.db/index.source.html |    1 +
+ .../coverage/com.acme.tracker.model/Person.html    |    1 +
+ .../com.acme.tracker.model/Person.java.html        |   21 +
+ .../coverage/com.acme.tracker.model/Project.html   |    1 +
+ .../com.acme.tracker.model/Project.java.html       |   29 +
+ reports/coverage/com.acme.tracker.model/Role.html  |    1 +
+ .../coverage/com.acme.tracker.model/Role.java.html |   18 +
+ reports/coverage/com.acme.tracker.model/Task.html  |    1 +
+ .../coverage/com.acme.tracker.model/Task.java.html |   49 +
+ reports/coverage/com.acme.tracker.model/index.html |    1 +
+ .../com.acme.tracker.model/index.source.html       |    1 +
+ .../com.acme.tracker.web/ApiTaskServlet.html       |    1 +
+ .../com.acme.tracker.web/ApiTaskServlet.java.html  |   56 +
+ .../coverage/com.acme.tracker.web/AuthFilter.html  |    1 +
+ .../com.acme.tracker.web/AuthFilter.java.html      |   60 +
+ .../com.acme.tracker.web/LoginServlet.html         |    1 +
+ .../com.acme.tracker.web/LoginServlet.java.html    |   37 +
+ .../com.acme.tracker.web/LogoutServlet.html        |    1 +
+ .../com.acme.tracker.web/LogoutServlet.java.html   |   20 +
+ .../com.acme.tracker.web/ProjectServlet.html       |    1 +
+ .../com.acme.tracker.web/ProjectServlet.java.html  |   53 +
+ .../com.acme.tracker.web/TaskActionServlet.html    |    1 +
+ .../TaskActionServlet.java.html                    |  111 ++
+ .../com.acme.tracker.web/TaskFormServlet.html      |    1 +
+ .../com.acme.tracker.web/TaskFormServlet.java.html |   93 +
+ .../com.acme.tracker.web/TaskListServlet.html      |    1 +
+ .../com.acme.tracker.web/TaskListServlet.java.html |   40 +
+ reports/coverage/com.acme.tracker.web/index.html   |    1 +
+ .../com.acme.tracker.web/index.source.html         |    1 +
+ reports/coverage/index.html                        |    1 +
+ reports/coverage/jacoco-resources/branchfc.gif     |  Bin 0 -> 91 bytes
+ reports/coverage/jacoco-resources/branchnc.gif     |  Bin 0 -> 91 bytes
+ reports/coverage/jacoco-resources/branchpc.gif     |  Bin 0 -> 91 bytes
+ reports/coverage/jacoco-resources/bundle.gif       |  Bin 0 -> 709 bytes
+ reports/coverage/jacoco-resources/class.gif        |  Bin 0 -> 586 bytes
+ reports/coverage/jacoco-resources/down.gif         |  Bin 0 -> 67 bytes
+ reports/coverage/jacoco-resources/greenbar.gif     |  Bin 0 -> 91 bytes
+ reports/coverage/jacoco-resources/group.gif        |  Bin 0 -> 351 bytes
+ reports/coverage/jacoco-resources/method.gif       |  Bin 0 -> 193 bytes
+ reports/coverage/jacoco-resources/package.gif      |  Bin 0 -> 227 bytes
+ reports/coverage/jacoco-resources/prettify.css     |   13 +
+ reports/coverage/jacoco-resources/prettify.js      | 1510 ++++++++++++++++
+ reports/coverage/jacoco-resources/redbar.gif       |  Bin 0 -> 91 bytes
+ reports/coverage/jacoco-resources/report.css       |  243 +++
+ reports/coverage/jacoco-resources/report.gif       |  Bin 0 -> 363 bytes
+ reports/coverage/jacoco-resources/session.gif      |  Bin 0 -> 213 bytes
+ reports/coverage/jacoco-resources/sort.gif         |  Bin 0 -> 58 bytes
+ reports/coverage/jacoco-resources/sort.js          |  148 ++
+ reports/coverage/jacoco-resources/source.gif       |  Bin 0 -> 354 bytes
+ reports/coverage/jacoco-resources/up.gif           |  Bin 0 -> 67 bytes
+ reports/coverage/jacoco-sessions.html              |    1 +
+ reports/coverage/jacoco.exec                       |  Bin 0 -> 372760 bytes
+ reports/coverage/report.xml                        |    1 +
+ reports/coverage/summary.json                      |   31 +
+ reports/d002-summary.md                            |   41 +
+ reports/run-summary.json                           |  119 ++
+ reports/tests/mapping.json                         | 1888 ++++++++++++++++++++
+ reports/tests/result.json                          |    6 +
+ reports/verification/family-audit.md               |   57 +
+ reports/verification/plan.md                       |  228 +++
+ rules/API.md                                       |   61 +
+ rules/AUTH.md                                      |   91 +
+ rules/BULK.md                                      |   51 +
+ rules/DATA.md                                      |   81 +
+ rules/FORM.md                                      |   91 +
+ rules/LIFE.md                                      |  101 ++
+ rules/PROJ.md                                      |   71 +
+ rules/QUERY.md                                     |   61 +
+ rules/app-inventory.json                           | 1013 +++++++++++
+ specs/API.md                                       |   68 +
+ specs/AUTH.md                                      |   81 +
+ specs/BULK.md                                      |   41 +
+ specs/DATA.md                                      |   65 +
+ specs/FORM.md                                      |   99 +
+ specs/LIFE.md                                      |   82 +
+ specs/PROJ.md                                      |   65 +
+ specs/QUERY.md                                     |   77 +
+ tests/build_mapping.py                             |  584 ++++++
+ tests/helpers.py                                   |  149 ++
+ tests/test_api.py                                  |  120 ++
+ tests/test_auth.py                                 |  176 ++
+ tests/test_bulk_close.py                           |  118 ++
+ tests/test_projects.py                             |  170 ++
+ tests/test_task_actions.py                         |  186 ++
+ tests/test_task_form.py                            |  254 +++
+ tests/test_task_list.py                            |  226 +++
+ 108 files changed, 10555 insertions(+)
+ create mode 100644 evidence/verifier/audit-coverage.py
+ create mode 100644 evidence/verifier/coverage-audit.md
+ create mode 100644 evidence/verifier/integration-run.md
+ create mode 100644 evidence/verifier/probes.md
+ create mode 100644 evidence/verifier/rows-parser.py
+ create mode 100644 evidence/verifier/source-integrity.md
+ create mode 100644 findings/d002-test-engineer-findings.md
+ create mode 100644 findings/ledger.json
+ create mode 100644 reports/attempts.json
+ create mode 100644 reports/coverage/com.acme.tracker.dao/PersonDao.html
+ create mode 100644 reports/coverage/com.acme.tracker.dao/PersonDao.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.dao/ProjectDao.html
+ create mode 100644 reports/coverage/com.acme.tracker.dao/ProjectDao.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.dao/TaskDao.html
+ create mode 100644 reports/coverage/com.acme.tracker.dao/TaskDao.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.dao/index.html
+ create mode 100644 reports/coverage/com.acme.tracker.dao/index.source.html
+ create mode 100644 reports/coverage/com.acme.tracker.db/BootstrapListener.html
+ create mode 100644 reports/coverage/com.acme.tracker.db/BootstrapListener.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.db/Database.html
+ create mode 100644 reports/coverage/com.acme.tracker.db/Database.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.db/index.html
+ create mode 100644 reports/coverage/com.acme.tracker.db/index.source.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/Person.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/Person.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/Project.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/Project.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/Role.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/Role.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/Task.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/Task.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/index.html
+ create mode 100644 reports/coverage/com.acme.tracker.model/index.source.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/ApiTaskServlet.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/ApiTaskServlet.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/AuthFilter.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/AuthFilter.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/LoginServlet.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/LoginServlet.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/LogoutServlet.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/LogoutServlet.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/ProjectServlet.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/ProjectServlet.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/TaskActionServlet.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/TaskActionServlet.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/TaskFormServlet.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/TaskFormServlet.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/TaskListServlet.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/TaskListServlet.java.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/index.html
+ create mode 100644 reports/coverage/com.acme.tracker.web/index.source.html
+ create mode 100644 reports/coverage/index.html
+ create mode 100644 reports/coverage/jacoco-resources/branchfc.gif
+ create mode 100644 reports/coverage/jacoco-resources/branchnc.gif
+ create mode 100644 reports/coverage/jacoco-resources/branchpc.gif
+ create mode 100644 reports/coverage/jacoco-resources/bundle.gif
+ create mode 100644 reports/coverage/jacoco-resources/class.gif
+ create mode 100644 reports/coverage/jacoco-resources/down.gif
+ create mode 100644 reports/coverage/jacoco-resources/greenbar.gif
+ create mode 100644 reports/coverage/jacoco-resources/group.gif
+ create mode 100644 reports/coverage/jacoco-resources/method.gif
+ create mode 100644 reports/coverage/jacoco-resources/package.gif
+ create mode 100644 reports/coverage/jacoco-resources/prettify.css
+ create mode 100644 reports/coverage/jacoco-resources/prettify.js
+ create mode 100644 reports/coverage/jacoco-resources/redbar.gif
+ create mode 100644 reports/coverage/jacoco-resources/report.css
+ create mode 100644 reports/coverage/jacoco-resources/report.gif
+ create mode 100644 reports/coverage/jacoco-resources/session.gif
+ create mode 100644 reports/coverage/jacoco-resources/sort.gif
+ create mode 100644 reports/coverage/jacoco-resources/sort.js
+ create mode 100644 reports/coverage/jacoco-resources/source.gif
+ create mode 100644 reports/coverage/jacoco-resources/up.gif
+ create mode 100644 reports/coverage/jacoco-sessions.html
+ create mode 100644 reports/coverage/jacoco.exec
+ create mode 100644 reports/coverage/report.xml
+ create mode 100644 reports/coverage/summary.json
+ create mode 100644 reports/d002-summary.md
+ create mode 100644 reports/run-summary.json
+ create mode 100644 reports/tests/mapping.json
+ create mode 100644 reports/tests/result.json
+ create mode 100644 reports/verification/family-audit.md
+ create mode 100644 reports/verification/plan.md
+ create mode 100644 rules/API.md
+ create mode 100644 rules/AUTH.md
+ create mode 100644 rules/BULK.md
+ create mode 100644 rules/DATA.md
+ create mode 100644 rules/FORM.md
+ create mode 100644 rules/LIFE.md
+ create mode 100644 rules/PROJ.md
+ create mode 100644 rules/QUERY.md
+ create mode 100644 rules/app-inventory.json
+ create mode 100644 specs/API.md
+ create mode 100644 specs/AUTH.md
+ create mode 100644 specs/BULK.md
+ create mode 100644 specs/DATA.md
+ create mode 100644 specs/FORM.md
+ create mode 100644 specs/LIFE.md
+ create mode 100644 specs/PROJ.md
+ create mode 100644 specs/QUERY.md
+ create mode 100644 tests/build_mapping.py
+ create mode 100644 tests/helpers.py
+ create mode 100644 tests/test_api.py
+ create mode 100644 tests/test_auth.py
+ create mode 100644 tests/test_bulk_close.py
+ create mode 100644 tests/test_projects.py
+ create mode 100644 tests/test_task_actions.py
+ create mode 100644 tests/test_task_form.py
+ create mode 100644 tests/test_task_list.py

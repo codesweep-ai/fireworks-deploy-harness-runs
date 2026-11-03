@@ -1,0 +1,191 @@
+{
+  "run": "05",
+  "generatedAt": "2026-11-03T00:04:33.609206+00:00",
+  "currency": "USD",
+  "reportedCostUSD": "0.95007719",
+  "complete": true,
+  "reportedEvents": 537,
+  "eligibleEvents": 537,
+  "members": {
+    "test-engineer": {
+      "reportedCostUSD": "0.43267037",
+      "sessions": 6,
+      "reportedEvents": 238,
+      "eligibleEvents": 238,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/glm-5p3-flash"
+      ]
+    },
+    "rule-analyst": {
+      "reportedCostUSD": "0.22546679",
+      "sessions": 5,
+      "reportedEvents": 132,
+      "eligibleEvents": 132,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/glm-5p3-flash"
+      ]
+    },
+    "verifier": {
+      "reportedCostUSD": "0.15997923",
+      "sessions": 2,
+      "reportedEvents": 83,
+      "eligibleEvents": 83,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/glm-5p3-flash"
+      ]
+    },
+    "orchestrator": {
+      "reportedCostUSD": "0.13196080",
+      "sessions": 1,
+      "reportedEvents": 84,
+      "eligibleEvents": 84,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/glm-5p3-flash"
+      ]
+    }
+  },
+  "sessions": [
+    {
+      "session": "ses_e614dc240ffeRy74JNkFiGS3eB",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.01935424",
+      "reportedEvents": 20,
+      "eligibleEvents": 20,
+      "complete": true,
+      "source": "viewer/traces/ses_e614dc240ffeRy74JNkFiGS3eB.json"
+    },
+    {
+      "session": "ses_e61554c3effeRZziVwmfxxqn1Z",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.04516411",
+      "reportedEvents": 31,
+      "eligibleEvents": 31,
+      "complete": true,
+      "source": "viewer/traces/ses_e61554c3effeRZziVwmfxxqn1Z.json"
+    },
+    {
+      "session": "ses_e615553c1ffeViwDu2APMPzP5C",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.03677533",
+      "reportedEvents": 31,
+      "eligibleEvents": 31,
+      "complete": true,
+      "source": "viewer/traces/ses_e615553c1ffeViwDu2APMPzP5C.json"
+    },
+    {
+      "session": "ses_e615b6a48ffecwWY067Efjv5Y2",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.04500515",
+      "reportedEvents": 34,
+      "eligibleEvents": 34,
+      "complete": true,
+      "source": "viewer/traces/ses_e615b6a48ffecwWY067Efjv5Y2.json"
+    },
+    {
+      "session": "ses_e615b7713ffehyf1Gq4hQE3j7g",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.13250233",
+      "reportedEvents": 79,
+      "eligibleEvents": 79,
+      "complete": true,
+      "source": "viewer/traces/ses_e615b7713ffehyf1Gq4hQE3j7g.json"
+    },
+    {
+      "session": "ses_e615edc01ffeNsI79VeToOCOOe",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.05300334",
+      "reportedEvents": 24,
+      "eligibleEvents": 24,
+      "complete": true,
+      "source": "viewer/traces/ses_e615edc01ffeNsI79VeToOCOOe.json"
+    },
+    {
+      "session": "ses_e6162b201ffe35pFqWiwdiiusR",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.08711122",
+      "reportedEvents": 30,
+      "eligibleEvents": 30,
+      "complete": true,
+      "source": "viewer/traces/ses_e6162b201ffe35pFqWiwdiiusR.json"
+    },
+    {
+      "session": "ses_e6169b0fbffemjqdyAaRAgr1jA",
+      "member": "verifier",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.15447430",
+      "reportedEvents": 76,
+      "eligibleEvents": 76,
+      "complete": true,
+      "source": "viewer/traces/ses_e6169b0fbffemjqdyAaRAgr1jA.json"
+    },
+    {
+      "session": "ses_e6169b855ffeZPkVnXKM0uxKWc",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.07609727",
+      "reportedEvents": 36,
+      "eligibleEvents": 36,
+      "complete": true,
+      "source": "viewer/traces/ses_e6169b855ffeZPkVnXKM0uxKWc.json"
+    },
+    {
+      "session": "ses_e6169bf12ffedlnNmfDeOsxUy8",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.15157392",
+      "reportedEvents": 71,
+      "eligibleEvents": 71,
+      "complete": true,
+      "source": "viewer/traces/ses_e6169bf12ffedlnNmfDeOsxUy8.json"
+    },
+    {
+      "session": "ses_e616adc93ffeMMSpwdZ4FiyNcb",
+      "member": "orchestrator",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.13196080",
+      "reportedEvents": 84,
+      "eligibleEvents": 84,
+      "complete": true,
+      "source": "viewer/traces/ses_e616adc93ffeMMSpwdZ4FiyNcb.json"
+    },
+    {
+      "session": "ses_e616ae6c0ffe25htrYaSS6RPyk",
+      "member": "verifier",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.00550493",
+      "reportedEvents": 7,
+      "eligibleEvents": 7,
+      "complete": true,
+      "source": "viewer/traces/ses_e616ae6c0ffe25htrYaSS6RPyk.json"
+    },
+    {
+      "session": "ses_e616ae6c5ffeHcfaJ21244gMUG",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.00619692",
+      "reportedEvents": 7,
+      "eligibleEvents": 7,
+      "complete": true,
+      "source": "viewer/traces/ses_e616ae6c5ffeHcfaJ21244gMUG.json"
+    },
+    {
+      "session": "ses_e616ae6efffeUlTjvf0dBvFCc5",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3-flash",
+      "reportedCostUSD": "0.00535333",
+      "reportedEvents": 7,
+      "eligibleEvents": 7,
+      "complete": true,
+      "source": "viewer/traces/ses_e616ae6efffeUlTjvf0dBvFCc5.json"
+    }
+  ],
+  "method": "Sum reportedCostUSD on events in each unique viewer/traces/*.json session, once. Cross-check against totals.cost.reportedByEvents; never add both figures.",
+  "scope": "CLI-reported model usage, including campaign briefing/readback sessions. Excludes host infrastructure, runtime preparation, and the operator's setup conversation; not reconciled to a provider invoice."
+}

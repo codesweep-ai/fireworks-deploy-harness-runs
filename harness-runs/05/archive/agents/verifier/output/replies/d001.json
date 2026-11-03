@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"verifier\",\"role\":\"agent\",\"branch\":\"cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10\",\"missing\":[],\"goal\":\"As the independent verifier of campaign task-tracker-05, I must run the submitted whole-app test suite against my own independently started runtime of the app at ~/app, reproduce and inspect its evidence per operation family, and honestly report executed coverage and gaps rather than grant blanket acceptance.\",\"scope\":\"I own evidence/verifier/ and reports/verification/ on my own branch cs-sandbox/verifier-36f5ca10.task-tracker-05-36f5ca10, and I must not author or modify submitted tests, rules, or app sources.\",\"obligations\":\"Every dispatch must be closed with cs-campaign-member reply and my work committed to my branch plus durable files in ~/.local/share/cs-campaign/output, because an unreplied turn reads as stopped and gets me prodded/continued, and anything uncommitted is destroyed when the machine is destroyed at campaign end.\"}",
+  "at": "2026-11-02T23:26:08.674983342Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "8f713fe76a31baacf269ecf4fce814513b1ead3f",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

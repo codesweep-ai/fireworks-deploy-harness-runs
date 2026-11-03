@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "run": "05",
+  "generatedBy": "rule-analyst",
+  "applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "note": "Defect candidates observed in frozen source. Each carries a reproducible case and an explicit observed-vs-intended label. Execution evidence belongs to test-engineer/verifier; nothing here is executed.",
+  "candidates": [
+    {
+      "id": "D-001",
+      "title": "Dead 'Delete' affordance on projects page",
+      "severity": "medium (UX/correctness)",
+      "observed": "projects.jsp:152 renders <a href=\"/projects/delete?id=...\">Delete</a> for every project, but web.xml maps only /projects (web.xml:71-78). GET /projects/delete reaches the container with no servlet and returns HTTP 404.",
+      "intended": "Either a working delete endpoint or no link.",
+      "repro": "Login -> GET /projects -> click any Delete link -> HTTP 404; project unchanged.",
+      "rules": ["R-PROJ-006"],
+      "specs": ["S-PROJ-007"]
+    },
+    {
+      "id": "D-002",
+      "title": "bulkClose bypasses the approval policy and has no role gate",
+      "severity": "high (authorization/policy bypass)",
+      "observed": "TaskActionServlet dispatches action=bulkClose before any role check (TaskActionServlet.java:26-29); handleBulkClose (76-88) checks nothing; TaskDao.bulkClose sets status='DONE' for every selected non-DONE task including PENDING_APPROVAL (TaskDao.java:136-137). AuthFilter gates only approve/reject (AuthFilter.java:40-46). A MEMBER or VIEWER can therefore close PENDING_APPROVAL tasks.",
+      "intended": "README domain: 'Only ADMIN/MANAGER may approve or reject tasks awaiting approval'. Closing a PENDING_APPROVAL task is an approval-shaped transition.",
+      "repro": "Login as dev (MEMBER) -> POST /tasks/action action=bulkClose&ids=3 (seed task 3 is PENDING_APPROVAL) -> 302, task 3 DONE. Contrast: POST action=approve&id=3 as dev -> 403.",
+      "rules": ["R-BULK-004", "R-AUTH-008"],
+      "specs": ["S-BULK-004", "S-AUTH-009"]
+    },
+    {
+      "id": "D-003",
+      "title": "ARCHIVED projects still accept tasks; unknown form id silently renders 'New task'",
+      "severity": "medium (state-model gap) + low (not-found handling)",
+      "observed": "TaskFormServlet validates projectId only via ProjectDao.exists, whose SQL has no state predicate (ProjectDao.java:45-55; TaskFormServlet.java:50-53), so tasks can be created in/edited into ARCHIVED project 3 'Legacy Archive'. Separately, GET /tasks/form?id=<unknown> leaves the task attribute null and task-form.jsp:27 renders the 'New task' form instead of a 404.",
+      "intended": "Source is silent on both; a task tracker conventionally blocks archived projects and reports not-found.",
+      "repro": "POST /tasks/form title=Ghost&projectId=3 -> 302 saved=1, task persists with project 'Legacy Archive'. GET /tasks/form?id=999 -> 200 'New task'.",
+      "rules": ["R-PROJ-007", "R-FORM-002"],
+      "specs": ["S-PROJ-008", "S-FORM-002"]
+    },
+    {
+      "id": "D-004",
+      "title": "Stored markup renders unescaped in JSPs (XSS candidate)",
+      "severity": "high (security)",
+      "observed": "JSPs interpolate task/project fields with bare EL (e.g. tasks.jsp:49 ${t.title}, projects.jsp:140 ${p.name}); plain JSP EL does not HTML-escape, so stored markup executes.",
+      "intended": "Escaped output (JSTL c:out or equivalent).",
+      "repro": "POST /tasks/form with title <script>alert(1)</script> and projectId=1 -> open /tasks -> script markup present in HTML.",
+      "rules": ["R-DATA-008"],
+      "specs": ["S-DATA-008"]
+    },
+    {
+      "id": "D-005",
+      "title": "Unvalidated numeric parameters surface as HTTP 500",
+      "severity": "medium (robustness)",
+      "observed": "Long.parseLong on request params without try/catch: TaskActionServlet.java:31 (id) and 84 (bulk ids), TaskFormServlet.java:50 (projectId), 61 (assigneeId), 69 (edit id), TaskListServlet.java:31 (assignee), ProjectServlet.java:34 (archive id).",
+      "intended": "400-style refusal.",
+      "repro": "GET /tasks?assignee=abc -> 500; POST /tasks/action action=start&id=abc -> 500.",
+      "rules": ["R-QUERY-003", "R-LIFE-006", "R-PROJ-003", "R-FORM-004"],
+      "specs": ["S-QUERY-003", "S-LIFE-003", "S-PROJ-004", "S-FORM-004"]
+    },
+    {
+      "id": "D-006",
+      "title": "bulkClose gives no feedback (skips DONE silently; empty selection silent success)",
+      "severity": "low (UX)",
+      "observed": "TaskDao.bulkClose returns the affected row count but TaskActionServlet ignores it (86-87); already-DONE rows are silently skipped (WHERE status <> 'DONE'); empty selection redirects as if successful (78-81).",
+      "intended": "Report how many tasks were closed.",
+      "repro": "POST action=bulkClose&ids=3&ids=4 (3 PENDING_APPROVAL, 4 DONE) -> 302 with no indication task 4 was skipped.",
+      "rules": ["R-BULK-003", "R-BULK-001"],
+      "specs": ["S-BULK-003", "S-BULK-001"]
+    },
+    {
+      "id": "D-007",
+      "title": "Plaintext password storage/comparison; /api/* unauthenticated",
+      "severity": "noted (legacy security posture)",
+      "observed": "PersonDao.authenticate compares the password inside the SQL WHERE clause in plaintext (PersonDao.java:18; schema.sql:13). AuthFilter exempts /api/* (AuthFilter.java:28) so the task readback is public; the API omits description but exposes titles, assignees, projects.",
+      "intended": "The API exemption is documented as intended in ApiTaskServlet.java:14-17; listed so the verifier confirms exposure is acceptable. Password hashing absent entirely.",
+      "repro": "Anonymous GET /api/tasks -> 200 JSON without any session.",
+      "rules": ["R-AUTH-003", "R-API-001"],
+      "specs": ["S-API-001"]
+    },
+    {
+      "id": "D-008",
+      "title": "API JSON escaping is quote/backslash only; control characters break the payload",
+      "severity": "medium (protocol correctness)",
+      "observed": "ApiTaskServlet.esc (51-54) escapes only backslash and double-quote; a newline or tab stored in title/status/etc. is emitted raw inside a JSON string token, producing invalid JSON; HTML chars are not escaped either. Content reaches the DB because the form layer never restricts it.",
+      "intended": "Spec-correct JSON string escaping.",
+      "repro": "POST /tasks/form with a title containing a literal newline (craftable via raw POST; the HTML form input is single-line but the server never enforces that) -> GET /api/tasks -> body no longer parses as JSON.",
+      "rules": ["R-API-005"],
+      "specs": ["S-API-005"]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{"at":"2026-11-02T23:26:51.783411569Z","kind":"plan","text":"{\"phase\":\"dispatched\",\"time_utc\":\"2026-11-02T23:29:00Z\",\"minutes_left\":\"~56\",\"plan\":\"Batch A: analyst d002 (inventory + AUTH/PROJ then FORM/LIFE then BULK/QUERY/API/DATA), engineer d002 (runtime up + test batches 1-4), verifier d002 (runtime up + source integrity + verification plan). Next: judge first replies; integrate analyst rule/spec IDs with engineer mapping; push exact integration commit to verifier refs/campaign/orchestrator as soon as engineer batch 1 + analyst batch 1 are accepted. Stop new implementation ~T-15m; commit reports/run-summary.json, reports/attempts.json, findings/ledger.json and reply by T-3m (00:21:57Z).\"}\n"}
+{"at":"2026-11-02T23:31:52.818683654Z","kind":"accepted","text":"rule-analyst/d002"}
+{"at":"2026-11-02T23:32:01.199163361Z","kind":"delivered","text":"delivered to test-engineer at refs/campaign/orchestrator","member":"test-engineer","repo":"outputs","commit":"6f55e3f269532d92aba3ebbfa073491ab564b708"}
+{"at":"2026-11-02T23:32:01.430461826Z","kind":"delivered","text":"delivered to verifier at refs/campaign/orchestrator","member":"verifier","repo":"outputs","commit":"6f55e3f269532d92aba3ebbfa073491ab564b708"}
+{"at":"2026-11-02T23:34:21.378229958Z","kind":"accepted","text":"test-engineer/d002"}
+{"at":"2026-11-02T23:38:34.220636876Z","kind":"delivered","text":"delivered to rule-analyst at refs/campaign/orchestrator","member":"rule-analyst","repo":"outputs","commit":"2fdf5c069b86fdca1094544730e391e5b1c61d26"}
+{"at":"2026-11-02T23:39:48.885452791Z","kind":"accepted","text":"test-engineer/d003"}
+{"at":"2026-11-02T23:42:10.930208711Z","kind":"accepted","text":"rule-analyst/d003"}
+{"at":"2026-11-02T23:44:04.730022428Z","kind":"accepted","text":"rule-analyst/d004"}
+{"at":"2026-11-02T23:48:48.157497366Z","kind":"accepted","text":"test-engineer/d004"}
+{"at":"2026-11-02T23:48:49.521134646Z","kind":"delivered","text":"delivered to verifier at refs/campaign/orchestrator","member":"verifier","repo":"outputs","commit":"065f18d59875a58a777e212fd12d31d61c693e1e"}
+{"at":"2026-11-02T23:48:49.732672156Z","kind":"delivered","text":"delivered to test-engineer at refs/campaign/orchestrator","member":"test-engineer","repo":"outputs","commit":"065f18d59875a58a777e212fd12d31d61c693e1e"}
+{"at":"2026-11-02T23:48:49.950123167Z","kind":"delivered","text":"delivered to rule-analyst at refs/campaign/orchestrator","member":"rule-analyst","repo":"outputs","commit":"065f18d59875a58a777e212fd12d31d61c693e1e"}
+{"at":"2026-11-02T23:51:15.929486366Z","kind":"accepted","text":"test-engineer/d005"}
+{"at":"2026-11-02T23:51:16.377406686Z","kind":"delivered","text":"delivered to verifier at refs/campaign/orchestrator","member":"verifier","repo":"outputs","commit":"6dd956f84717570599ff1daa0c621ffe5fe57541"}
+{"at":"2026-11-02T23:57:15.217978244Z","kind":"accepted","text":"rule-analyst/d005"}
+{"at":"2026-11-02T23:57:15.693383186Z","kind":"delivered","text":"delivered to verifier at refs/campaign/orchestrator","member":"verifier","repo":"outputs","commit":"8d5045ef889efe78b9c3e2756f203f9c34e1ff9b"}
+{"at":"2026-11-02T23:58:10.989272137Z","kind":"accepted","text":"test-engineer/d006"}
+{"at":"2026-11-02T23:58:11.438793542Z","kind":"delivered","text":"delivered to verifier at refs/campaign/orchestrator","member":"verifier","repo":"outputs","commit":"b38f8dae33762710156ea10ddf29c356130b0787"}
+{"at":"2026-11-03T00:03:36.559742189Z","kind":"accepted","text":"verifier/d002"}

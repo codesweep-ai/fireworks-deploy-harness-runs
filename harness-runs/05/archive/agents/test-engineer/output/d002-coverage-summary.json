@@ -1,0 +1,31 @@
+{
+  "applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "scope": "All compiled production Java classes in the frozen WAR; JSP, SQL, and CSS are not measured",
+  "command": "python3 harness/runtime.py coverage",
+  "counters": {
+    "INSTRUCTION": {
+      "covered": 1993,
+      "missed": 162
+    },
+    "BRANCH": {
+      "covered": 168,
+      "missed": 20
+    },
+    "LINE": {
+      "covered": 452,
+      "missed": 48
+    },
+    "COMPLEXITY": {
+      "covered": 180,
+      "missed": 24
+    },
+    "METHOD": {
+      "covered": 103,
+      "missed": 5
+    },
+    "CLASS": {
+      "covered": 17,
+      "missed": 0
+    }
+  }
+}

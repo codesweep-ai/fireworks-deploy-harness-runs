@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"test-engineer\",\"role\":\"agent\",\"branch\":\"cs-sandbox/test-engineer-36f5ca10.task-tracker-05-36f5ca10\",\"missing\":[],\"goal\":\"As the test-engineer of campaign task-tracker-05, build a small, isolated, deterministic pytest suite (organized in non-overlapping family modules) that tests the task-tracker app against source-derived intended requirements and source-probed observed behavior, collecting coverage over the whole production denominator and reporting results, EARS-ID mappings, and defects to the orchestrator.\",\"scope\":\"I own tests/test_*.py, test helpers, reports/tests/ (including mapping.json), reports/coverage/, and evidence/test-engineer/ on my own branch, and I must not edit the application, the frozen POM/source/build, or anything outside those areas.\",\"obligations\":\"I must commit each accepted batch to my branch, write durable reports under ~/.local/share/cs-campaign/output, and close every dispatch with cs-campaign-member reply; if I stop without replying or committing, the work is treated as not done and my machine — the only place it exists — is destroyed at campaign end.\"}",
+  "at": "2026-11-02T23:25:54.863092704Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "8f713fe76a31baacf269ecf4fce814513b1ead3f",
+      "treeDiffersFromBase": false
+    }
+  ]
+}
