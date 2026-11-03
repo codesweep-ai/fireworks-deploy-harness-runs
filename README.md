@@ -10,6 +10,13 @@ app, done two ways for the **Fireworks Deploy Buildathon**:
 Both analyzed the same frozen app commit, `eee783057ec28d28fb36ec05484de9b4b40ceb9c`, from the
 sibling `../task-tracker-demo` repo.
 
+| | Claude Code baseline | Codesweep Harness |
+|---|---|---|
+| **Business rules discovered** | **34** | **65** (runs 01 + 02) |
+| Executable tests reproducing suspected defects | No | Yes |
+
+See [Comparing the two](#comparing-the-two) for how the two rule sets line up.
+
 ## Repository layout
 
 ```
@@ -20,17 +27,8 @@ harness-runs/02/                         Codesweep Harness run 02 (whole-app exp
 
 ## 1. Claude Code Modernization plugin baseline
 
-The baseline comes from the Claude Code Modernization plugin (`/code-modernization:modernize-preflight`
-and `/code-modernization:modernize-extract-rules`) run against `../task-tracker-demo`, with Claude Opus 5.5 as the model. It discovered
-**34 business rules** (4 at P0). A second agent checked each rule's source citation.
-
-| File | Contents |
-|---|---|
-| `PREFLIGHT.md` | Environment check and where the code lives |
-| `BUSINESS_RULES.md` | Rule cards (RULE-001..034) in Given/When/Then form with `file:line` citations |
-| `DATA_OBJECTS.md` | Domain data objects and their constraints |
-| `REPORT.html` | Readable report of the extraction |
-| `extract-rules.modules.json`, `rules_result.json` | Module list and raw extraction output |
+The output of `/code-modernization:modernize-extract-rules` on Claude Opus 5.5: **34 business
+rules** in `BUSINESS_RULES.md`, with a readable summary in `REPORT.html`.
 
 ## 2. Codesweep Harness discovery
 
