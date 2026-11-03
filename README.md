@@ -4,16 +4,18 @@ Business-rule discovery of the [task-tracker-demo](https://github.com/codesweep-
 app, done two ways for the **Fireworks Deploy Buildathon**:
 
 1. **Baseline:** Claude Code with the Code Modernization plugin, on Claude Opus 5.5.
-2. **Codesweep Harness:** a multi-agent campaign running in Codesweep sandboxes, on a mix of
-   Fireworks-hosted GLM 5.3 and Kimi K3 models across the campaign agents.
+2. **Codesweep Harness:** a multi-agent campaign running in Codesweep sandboxes, on
+   Fireworks-hosted models: a mix of GLM 5.3 and Kimi K3 in runs 01 and 02, and GLM 5.3 Flash
+   alone in run 05.
 
 Both analyzed the same frozen app commit, `eee783057ec28d28fb36ec05484de9b4b40ceb9c`, from the
 sibling `../task-tracker-demo` repo.
 
-| | Claude Code baseline | Codesweep Harness |
-|---|---|---|
-| **Business rules discovered** | **34** | **65** (runs 01 + 02) |
-| Executable tests reproducing suspected defects | No | Yes |
+| | Claude Code baseline | Codesweep Harness runs 01 + 02 | Codesweep Harness run 05 |
+|---|---|---|---|
+| Models | Claude Opus 5.5 | GLM 5.3 + Kimi K3 | GLM 5.3 Flash |
+| **Business rules discovered** | **34** | **65** | **60** |
+| Executable tests reproducing suspected defects | No | Yes | Yes |
 
 See [Comparing the two](#comparing-the-two) for how the two rule sets line up.
 
@@ -23,6 +25,7 @@ See [Comparing the two](#comparing-the-two) for how the two rule sets line up.
 claude-baseline/analysis/task-tracker/   Claude Code Modernization plugin baseline
 harness-runs/01/                         Codesweep Harness run 01 (approval/permission pilot)
 harness-runs/02/                         Codesweep Harness run 02 (whole-app expansion)
+harness-runs/05/                         Codesweep Harness run 05 (whole app from scratch, GLM 5.3 Flash)
 ```
 
 ## 1. Claude Code Modernization plugin baseline
@@ -42,16 +45,17 @@ harness relies on these sibling projects from [github.com/codesweep-ai](https://
 - [`campaign`](https://github.com/codesweep-ai/campaign) handles campaign coordination: profiles,
   dispatch between roles, deadlines, collection and archiving.
 
-Each run used a team of four campaign agents, all on [opencode](https://opencode.ai) with a mix
-of Fireworks-hosted models: GLM 5.3 for the orchestrator and rule analyst, Kimi K3 for the test
-engineer and verifier.
+Each run used a team of four campaign agents, all on [opencode](https://opencode.ai) with
+Fireworks-hosted models. Runs 01 and 02 used a mix: GLM 5.3 for the orchestrator and rule
+analyst, Kimi K3 for the test engineer and verifier. Run 05 used GLM 5.3 Flash for all four.
+Model IDs are under `fireworks-ai/accounts/fireworks/models/`.
 
-| Seat | Model |
-|---|---|
-| orchestrator | `fireworks-ai/accounts/fireworks/models/glm-5p3` |
-| rule-analyst | `fireworks-ai/accounts/fireworks/models/glm-5p3` |
-| test-engineer | `fireworks-ai/accounts/fireworks/models/kimi-k3` |
-| verifier | `fireworks-ai/accounts/fireworks/models/kimi-k3` |
+| Seat | Runs 01, 02 | Run 05 |
+|---|---|---|
+| orchestrator | `glm-5p3` | `glm-5p3-flash` |
+| rule-analyst | `glm-5p3` | `glm-5p3-flash` |
+| test-engineer | `kimi-k3` | `glm-5p3-flash` |
+| verifier | `kimi-k3` | `glm-5p3-flash` |
 
 ### Runs
 
@@ -59,8 +63,10 @@ engineer and verifier.
 |---|---|---|---|
 | [01](harness-runs/01/packet/mission.md) | Pilot: one approval/permission slice, 15-minute budget | ~12 min | `5f57517` |
 | [02](harness-runs/02/packet/mission.md) | Whole app, continuing from run 01's output | ~24 min | `afd4500` |
+| [05](harness-runs/05/packet/mission.md) | Whole app from scratch, no prior output, 60-minute budget | ~40 min | `c6bc3be` |
 
-Together, runs 01 and 02 discovered an aggregate of **65 business rules**.
+Together, runs 01 and 02 discovered an aggregate of **65 business rules**. Run 05 started from
+an empty workspace and, on GLM 5.3 Flash alone, discovered **60 business rules** in a single run.
 
 Each run directory contains:
 
@@ -75,10 +81,12 @@ Each run directory contains:
 | `review/` | Review catalog (`review/index.html`) |
 | `cost/` | Cost report (`cost/index.html`) |
 | `inputs/` | Frozen app snapshot and runtime jars |
+| `scratch/` | Run 05 only: opencode config, log and database, verifier transcript, archived `cs-opencode-turn` |
 
 ## Comparing the two
 
 `../fireworks-deploy/docs/business-rules-comparison.md` maps the baseline's 34 rules to the
 65 rule IDs from harness runs 01 and 02. The two agree on observed behavior almost everywhere.
 They differ mainly in judgement (which behaviors count as defects) and coverage. The harness
-runs also produced executable tests that reproduce the suspected defects.
+runs also produced executable tests that reproduce the suspected defects. Run 05's 60 rules
+are not mapped there yet.
