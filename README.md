@@ -1,4 +1,4 @@
-# Fireworks Deploy harness runs
+# Fireworks Deploy Buildathon App Discovery Harness Eval Runs
 
 Business-rule discovery of the [task-tracker-demo](https://github.com/codesweep-ai/task-tracker-demo)
 app, done two ways for the **Fireworks Deploy Buildathon**:
