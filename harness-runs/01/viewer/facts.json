@@ -1,0 +1,483 @@
+{
+ "schemaVersion": 1,
+ "campaign": "task-tracker-01",
+ "elapsed": {
+  "from": "2026-11-02T20:02:42Z",
+  "to": "2026-11-02T20:13:52Z",
+  "duration": {
+   "ms": 670000,
+   "hms": "0:11:10"
+  },
+  "fromAddr": "e/0",
+  "toAddr": "e/26"
+ },
+ "totals": {
+  "toolCalls": 185,
+  "toolOutputBytes": 255247,
+  "outputTokens": 33418,
+  "failedSteps": {}
+ },
+ "members": [
+  {
+   "node": "orchestrator",
+   "role": "orchestrator",
+   "cli": "opencode",
+   "work": {
+    "ms": 662767,
+    "hms": "0:11:02"
+   },
+   "idle": {
+    "ms": 4419,
+    "hms": "0:00:04"
+   },
+   "wait": {
+    "ms": 319761,
+    "hms": "0:05:19"
+   },
+   "idleShare": 0.006,
+   "steps": 167,
+   "toolCalls": 62,
+   "toolOutputBytes": 92937,
+   "outputTokens": 11090,
+   "sessions": [
+    {
+     "id": "ses_e622492a4ffeWzhAORWeUs6l0O",
+     "source": "opencode",
+     "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+     "work": {
+      "ms": 662767,
+      "hms": "0:11:02"
+     },
+     "idle": {
+      "ms": 4419,
+      "hms": "0:00:04"
+     },
+     "steps": 167,
+     "toolCalls": 62,
+     "toolOutputBytes": 92937,
+     "outputTokens": 11090,
+     "page": "tracer/traces/ses_e622492a4ffeWzhAORWeUs6l0O.html"
+    }
+   ]
+  },
+  {
+   "node": "rule-analyst",
+   "role": "agent",
+   "cli": "opencode",
+   "work": {
+    "ms": 141244,
+    "hms": "0:02:21"
+   },
+   "idle": {
+    "ms": 0,
+    "hms": "0:00:00"
+   },
+   "wait": {
+    "ms": 0,
+    "hms": "0:00:00"
+   },
+   "idleShare": 0,
+   "steps": 69,
+   "toolCalls": 30,
+   "toolOutputBytes": 47353,
+   "outputTokens": 5447,
+   "sessions": [
+    {
+     "id": "ses_e6223288effe1ALIUCjnHwhWLB",
+     "source": "opencode",
+     "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+     "work": {
+      "ms": 122886,
+      "hms": "0:02:02"
+     },
+     "idle": {
+      "ms": 0,
+      "hms": "0:00:00"
+     },
+     "steps": 49,
+     "toolCalls": 23,
+     "toolOutputBytes": 39695,
+     "outputTokens": 5027,
+     "page": "tracer/traces/ses_e6223288effe1ALIUCjnHwhWLB.html"
+    },
+    {
+     "id": "ses_e622492d9ffeQkn3Usr4SNQeTE",
+     "source": "opencode",
+     "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+     "work": {
+      "ms": 18358,
+      "hms": "0:00:18"
+     },
+     "idle": {
+      "ms": 0,
+      "hms": "0:00:00"
+     },
+     "steps": 20,
+     "toolCalls": 7,
+     "toolOutputBytes": 7658,
+     "outputTokens": 420,
+     "page": "tracer/traces/ses_e622492d9ffeQkn3Usr4SNQeTE.html"
+    }
+   ]
+  },
+  {
+   "node": "test-engineer",
+   "role": "agent",
+   "cli": "opencode",
+   "work": {
+    "ms": 234225,
+    "hms": "0:03:54"
+   },
+   "idle": {
+    "ms": 0,
+    "hms": "0:00:00"
+   },
+   "wait": {
+    "ms": 0,
+    "hms": "0:00:00"
+   },
+   "idleShare": 0,
+   "steps": 134,
+   "toolCalls": 59,
+   "toolOutputBytes": 67555,
+   "outputTokens": 10094,
+   "sessions": [
+    {
+     "id": "ses_e621fff93ffeBm41ocO4Kaz08x",
+     "source": "opencode",
+     "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+     "work": {
+      "ms": 83332,
+      "hms": "0:01:23"
+     },
+     "idle": {
+      "ms": 0,
+      "hms": "0:00:00"
+     },
+     "steps": 48,
+     "toolCalls": 22,
+     "toolOutputBytes": 20302,
+     "outputTokens": 4276,
+     "page": "tracer/traces/ses_e621fff93ffeBm41ocO4Kaz08x.html"
+    },
+    {
+     "id": "ses_e622327e8ffe679BPLALXmdtf6",
+     "source": "opencode",
+     "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+     "work": {
+      "ms": 132242,
+      "hms": "0:02:12"
+     },
+     "idle": {
+      "ms": 0,
+      "hms": "0:00:00"
+     },
+     "steps": 68,
+     "toolCalls": 30,
+     "toolOutputBytes": 38967,
+     "outputTokens": 5035,
+     "page": "tracer/traces/ses_e622327e8ffe679BPLALXmdtf6.html"
+    },
+    {
+     "id": "ses_e6224930affeE2mJ3fhueqKgp6",
+     "source": "opencode",
+     "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+     "work": {
+      "ms": 18651,
+      "hms": "0:00:18"
+     },
+     "idle": {
+      "ms": 0,
+      "hms": "0:00:00"
+     },
+     "steps": 18,
+     "toolCalls": 7,
+     "toolOutputBytes": 8286,
+     "outputTokens": 783,
+     "page": "tracer/traces/ses_e6224930affeE2mJ3fhueqKgp6.html"
+    }
+   ]
+  },
+  {
+   "node": "verifier",
+   "role": "agent",
+   "cli": "opencode",
+   "work": {
+    "ms": 174628,
+    "hms": "0:02:54"
+   },
+   "idle": {
+    "ms": 0,
+    "hms": "0:00:00"
+   },
+   "wait": {
+    "ms": 0,
+    "hms": "0:00:00"
+   },
+   "idleShare": 0,
+   "steps": 80,
+   "toolCalls": 34,
+   "toolOutputBytes": 47402,
+   "outputTokens": 6787,
+   "sessions": [
+    {
+     "id": "ses_e621e06beffeONXZF3KwHYF5NW",
+     "source": "opencode",
+     "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+     "work": {
+      "ms": 158520,
+      "hms": "0:02:38"
+     },
+     "idle": {
+      "ms": 0,
+      "hms": "0:00:00"
+     },
+     "steps": 63,
+     "toolCalls": 27,
+     "toolOutputBytes": 39471,
+     "outputTokens": 6042,
+     "page": "tracer/traces/ses_e621e06beffeONXZF3KwHYF5NW.html"
+    },
+    {
+     "id": "ses_e62249307ffeSOjuRbqTRlyyBf",
+     "source": "opencode",
+     "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+     "work": {
+      "ms": 16108,
+      "hms": "0:00:16"
+     },
+     "idle": {
+      "ms": 0,
+      "hms": "0:00:00"
+     },
+     "steps": 17,
+     "toolCalls": 7,
+     "toolOutputBytes": 7931,
+     "outputTokens": 745,
+     "page": "tracer/traces/ses_e62249307ffeSOjuRbqTRlyyBf.html"
+    }
+   ]
+  }
+ ],
+ "dispatches": [
+  {
+   "node": "orchestrator",
+   "dispatch": "m1",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:03:13Z",
+   "repliedAt": "2026-11-02T20:13:52Z",
+   "duration": {
+    "ms": 639000,
+    "hms": "0:10:39"
+   },
+   "continues": 0,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/orchestrator/m1"
+  },
+  {
+   "node": "verifier",
+   "dispatch": "d002",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:09:52Z",
+   "repliedAt": "2026-11-02T20:12:27Z",
+   "duration": {
+    "ms": 155000,
+    "hms": "0:02:35"
+   },
+   "continues": 1,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/verifier/d002"
+  },
+  {
+   "node": "test-engineer",
+   "dispatch": "d002",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:04:15Z",
+   "repliedAt": "2026-11-02T20:06:27Z",
+   "duration": {
+    "ms": 132000,
+    "hms": "0:02:12"
+   },
+   "continues": 0,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/test-engineer/d002"
+  },
+  {
+   "node": "rule-analyst",
+   "dispatch": "d002",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:04:15Z",
+   "repliedAt": "2026-11-02T20:06:17Z",
+   "duration": {
+    "ms": 122000,
+    "hms": "0:02:02"
+   },
+   "continues": 0,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/rule-analyst/d002"
+  },
+  {
+   "node": "test-engineer",
+   "dispatch": "d003",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:07:40Z",
+   "repliedAt": "2026-11-02T20:09:06Z",
+   "duration": {
+    "ms": 86000,
+    "hms": "0:01:26"
+   },
+   "continues": 0,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/test-engineer/d003"
+  },
+  {
+   "node": "orchestrator",
+   "dispatch": "d001",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:02:42Z",
+   "repliedAt": "2026-11-02T20:03:06Z",
+   "duration": {
+    "ms": 24000,
+    "hms": "0:00:24"
+   },
+   "continues": 0,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/orchestrator/d001"
+  },
+  {
+   "node": "test-engineer",
+   "dispatch": "d001",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:02:42Z",
+   "repliedAt": "2026-11-02T20:03:04Z",
+   "duration": {
+    "ms": 22000,
+    "hms": "0:00:22"
+   },
+   "continues": 0,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/test-engineer/d001"
+  },
+  {
+   "node": "rule-analyst",
+   "dispatch": "d001",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:02:42Z",
+   "repliedAt": "2026-11-02T20:03:03Z",
+   "duration": {
+    "ms": 21000,
+    "hms": "0:00:21"
+   },
+   "continues": 0,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/rule-analyst/d001"
+  },
+  {
+   "node": "verifier",
+   "dispatch": "d001",
+   "phase": "done",
+   "openedAt": "2026-11-02T20:02:42Z",
+   "repliedAt": "2026-11-02T20:03:01Z",
+   "duration": {
+    "ms": 19000,
+    "hms": "0:00:19"
+   },
+   "continues": 0,
+   "restarts": 0,
+   "resumes": 0,
+   "handoffs": 0,
+   "commitAsks": 0,
+   "addr": "m/verifier/d001"
+  }
+ ],
+ "idleGaps": [
+  {
+   "idle": {
+    "ms": 4419,
+    "hms": "0:00:04"
+   },
+   "addr": "traces/e/80",
+   "after": {
+    "node": "orchestrator",
+    "session": "ses_e622492a4ffeWzhAORWeUs6l0O",
+    "at": "2026-11-02T20:03:10.388Z",
+    "kind": "turn_end",
+    "text": "step finish — stop",
+    "addr": "",
+    "page": "tracer/traces/ses_e622492a4ffeWzhAORWeUs6l0O.html#ev-26"
+   }
+  }
+ ],
+ "failedSteps": [],
+ "recovery": {
+  "policy": {
+   "continueAttempts": 2,
+   "restarts": 1,
+   "stallSeconds": 180,
+   "providerWaitSeconds": 60
+  },
+  "events": [
+   {
+    "type": "continue",
+    "node": "verifier",
+    "dispatch": "d002",
+    "at": "2026-11-02T20:10:05Z",
+    "addr": "e/23",
+    "sinceLastStep": {
+     "ms": 1198,
+     "hms": "0:00:01"
+    },
+    "lastStep": {
+     "node": "verifier",
+     "session": "ses_e621e06beffeONXZF3KwHYF5NW",
+     "at": "2026-11-02T20:10:03.802Z",
+     "kind": "meta",
+     "text": "step finish — tool-calls",
+     "addr": "",
+     "page": "tracer/traces/ses_e621e06beffeONXZF3KwHYF5NW.html#ev-8"
+    }
+   }
+  ]
+ },
+ "subagents": [],
+ "repeatedCalls": [
+  {
+   "node": "orchestrator",
+   "tool": "bash",
+   "input": "cs-campaign-member wait",
+   "count": 5,
+   "polling": true,
+   "addrs": [
+    "traces/e/145",
+    "traces/e/161",
+    "traces/e/203",
+    "traces/e/239",
+    "traces/e/301"
+   ]
+  }
+ ]
+}

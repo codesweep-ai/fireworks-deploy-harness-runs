@@ -1,0 +1,58 @@
+{
+  "run": "task-tracker-01",
+  "mission": "Extract and test one coherent approval/permission slice of the frozen task-tracker-demo; prove discovery -> EARS specification -> executable test -> independent verification; leave evidence of obstacles.",
+  "outcome": "campaign-met",
+  "frozenAppCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "frozenAppIntegrity": {
+    "before": "PASS 2026-11-02T20:04:2xZ — python3 harness/check-frozen-app.py ~/app -> exit 0, 41 files",
+    "after": "PASS 2026-11-02T20:13:5xZ — same command -> exit 0, 41 files (no source changes; mission criterion 6 met)",
+    "verifierIndependent": "PASS at 340dc91 (evidence/verifier/d002/commands.md)"
+  },
+  "slice": "approve/reject on POST /tasks/action: approver-role permission (AuthFilter + TaskActionServlet.requireApprover, decided by Role.canApprove = ADMIN||MANAGER) and starting-state guard (PENDING_APPROVAL only; approve->DONE, reject->IN_PROGRESS)",
+  "integratedCommits": {
+    "integrationForVerification": "340dc91a4898092b510c473c4890e831feffda9a (A1 d7e6bdf + T1 b1a2ee6 + T2 8566315)",
+    "finalHead": "64d0b5c8afafac2e18014123eb91d737572dea4b (adds V1 evidence 7637027 + orchestrator reports commit)"
+  },
+  "artifacts": {
+    "rules": "rules/R-APR.md (R-APR-001..005 + gaps G-APR-001..003)",
+    "specs": "specs/S-APR.md (S-APR-001..005, EARS, each with observable assertions)",
+    "tests": "tests/test_approval_slice.py (5 EARS-tagged tests) + tests/test_skeleton.py (4 smoke) + tests/httpcase.py (real-HTTP plumbing)",
+    "mapping": "reports/tests/mapping.json (test -> spec/rule IDs)",
+    "testEvidence": "evidence/test-engineer/t2-test.log, t2-coverage.log, d002-runtime.log, d002-request-mechanics.md",
+    "verification": "reports/verification/d002-verdict.md + evidence/verifier/d002/ (commands.md, rt-start/reset/test1/test2/cov logs)"
+  },
+  "measuredResults": {
+    "testCommand": "python3 harness/runtime.py test",
+    "engineerRun": "exit 0, 9 tests OK (2026-11-02T20:09Z, engineer seat)",
+    "verifierIndependentRun": "exit 0, 9 tests OK on fresh DB (own app/database at commit 340dc91); second run without re-reset also OK — no dependence on prior state",
+    "coverage": {
+      "command": "python3 harness/runtime.py coverage",
+      "scope": "All compiled production Java classes in the frozen WAR (17 classes); JSP, SQL, and CSS are not measured",
+      "LINE": "233 covered / 267 missed (500 total, 46.6%)",
+      "BRANCH": "75 covered / 113 missed (188 total, 39.9%)",
+      "METHOD": "64 covered / 44 missed",
+      "CLASS": "12 covered / 5 missed",
+      "independentReproduction": "verifier re-ran coverage; regenerated summary.json byte-identical to committed one"
+    }
+  },
+  "acceptanceCriteria": [
+    {"id": 1, "statement": "rules/ and specs/ describe the approval permission and status conditions with stable IDs and source citations, EARS format, incl. allowed action, role refusal, wrong-starting-state refusal", "status": "met", "evidence": "rules/R-APR.md, specs/S-APR.md (S-APR-001/002 success, S-APR-003 role refusal, S-APR-004 wrong-state refusal, S-APR-005 unauthenticated); verifier confirmed 14/14 citations"},
+    {"id": 2, "statement": "Executable tests drive real HTTP through filter and servlet, assert responses and persisted effects incl. unchanged state after refusals, name EARS/rule IDs, live outside the frozen app", "status": "met", "evidence": "tests/test_approval_slice.py via httpcase.py (stdlib urllib to 127.0.0.1:8080, session cookies); refusal tests assert exact filter/guard messages and unchanged oracle map; reports/tests/mapping.json"},
+    {"id": 3, "statement": "Verifier runs integrated tests independently against its own app/database at a named commit, saving commands, exit codes, results, integrity checks", "status": "met", "evidence": "reports/verification/d002-verdict.md — ACCEPTED at 340dc91a4898092b510c473c4890e831feffda9a; evidence/verifier/d002/ holds verbatim logs; no suspected defects in submitted work"},
+    {"id": 4, "statement": "Record line/branch coverage of the frozen Java app with measured source scope and commands", "status": "met", "evidence": "reports/coverage/summary.json — LINE 233/500 (46.6%), BRANCH 75/188 (39.9%); scope stated; no percentage fabricated; denominator not narrowed"},
+    {"id": 5, "statement": "Orchestrator leaves run-summary.json, attempts.json, findings/ledger.json with integrated commits, achieved/unmet goals, measurements, adjudications, next-run recommendations", "status": "met", "evidence": "this file + reports/attempts.json + findings/ledger.json"},
+    {"id": 6, "statement": "Application source hashes match before and after execution; no edits to app sources", "status": "met", "evidence": "check-frozen-app.py exit 0 before (20:04Z) and after (20:13Z); verifier confirmed independently; all authored work confined to ~/outputs"}
+  ],
+  "unmetGoals": [],
+  "deferredOutOfWorkItems": [
+    "G-APR-001 bulkClose bypass: suspected defect, tracked in findings/ledger.json (F-001), not reproduced this run — closeout reserve consumed by reports; verifier time-boxed it out; reproducer recipe recorded",
+    "G-APR-002 malformed id -> 500: suspected robustness defect, tracked as F-002, not reproduced this run (same reason); reproducer recipe recorded"
+  ],
+  "nextRunRecommendations": [
+    "Reproduce F-001 (bulkClose) and F-002 (NFE 500) first thing next run — both are single-request reproductions; adjudicate F-001 against product intent (source behavior does not establish intended policy)",
+    "Add ordering cross-check tests from evidence/analyst/fixtures.md (non-approver + nonexistent id -> 403 filter-first; approver + nonexistent id -> 404)",
+    "Measure per-spec coverage attribution (current coverage is whole-suite, incl. 4 smoke tests)",
+    "Decide whether the servlet-level duplicate 403 (R-APR-002, unreachable message on normal route) is intended defense-in-depth or dead code",
+    "Expand to reject transitions and other slices only after the bulkClose policy decision"
+  ]
+}

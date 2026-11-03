@@ -1,0 +1,7 @@
+{
+  "fetch:orchestrator": 0,
+  "fetch:rule-analyst": 0,
+  "fetch:test-engineer": 0,
+  "fetch:verifier": 0,
+  "archive": 0
+}

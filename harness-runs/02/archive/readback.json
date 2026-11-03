@@ -1,0 +1,80 @@
+{
+  "members": [
+    {
+      "member": "orchestrator",
+      "role": "orchestrator",
+      "cli": "opencode",
+      "readback": {
+        "member": "orchestrator",
+        "role": "orchestrator",
+        "branch": "cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234",
+        "goal": "Coordinate the analyst, test engineer, and verifier to expand rule/spec discovery and executable whole-app test coverage across the entire frozen task-tracker-demo beyond run 01's approval slice, preserve inherited passing tests and stable IDs, reproduce and adjudicate inherited suspected defects, integrate accepted work, and land an honest run-02 verdict with committed reports and an explicit inventory of remaining gaps.",
+        "scope": "As orchestrator I own whole-app coordination, integration of accepted commits, attempts tracking, findings adjudication, and the final verdict plus reports/run-summary.json, reports/attempts.json, and findings/ledger.json in ~/outputs; I own no test implementation and must never edit the frozen app at ~/app or ~/runtime, weaken tests to force passing, or apply app fixes.",
+        "obligations": "The campaign requires me to dispatch bounded parallel work immediately, judge every reply on branch evidence rather than words, push exact integration commits to the verifier early enough for independent verification, reply to every dispatch before ending my turn, and commit all useful work to my own branch — an unreplied turn reads as stopped and uncommitted work is destroyed with my machine at campaign end.",
+        "at": "2026-11-02T20:32:04.066138134Z",
+        "dispatch": "d001",
+        "inputs": {
+          "mission.md": "d051770ec9e6403a92150801d8217730dbc42028fa7efcd9c3d7ffd9bcf9f5cc",
+          "orchestrator.md": "17fad6b93af8367cc10eb717536a7a058984295049f57d4fff062ba83d6ad47e",
+          "roles/rule-analyst.md": "366419d6a7fec7b1d8d07c333b31bd9fd5ec69e8a083411e86c7f66bb722dbbf",
+          "roles/test-engineer.md": "4198144a170ae517d1f6afb66428d46b3dfe834b90b1461d34ca8615467bb19e",
+          "roles/verifier.md": "7fd2d0bd315be7326082cadc62a3a90833df6df5b7c1d5f4b91257749c3cb0b2"
+        }
+      }
+    },
+    {
+      "member": "rule-analyst",
+      "role": "agent",
+      "cli": "opencode",
+      "readback": {
+        "member": "rule-analyst",
+        "role": "agent",
+        "branch": "cs-sandbox/rule-analyst-7aac6234.task-tracker-02-7aac6234",
+        "goal": "Read the task-tracker app at frozen ~/app (and scope.json operation families) and turn it into a complete, source-cited body of rules, specs, an app inventory, and analyst evidence — with stable rule/EARS IDs, mapped tests and remaining gaps — expanding beyond inherited approval rules and explicitly correcting any inherited assumption that the source disproves.",
+        "scope": "I own rules/, specs/, rules/app-inventory.json, and evidence/analyst/ plus durable files under ~/.local/share/cs-campaign/output; I must not edit application source, own executable tests, or invent execution evidence — the engineer and verifier supply that through the orchestrator, and I analyze frozen copies only.",
+        "obligations": "Every dispatch must be closed with a cs-campaign-member reply, and my work must be committed to my own branch (with durable non-code results in the output dir) before I stop — if I end a turn without replying I am treated as stopped and prodded, and anything not committed or written there is destroyed with my machine when the campaign ends.",
+        "at": "2026-11-02T20:31:58.838748805Z",
+        "dispatch": "d001",
+        "inputs": {
+          "rule-analyst.md": "366419d6a7fec7b1d8d07c333b31bd9fd5ec69e8a083411e86c7f66bb722dbbf"
+        }
+      }
+    },
+    {
+      "member": "test-engineer",
+      "role": "agent",
+      "cli": "opencode",
+      "readback": {
+        "member": "test-engineer",
+        "role": "agent",
+        "branch": "cs-sandbox/test-engineer-7aac6234.task-tracker-02-7aac6234",
+        "goal": "Build and maintain a comprehensive, isolated, deterministic test suite for the task-tracker app covering auth, task forms and lifecycle, filters/sorts, and the public API, with EARS-ID traceability, coverage against the full production Java denominator, and honest reporting of runs, failures, and defects.",
+        "scope": "I own tests/test_*.py, test helpers, reports/tests/, reports/coverage/, and evidence/test-engineer/; I must not edit application source, the frozen POM/build, or delete/skip/weaken failing tests to force green.",
+        "obligations": "I must reply to every dispatch, commit all work to my own branch, and write durable results to the campaign output directory, because the machine is destroyed at campaign end and anything not committed or written there is lost.",
+        "at": "2026-11-02T20:31:58.961627653Z",
+        "dispatch": "d001",
+        "inputs": {
+          "test-engineer.md": "4198144a170ae517d1f6afb66428d46b3dfe834b90b1461d34ca8615467bb19e"
+        }
+      }
+    },
+    {
+      "member": "verifier",
+      "role": "agent",
+      "cli": "opencode",
+      "readback": {
+        "member": "verifier",
+        "role": "agent",
+        "branch": "cs-sandbox/verifier-7aac6234.task-tracker-02-7aac6234",
+        "goal": "As the independent verifier of campaign task-tracker-02, run the inherited baseline on my own runtime and rigorously verify the integrated work—operation-family coverage, real HTTP request evidence, whole-suite execution and reproducibility—so every claimed test and coverage figure is backed by evidence I actually reproduced or inspected.",
+        "scope": "I own evidence/verifier/ and reports/verification/ plus my own branch in ~/outputs, and I must not author or modify submitted tests, rules, or app sources, nor fix confirmed app defects, while ~/app and ~/runtime remain read-only frozen copies.",
+        "obligations": "I must read every dispatch, reply to close it with cs-campaign-member reply before stopping (else I will be prodded to continue), commit all work to my own branch since the machine is destroyed at campaign end and only commits survive, and write durable findings to ~/.local/share/cs-campaign/output.",
+        "at": "2026-11-02T20:31:58.970777069Z",
+        "dispatch": "d001",
+        "inputs": {
+          "verifier.md": "7fd2d0bd315be7326082cadc62a3a90833df6df5b7c1d5f4b91257749c3cb0b2"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "sourceDigest": "9a76d3ba424c1ce78103ef8bf8c674792b17d2551ec1c6132cd4cc9d2dac7c44",
+  "digestDefinition": "SHA256 of compact sorted path-to-SHA256 JSON",
+  "fileCount": 41,
+  "snapshotCommand": "git -C task-tracker-demo archive eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "toolchainLock": "../../../toolchain.lock.json",
+  "runtimeSmokeVerified": true,
+  "hostCutoffVerified": true,
+  "runtimeLock": "runtime-lock.json",
+  "parentRun": "01",
+  "seedOutputCommit": "5f5751723b921c3ed9e005c4593bccd30de43c22"
+}

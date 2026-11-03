@@ -1,0 +1,113 @@
+{
+  "run": "task-tracker-02",
+  "policy": "max 2 attempts per stable work item, ~3 min per attempt; stop new implementation dispatches by 20:52:58Z; deadline 2026-11-02T21:00:58Z (campaign created 20:30:58Z)",
+  "briefingReadbacksNotAttempts": [
+    {"member": "orchestrator", "dispatch": "d001", "at": "2026-11-02T20:32:40Z (approx)", "note": "readback confirmed, all 6 inputs + 2 snapshots present"},
+    {"member": "rule-analyst", "dispatch": "d001", "at": "before run-02 work window", "note": "readback confirmed per harness"},
+    {"member": "test-engineer", "dispatch": "d001", "at": "before run-02 work window", "note": "readback confirmed per harness"},
+    {"member": "verifier", "dispatch": "d001", "at": "before run-02 work window", "note": "readback confirmed per harness"}
+  ],
+  "workItems": [
+    {
+      "id": "A1",
+      "owner": "rule-analyst",
+      "title": "AUTH/PROJ/FORM rules + EARS specs (whole-app expansion batch 1)",
+      "attempts": [
+        {"number": 1, "dispatch": "rule-analyst/d002", "sent": "2026-11-02T20:33:20Z (approx)", "replied": "2026-11-02T20:44:28Z", "result": "accepted", "commit": "24877c8 (in de6e554)", "verification": "orchestrator inspected merged rules/R-AUTH.md (8 rules), R-PROJ.md (8), R-FORM.md (8), specs S-AUTH/S-PROJ/S-FORM against own reading of ~/app sources (LoginServlet, AuthFilter exemptions /login + /api/* + .css, ProjectServlet 400 blank name, TaskFormServlet 200 re-render refusals, defaults OPEN/MEDIUM) — accurate; R-APR IDs unchanged, cross-ref section additive"}
+      ]
+    },
+    {
+      "id": "A2",
+      "owner": "rule-analyst",
+      "title": "LIFE/BULK/QUERY/API/DATA rules + specs + complete rules/app-inventory.json",
+      "attempts": [
+        {"number": 1, "dispatch": "rule-analyst/d002", "sent": "2026-11-02T20:33:20Z (approx)", "replied": "2026-11-02T20:44:28Z", "result": "accepted", "commit": "f3b06a0 + bb50a81 (in de6e554)", "verification": "orchestrator validated app-inventory.json (valid JSON, 10 routes incl. unmapped /projects/delete, 18 java sources accounted, 8 families, 12 gaps, 8 defect candidates) and spot-checked sort whitelist citation TaskDao.java:154-172 and bulkClose guard absence TaskActionServlet.java:76-88 against source — confirmed"}
+      ]
+    },
+    {
+      "id": "T-AUTH",
+      "owner": "test-engineer",
+      "title": "tests/test_auth_session.py — logout, anonymous protection, /api exemption, root redirect",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d002", "sent": "2026-11-02T20:33:25Z (approx)", "replied": "2026-11-02T20:44:29Z", "result": "accepted", "commit": "ce507a8 (in 3df5112)", "verification": "5 tests in engineer suite run 53/53 green; independent verifier double-run pending/in-flight at time of writing (see V2)"}
+      ]
+    },
+    {
+      "id": "T-PROJ",
+      "owner": "test-engineer",
+      "title": "tests/test_projects.py — list/create/blank-name 400/duplicate/archive",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d002", "sent": "2026-11-02T20:33:25Z (approx)", "replied": "2026-11-02T20:44:29Z", "result": "accepted", "commit": "6e6efd8 (in 3df5112)", "verification": "5 tests in 53/53 suite; oracle-verified persistence assertions; duplicate-name characterization matches schema (no UNIQUE on project.name)"}
+      ]
+    },
+    {
+      "id": "T-FORM",
+      "owner": "test-engineer",
+      "title": "tests/test_task_form.py — display/prefill/create-defaults/validation/nullable round-trip",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d002", "sent": "2026-11-02T20:33:25Z (approx)", "replied": "2026-11-02T20:44:29Z", "result": "rejected in review by engineer itself", "commit": "n/a", "verification": "attempt 1 asserted INTENDED project-move-on-edit; corrected to OBSERVED behavior (update never persists project_id — F-006)"},
+        {"number": 2, "dispatch": "test-engineer/d002 (same session)", "sent": "same", "replied": "2026-11-02T20:44:29Z", "result": "accepted (2/2 attempts used)", "commit": "0c7d3e8 (in 3df5112)", "verification": "6 tests in 53/53 suite; characterization labelled"}
+      ]
+    },
+    {
+      "id": "T-LIFE",
+      "owner": "test-engineer",
+      "title": "tests/test_lifecycle_bulk.py — lifecycle guards, 404/400 edges, F-001/F-002 reproduction, bulkClose",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d002", "sent": "2026-11-02T20:33:25Z (approx)", "replied": "2026-11-02T20:44:29Z", "result": "accepted", "commit": "e7e36dd (in 3df5112)", "verification": "14 tests in 53/53 suite; F-001 reproduced (member bulkClose PENDING_APPROVAL->DONE, 302, before/after oracle), F-002 reproduced (malformed + missing id -> 500, no mutation); independent verifier reproduction in V2"}
+      ]
+    },
+    {
+      "id": "T-QUERY",
+      "owner": "test-engineer",
+      "title": "tests/test_filters_sorts.py — status/assignee/combined filters, all sort tokens, actual sequences",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d002", "sent": "2026-11-02T20:33:25Z (approx)", "replied": "2026-11-02T20:44:29Z", "result": "accepted", "commit": "83ddb52 (in 3df5112)", "verification": "9 tests in 53/53 suite; asserted exact id sequences for default + all 6 whitelist tokens + invalid-token fallback; matches TaskDao.orderClause source"}
+      ]
+    },
+    {
+      "id": "T-API",
+      "owner": "test-engineer",
+      "title": "tests/test_api_json.py — readback/status filter/escaping/nulls/405/anonymous",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d002", "sent": "2026-11-02T20:33:25Z (approx)", "replied": "2026-11-02T20:44:29Z", "result": "accepted", "commit": "8f429ac (in 3df5112)", "verification": "5 tests in 53/53 suite; byte-exact escaping round-trip; assignee-param-ignored characterization matches ApiTaskServlet source (reads status only)"}
+      ]
+    },
+    {
+      "id": "T-CLOSEOUT",
+      "owner": "test-engineer",
+      "title": "mapping.json + results + coverage + evidence closeout",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d002", "sent": "2026-11-02T20:33:25Z (approx)", "replied": "2026-11-02T20:44:29Z", "result": "accepted with follow-up: mapping used placeholder EARS IDs (S-AUT/S-PRJ/S-FRM/S-LIF/S-QRY/S-API) because analyst batches had not reached the engineer", "commit": "3df5112", "verification": "suite 53/53 exit 0; coverage 449/500 LINE (+216), 159/188 BRANCH (+84) vs baseline.json — recorded in reports/coverage/summary.json and evidence logs"},
+        {"number": 2, "dispatch": "test-engineer/d003", "sent": "2026-11-02T20:50:40Z (approx)", "replied": "2026-11-02T20:49:41Z (measured reply timestamp)", "result": "accepted — 44/44 mapping rows on final analyst IDs (idStatus=FINAL), suite re-run 53/53, zero placeholders left; one approximation noted in mapping.json (assignee-param-ignored -> S-API-002)", "commit": "f63a5e8", "verification": "orchestrator diffed f63a5e8 vs 3df5112 on tests/: 74/74 balanced ID-text-only changes, no logic/assertion changes, inherited nine untouched; verifier normalized-diff independently confirmed and re-ran suite on I2: 53/53 OK (rt-test3-i2.log)"}
+      ]
+    },
+    {
+      "id": "V1",
+      "owner": "verifier",
+      "title": "Independent baseline audit (inherited 9 tests + coverage counters + integrity + gap list)",
+      "attempts": [
+        {"number": 1, "dispatch": "verifier/d002", "sent": "2026-11-02T20:33:30Z (approx)", "replied": "2026-11-02T20:35:44Z", "result": "accepted", "commit": "5737f81", "verification": "orchestrator fetched branch and inspected evidence/verifier/d002-run02/commands.md + logs: 9/9 OK exit 0 on verifier's own seat; coverage byte-identical to baseline (233/500 LINE, 75/188 BRANCH, 1021/2155 INSTR, 64/108 METHOD, 12/17 CLASS, 85/119 COMPLEXITY); check-frozen-app exit 0 (41 files)"}
+      ]
+    },
+    {
+      "id": "INT1",
+      "owner": "orchestrator",
+      "title": "Integration I1 of analyst de6e554 + engineer 3df5112",
+      "attempts": [
+        {"number": 1, "dispatch": "n/a (orchestrator-owned)", "sent": "2026-11-02T20:49:30Z (approx)", "replied": "n/a", "result": "integrated", "commit": "d90a91a", "verification": "clean merges (analyst fast-forward, engineer ort merge, no conflicts); pushed to verifier at refs/campaign/orchestrator for V2"}
+      ]
+    },
+    {
+      "id": "V2",
+      "owner": "verifier",
+      "title": "Independent verification of integration commit(s) I1 d90a91a (+ final I2)",
+      "attempts": [
+        {"number": 1, "dispatch": "verifier/d003", "sent": "2026-11-02T20:50:45Z (approx)", "replied": "2026-11-02T20:52:17Z", "result": "accepted — verdict ACCEPT", "commit": "c79e671 (merge 261a566 of I2 + evidence)", "verification": "orchestrator inspected reports/verification/v2-d003-verdict.md + evidence/verifier/d003/ logs: suite 53/53 on I1 twice with reset between AND once on I2; coverage reproduced exactly (449/500 LINE, 159/188 BRANCH, 17/17 CLASS); 49/49 mapped rows executed, all 89 cited rule/spec IDs exist; F-001/F-002 independently reproduced; F-005..F-009 spot-checks all CONFIRMED at HTTP level; inventory 10 routes/18 sources/8 families with executed evidence; integrity PASS before+after. Orchestrator also ran the integrated suite on its own seat: 53/53 OK"}
+      ]
+    }
+  ],
+  "reworksUsed": 1,
+  "exhaustedItems": ["T-FORM (2/2 attempts used, accepted on attempt 2)"],
+  "notes": "One nudge --continue per implementer was sent ~20:46:30Z when both passed the 3-min soft timebox; both had already replied at 20:44:28/29Z, so the nudges became no-ops (readbacks, not attempts). Analyst replied once covering A1+A2 (single-reply dispatch mechanics); per-item commits preserve per-batch history for the verifier. Mapping reconciliation (T-CLOSEOUT attempt 2) and V2 were timeboxed against the 20:52:58Z new-implementation stop and the 20:57:58Z reply target."
+}

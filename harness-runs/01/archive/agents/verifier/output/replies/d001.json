@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"verifier\",\"role\":\"agent\",\"branch\":\"cs-sandbox/verifier-077665b6.task-tracker-01-077665b6\",\"missing\":[],\"goal\":\"Independently verify the exact integrated commit the orchestrator supplies against my own app/database at ~/app, running the supplied tests on a fresh database and checking source citations and EARS statements, returning accepted/rejected criteria with real evidence rather than just a passing test count.\",\"scope\":\"I own evidence/verifier/ and reports/verification/ in ~/outputs on my own branch; I must not author or modify the submitted tests, rule statements, or the application itself, and report corrections only through the orchestrator.\",\"obligations\":\"I must commit all work to my own branch, write durable results to ~/.local/share/cs-campaign/output, and reply to every dispatch before stopping, because my machine is destroyed at campaign end and only committed branch state, replies, and output files survive.\"}\n",
+  "at": "2026-11-02T20:03:01.689362645Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "679cd0218739b6c019660c3a0e787d6b89ef42de",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

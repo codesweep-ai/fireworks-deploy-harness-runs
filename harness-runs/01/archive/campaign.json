@@ -1,0 +1,460 @@
+{
+  "version": 2,
+  "id": "task-tracker-01-077665b61012ba68",
+  "name": "task-tracker-01",
+  "group": "task-tracker-01-077665b6",
+  "network": "cs-sandbox-task-tracker-01-077665b6",
+  "engine": "firecracker",
+  "createdAt": "2026-11-02T20:02:09.157916934Z",
+  "updatedAt": "2026-11-02T20:03:13.792368285Z",
+  "profilePath": "/home/rishi/.tmp/firecracker-deploy/runs/01/packet/profile.yaml",
+  "profileDigest": "a69d3f47d929aa7d71b6856d5ee0386890628bac215fc2f5402df2499a30a566",
+  "upstream": {
+    "checkedAt": "2026-11-02T20:02:09.364398266Z",
+    "sandboxVersion": "v0.0.0-20261025044344-a0df4c558d44",
+    "sandboxImage": {
+      "ref": "ghcr.io/codesweep-ai/sandbox:v0.0.0-20261025044344-a0df4c558d44",
+      "id": "289de165fb1db5188b9166df1d29466ad6bec6386c1d15be15ed30ad066845e1",
+      "revision": "a0df4c558d4404718bdcb16cde82d642e5504da5"
+    },
+    "warnings": [
+      "cs-lint on PATH is v0.0.0-20260915174257-9e7aae21a123, this build pins v0.0.0-20260929195214-4cd5a16db088 — install the pinned one:  go install github.com/codesweep-ai/lint/cmd/cs-lint@v0.0.0-20260929195214-4cd5a16db088",
+      "cs-ledger on PATH is v0.0.0-20260915174332-aea70322aee1, this build pins v0.0.0-20260929195228-7eb9e9a96621 — install the pinned one:  go install github.com/codesweep-ai/ledger/cmd/cs-ledger@v0.0.0-20260929195228-7eb9e9a96621"
+    ],
+    "notes": [
+      "members boot ghcr.io/codesweep-ai/sandbox:v0.0.0-20261025044344-a0df4c558d44 (289de165fb1db5188b9, revision a0df4c558d44)",
+      "cs-vcr on PATH matches the pin (v0.0.0-20260928070923-415d1810e561)",
+      "cs-tracer on PATH matches the pin (v0.0.0-20260929195245-961ae414c82a)",
+      "not on PATH (fine — nothing here needs them): cs-npmrevs"
+    ]
+  },
+  "policy": {
+    "continueAttempts": 2,
+    "restarts": 1,
+    "elapsedSeconds": 900,
+    "blindProbes": 3,
+    "pollSeconds": 5,
+    "settlingSeconds": 15,
+    "providerWaitSeconds": 60,
+    "stallSeconds": 180
+  },
+  "deadline": "2026-11-02T20:17:09.157916934Z",
+  "attempts": [
+    {
+      "startedAt": "2026-11-02T20:02:09.157916934Z",
+      "deadline": "2026-11-02T20:17:09.157916934Z"
+    }
+  ],
+  "members": [
+    {
+      "name": "orchestrator",
+      "role": "orchestrator",
+      "cli": "opencode",
+      "sandbox": "orchestrator-077665b6",
+      "ref": "orchestrator-077665b6.task-tracker-01-077665b6",
+      "ip": "10.89.7.200",
+      "branch": "cs-sandbox/orchestrator-077665b6.task-tracker-01-077665b6",
+      "solo": false,
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+      "providerHeaderTimeoutSeconds": 60,
+      "harness": {
+        "checkedAt": "2026-11-02T20:02:40.650331425Z",
+        "tools": {
+          "cs-claude": "c7d6fd49ca7cb7044b9abbc2ebd3c3c515ffd38bfced5ac9323b12ab3b816d55",
+          "cs-claude-remote": "413275005c83e99e35b662d52143702f8bc89142aea8f070ecd963f8173ff9ca",
+          "cs-claude-remote-forget": "5912f54c19fde43a1e7cd91885048d9b4afea2c31daf78966b914d514db48601",
+          "cs-claude-remote-output": "4468fd4c3816f681559608625fb1d73be465b364c0de27055b6c04048e94fb4f",
+          "cs-claude-remote-sessions": "223ef39af35eaa14222160e709c94ab30a0d71c42a3d28e9a1837136bc4a4fcd",
+          "cs-claude-remote-status": "4197ba136468f5d0b19d790053277a52e2f243bca538957542c92bd3abdd9fbb",
+          "cs-claude-resume": "e861c3e42d49f71c3057be00e9aad5050c9b881d08e03ba19604669179a9a7f6",
+          "cs-claude-turn": "460270ebab233839b3a19173f4496c93d26beddb55798d13d0d0824fc3b92e0c",
+          "cs-codex": "2ad8b7be97b3773285a6ca9d9cbff96836555c2ef4819bc6191e7633bff2a7c6",
+          "cs-codex-remote": "0d3dc748d30bd9694b2258cd159a1a7d7dba2c6ce599dc7d7dc7a34a5e9bcb88",
+          "cs-codex-remote-forget": "e88dccedc1c8b34ba2e0eca42df4df6797c8fdfab8370f5a0e48f3da20643873",
+          "cs-codex-remote-output": "c51c06a7c4f8dd3e571bf55d6b4ed82c7edb84c7b73c8201f8b829539a4d2c8a",
+          "cs-codex-remote-sessions": "08e4ffda850daa76580a5ca6499c9acb11afb9e3fdcb97d3bc95ea978b501e08",
+          "cs-codex-remote-status": "b6be1f9e07fc83e41cd5ce6fac92ed43c0a4cba00baea9b67e6b27e245175f5d",
+          "cs-codex-turn": "ecc3973d3d740f53e69b68514ddbfdbb359917c02045fd50eb461117d2a8d96c",
+          "cs-context-hook": "ab012f145d036bab6d9974a1b637a1b950b865799fb73f509cf0eed0b97c8143",
+          "cs-opencode": "ad1e4332c30321a2d7ca397083d607ed616254ae00b5392fb014c1bfa0b18e1a",
+          "cs-opencode-remote": "0fcbad7f25bcda2e52e93ddcb884c055c222b8a2ea36bab9f219eb74967527df",
+          "cs-opencode-remote-forget": "0b3756739f88217c4499b3657201c10dc6ccd570a854c69cc58ae2039ec7ba01",
+          "cs-opencode-remote-output": "32ddc8ab5c280a22551406f5ac6a4bc43708d7efb3673b73bb1c8aaca59b95fc",
+          "cs-opencode-remote-sessions": "e94cb889d8ff2a30e020ef82e8205d521316aa051f126d4631168f3690cd9b49",
+          "cs-opencode-remote-status": "05f483b850c477f3a6145423fae712be259ff2a3b3b1fc735f6558a48ce6ae5a",
+          "cs-opencode-turn": "797dfe7154e0fe3e434a77d6601c04d9f0c0dc9f1d0bb29940eec624f665cda9",
+          "mdtohtml": "823748ff5e09e67d7e8b621abd8d16321b32bfe6b8f09685629f2212cabdef71",
+          "mdview": "7a06d2283535f6ccaa0bc4c1147591bda9f915552326bc164c65b3d09ba23ca2"
+        }
+      },
+      "seededInputs": {
+        "mission.md": "0f50998e8eb275ae6f19951c03abc28fbacb859e7919fb8fd53caf817b72f16e",
+        "orchestrator.md": "7f9fc7ca9bafe399a93170522277b324e172b7725d546fe6822dff3a75a4be0f",
+        "roles/rule-analyst.md": "2d8f6554112b6e3c09c2024c90037c30edf954304938f1e823dd1e8a685a0944",
+        "roles/test-engineer.md": "1cd38d647a10aecf732adc337f3adca44329052cdb885da9c706e728a65b3a6d",
+        "roles/verifier.md": "1103a07666e923b8de4c8d9b11f654cc0c3dd70bb2e47d4c81173c12ed474914"
+      },
+      "readback": {
+        "member": "orchestrator",
+        "role": "orchestrator",
+        "branch": "cs-sandbox/orchestrator-077665b6.task-tracker-01-077665b6",
+        "goal": "Within the 15-minute pilot, orchestrate the team to extract one approval/permission slice of the frozen task-tracker-demo, specify it in EARS, implement and run real-HTTP executable tests, obtain the verifier's independent reproduction at a named integration commit, measure coverage if the collector works, and leave reports and evidence of anything unmet.",
+        "scope": "I own integration, scope, attempt adjudication and the final verdict in ~/outputs, including reports/run-summary.json, reports/attempts.json, findings/ledger.json and integration commits; I must not edit the frozen ~/app sources (Java, JSP, SQL, build files, dependencies, scripts) or teammates' owned files except through reviewed integration, and members only communicate through me.",
+        "obligations": "I must keep every dispatch answered (ending a turn without a reply reads as stopped), commit all work to my own branch and write durable results to the campaign output directory, since my machine is destroyed at campaign end and only committed/output-written work survives.",
+        "at": "2026-11-02T20:03:10.230716735Z",
+        "dispatch": "d001",
+        "inputs": {
+          "mission.md": "0f50998e8eb275ae6f19951c03abc28fbacb859e7919fb8fd53caf817b72f16e",
+          "orchestrator.md": "7f9fc7ca9bafe399a93170522277b324e172b7725d546fe6822dff3a75a4be0f",
+          "roles/rule-analyst.md": "2d8f6554112b6e3c09c2024c90037c30edf954304938f1e823dd1e8a685a0944",
+          "roles/test-engineer.md": "1cd38d647a10aecf732adc337f3adca44329052cdb885da9c706e728a65b3a6d",
+          "roles/verifier.md": "1103a07666e923b8de4c8d9b11f654cc0c3dd70bb2e47d4c81173c12ed474914"
+        }
+      },
+      "session": {
+        "name": "task-tracker-01-077665b61012ba68-orchestrator"
+      },
+      "profile": {
+        "cli": "opencode",
+        "policy": {
+          "stallSeconds": 180
+        },
+        "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+        "providerHeaderTimeoutSeconds": 60,
+        "repos": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+            "name": "outputs",
+            "resolvedCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+          }
+        ],
+        "snapshots": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app",
+            "name": "app"
+          },
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime",
+            "name": "runtime"
+          }
+        ],
+        "auth": {
+          "apiKey": [
+            "fireworks"
+          ],
+          "credentials": "lend"
+        },
+        "resources": {
+          "cpus": 4,
+          "memoryMiB": 6144
+        },
+        "imageStores": [
+          "tt-demo-01"
+        ]
+      },
+      "stallSeconds": 180
+    },
+    {
+      "name": "rule-analyst",
+      "role": "agent",
+      "cli": "opencode",
+      "sandbox": "rule-analyst-077665b6",
+      "ref": "rule-analyst-077665b6.task-tracker-01-077665b6",
+      "ip": "10.89.7.201",
+      "branch": "cs-sandbox/rule-analyst-077665b6.task-tracker-01-077665b6",
+      "solo": true,
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+      "providerHeaderTimeoutSeconds": 60,
+      "harness": {
+        "checkedAt": "2026-11-02T20:02:40.841129609Z",
+        "tools": {
+          "cs-claude": "c7d6fd49ca7cb7044b9abbc2ebd3c3c515ffd38bfced5ac9323b12ab3b816d55",
+          "cs-claude-remote": "413275005c83e99e35b662d52143702f8bc89142aea8f070ecd963f8173ff9ca",
+          "cs-claude-remote-forget": "5912f54c19fde43a1e7cd91885048d9b4afea2c31daf78966b914d514db48601",
+          "cs-claude-remote-output": "4468fd4c3816f681559608625fb1d73be465b364c0de27055b6c04048e94fb4f",
+          "cs-claude-remote-sessions": "223ef39af35eaa14222160e709c94ab30a0d71c42a3d28e9a1837136bc4a4fcd",
+          "cs-claude-remote-status": "4197ba136468f5d0b19d790053277a52e2f243bca538957542c92bd3abdd9fbb",
+          "cs-claude-resume": "e861c3e42d49f71c3057be00e9aad5050c9b881d08e03ba19604669179a9a7f6",
+          "cs-claude-turn": "460270ebab233839b3a19173f4496c93d26beddb55798d13d0d0824fc3b92e0c",
+          "cs-codex": "2ad8b7be97b3773285a6ca9d9cbff96836555c2ef4819bc6191e7633bff2a7c6",
+          "cs-codex-remote": "0d3dc748d30bd9694b2258cd159a1a7d7dba2c6ce599dc7d7dc7a34a5e9bcb88",
+          "cs-codex-remote-forget": "e88dccedc1c8b34ba2e0eca42df4df6797c8fdfab8370f5a0e48f3da20643873",
+          "cs-codex-remote-output": "c51c06a7c4f8dd3e571bf55d6b4ed82c7edb84c7b73c8201f8b829539a4d2c8a",
+          "cs-codex-remote-sessions": "08e4ffda850daa76580a5ca6499c9acb11afb9e3fdcb97d3bc95ea978b501e08",
+          "cs-codex-remote-status": "b6be1f9e07fc83e41cd5ce6fac92ed43c0a4cba00baea9b67e6b27e245175f5d",
+          "cs-codex-turn": "ecc3973d3d740f53e69b68514ddbfdbb359917c02045fd50eb461117d2a8d96c",
+          "cs-context-hook": "ab012f145d036bab6d9974a1b637a1b950b865799fb73f509cf0eed0b97c8143",
+          "cs-opencode": "ad1e4332c30321a2d7ca397083d607ed616254ae00b5392fb014c1bfa0b18e1a",
+          "cs-opencode-remote": "0fcbad7f25bcda2e52e93ddcb884c055c222b8a2ea36bab9f219eb74967527df",
+          "cs-opencode-remote-forget": "0b3756739f88217c4499b3657201c10dc6ccd570a854c69cc58ae2039ec7ba01",
+          "cs-opencode-remote-output": "32ddc8ab5c280a22551406f5ac6a4bc43708d7efb3673b73bb1c8aaca59b95fc",
+          "cs-opencode-remote-sessions": "e94cb889d8ff2a30e020ef82e8205d521316aa051f126d4631168f3690cd9b49",
+          "cs-opencode-remote-status": "05f483b850c477f3a6145423fae712be259ff2a3b3b1fc735f6558a48ce6ae5a",
+          "cs-opencode-turn": "797dfe7154e0fe3e434a77d6601c04d9f0c0dc9f1d0bb29940eec624f665cda9",
+          "mdtohtml": "823748ff5e09e67d7e8b621abd8d16321b32bfe6b8f09685629f2212cabdef71",
+          "mdview": "7a06d2283535f6ccaa0bc4c1147591bda9f915552326bc164c65b3d09ba23ca2"
+        }
+      },
+      "seededInputs": {
+        "rule-analyst.md": "2d8f6554112b6e3c09c2024c90037c30edf954304938f1e823dd1e8a685a0944"
+      },
+      "readback": {
+        "member": "rule-analyst",
+        "role": "agent",
+        "branch": "cs-sandbox/rule-analyst-077665b6.task-tracker-01-077665b6",
+        "goal": "Analyze the staged task-tracker commit to discover, from source (filters, servlets, DAOs, SQL, routes/views), the actual rules governing task approval permissions and starting-state guards, and record them as stable, source-cited rules and EARS test specifications in my ~/outputs branch.",
+        "scope": "I own rules/, specs/, and evidence/analyst/ in ~/outputs and may read the frozen ~/app and ~/runtime snapshots, but I must not write executable tests, make application edits or fixes, infer permissions from role names, or expand beyond task approval permissions and starting-state guards.",
+        "obligations": "For each dispatch I must reply via cs-campaign-member to close it, commit useful work to my own branch, and write durable results to ~/.local/share/cs-campaign/output — if I fail to reply I will be continued as unfinished, and anything not committed or written to output is lost when my machine is destroyed at campaign end.",
+        "at": "2026-11-02T20:03:05.394167228Z",
+        "dispatch": "d001",
+        "inputs": {
+          "rule-analyst.md": "2d8f6554112b6e3c09c2024c90037c30edf954304938f1e823dd1e8a685a0944"
+        }
+      },
+      "session": {
+        "name": "task-tracker-01-077665b61012ba68-rule-analyst"
+      },
+      "profile": {
+        "cli": "opencode",
+        "policy": {
+          "stallSeconds": 180,
+          "freshPerDispatch": true
+        },
+        "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+        "providerHeaderTimeoutSeconds": 60,
+        "repos": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+            "name": "outputs",
+            "resolvedCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+          }
+        ],
+        "snapshots": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app",
+            "name": "app"
+          },
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime",
+            "name": "runtime"
+          }
+        ],
+        "auth": {
+          "apiKey": [
+            "fireworks"
+          ],
+          "credentials": "lend"
+        },
+        "resources": {
+          "cpus": 4,
+          "memoryMiB": 6144
+        },
+        "imageStores": [
+          "tt-demo-01"
+        ]
+      },
+      "stallSeconds": 180,
+      "freshPerDispatch": true
+    },
+    {
+      "name": "test-engineer",
+      "role": "agent",
+      "cli": "opencode",
+      "sandbox": "test-engineer-077665b6",
+      "ref": "test-engineer-077665b6.task-tracker-01-077665b6",
+      "ip": "10.89.7.202",
+      "branch": "cs-sandbox/test-engineer-077665b6.task-tracker-01-077665b6",
+      "solo": true,
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "harness": {
+        "checkedAt": "2026-11-02T20:02:41.014328669Z",
+        "tools": {
+          "cs-claude": "c7d6fd49ca7cb7044b9abbc2ebd3c3c515ffd38bfced5ac9323b12ab3b816d55",
+          "cs-claude-remote": "413275005c83e99e35b662d52143702f8bc89142aea8f070ecd963f8173ff9ca",
+          "cs-claude-remote-forget": "5912f54c19fde43a1e7cd91885048d9b4afea2c31daf78966b914d514db48601",
+          "cs-claude-remote-output": "4468fd4c3816f681559608625fb1d73be465b364c0de27055b6c04048e94fb4f",
+          "cs-claude-remote-sessions": "223ef39af35eaa14222160e709c94ab30a0d71c42a3d28e9a1837136bc4a4fcd",
+          "cs-claude-remote-status": "4197ba136468f5d0b19d790053277a52e2f243bca538957542c92bd3abdd9fbb",
+          "cs-claude-resume": "e861c3e42d49f71c3057be00e9aad5050c9b881d08e03ba19604669179a9a7f6",
+          "cs-claude-turn": "460270ebab233839b3a19173f4496c93d26beddb55798d13d0d0824fc3b92e0c",
+          "cs-codex": "2ad8b7be97b3773285a6ca9d9cbff96836555c2ef4819bc6191e7633bff2a7c6",
+          "cs-codex-remote": "0d3dc748d30bd9694b2258cd159a1a7d7dba2c6ce599dc7d7dc7a34a5e9bcb88",
+          "cs-codex-remote-forget": "e88dccedc1c8b34ba2e0eca42df4df6797c8fdfab8370f5a0e48f3da20643873",
+          "cs-codex-remote-output": "c51c06a7c4f8dd3e571bf55d6b4ed82c7edb84c7b73c8201f8b829539a4d2c8a",
+          "cs-codex-remote-sessions": "08e4ffda850daa76580a5ca6499c9acb11afb9e3fdcb97d3bc95ea978b501e08",
+          "cs-codex-remote-status": "b6be1f9e07fc83e41cd5ce6fac92ed43c0a4cba00baea9b67e6b27e245175f5d",
+          "cs-codex-turn": "ecc3973d3d740f53e69b68514ddbfdbb359917c02045fd50eb461117d2a8d96c",
+          "cs-context-hook": "ab012f145d036bab6d9974a1b637a1b950b865799fb73f509cf0eed0b97c8143",
+          "cs-opencode": "ad1e4332c30321a2d7ca397083d607ed616254ae00b5392fb014c1bfa0b18e1a",
+          "cs-opencode-remote": "0fcbad7f25bcda2e52e93ddcb884c055c222b8a2ea36bab9f219eb74967527df",
+          "cs-opencode-remote-forget": "0b3756739f88217c4499b3657201c10dc6ccd570a854c69cc58ae2039ec7ba01",
+          "cs-opencode-remote-output": "32ddc8ab5c280a22551406f5ac6a4bc43708d7efb3673b73bb1c8aaca59b95fc",
+          "cs-opencode-remote-sessions": "e94cb889d8ff2a30e020ef82e8205d521316aa051f126d4631168f3690cd9b49",
+          "cs-opencode-remote-status": "05f483b850c477f3a6145423fae712be259ff2a3b3b1fc735f6558a48ce6ae5a",
+          "cs-opencode-turn": "797dfe7154e0fe3e434a77d6601c04d9f0c0dc9f1d0bb29940eec624f665cda9",
+          "mdtohtml": "823748ff5e09e67d7e8b621abd8d16321b32bfe6b8f09685629f2212cabdef71",
+          "mdview": "7a06d2283535f6ccaa0bc4c1147591bda9f915552326bc164c65b3d09ba23ca2"
+        }
+      },
+      "seededInputs": {
+        "test-engineer.md": "1cd38d647a10aecf732adc337f3adca44329052cdb885da9c706e728a65b3a6d"
+      },
+      "readback": {
+        "member": "test-engineer",
+        "role": "agent",
+        "branch": "cs-sandbox/test-engineer-077665b6.task-tracker-01-077665b6",
+        "goal": "Own the test slice of the task-tracker campaign: check the supplied runtime, and once accepted EARS/rule IDs are delivered, implement small real-HTTP stdlib tests with session cookies that verify responses, persisted task state, and no mutation after refusal, with EARS-ID-referenced test names and a machine-readable mapping plus collected logs and coverage.",
+        "scope": "I own tests/, authored harness/ additions, evidence/test-engineer/, and reports/tests/ plus reports/coverage/ in ~/outputs, using only the host-prepared harness interface against this seat's isolated database; I must not edit the app's POM, copy modified app sources into a test build, make rule-policy decisions, perform app fixes, or touch the frozen ~/app and ~/runtime copies.",
+        "obligations": "I must commit all work to my own branch and write durable results to ~/.local/share/cs-campaign/output before replying to each dispatch, because the machine is destroyed at campaign end and only committed branch work and output files survive; ending a turn without a reply reads as stopped and forfeits unsaved reasoning.",
+        "at": "2026-11-02T20:03:10.132207243Z",
+        "dispatch": "d001",
+        "inputs": {
+          "test-engineer.md": "1cd38d647a10aecf732adc337f3adca44329052cdb885da9c706e728a65b3a6d"
+        }
+      },
+      "session": {
+        "name": "task-tracker-01-077665b61012ba68-test-engineer"
+      },
+      "profile": {
+        "cli": "opencode",
+        "policy": {
+          "stallSeconds": 180,
+          "freshPerDispatch": true
+        },
+        "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+        "repos": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+            "name": "outputs",
+            "resolvedCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+          }
+        ],
+        "snapshots": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app",
+            "name": "app"
+          },
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime",
+            "name": "runtime"
+          }
+        ],
+        "auth": {
+          "apiKey": [
+            "fireworks"
+          ],
+          "credentials": "lend"
+        },
+        "resources": {
+          "cpus": 4,
+          "memoryMiB": 6144
+        },
+        "imageStores": [
+          "tt-demo-01"
+        ]
+      },
+      "stallSeconds": 180,
+      "freshPerDispatch": true
+    },
+    {
+      "name": "verifier",
+      "role": "agent",
+      "cli": "opencode",
+      "sandbox": "verifier-077665b6",
+      "ref": "verifier-077665b6.task-tracker-01-077665b6",
+      "ip": "10.89.7.203",
+      "branch": "cs-sandbox/verifier-077665b6.task-tracker-01-077665b6",
+      "solo": true,
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "harness": {
+        "checkedAt": "2026-11-02T20:02:41.202951042Z",
+        "tools": {
+          "cs-claude": "c7d6fd49ca7cb7044b9abbc2ebd3c3c515ffd38bfced5ac9323b12ab3b816d55",
+          "cs-claude-remote": "413275005c83e99e35b662d52143702f8bc89142aea8f070ecd963f8173ff9ca",
+          "cs-claude-remote-forget": "5912f54c19fde43a1e7cd91885048d9b4afea2c31daf78966b914d514db48601",
+          "cs-claude-remote-output": "4468fd4c3816f681559608625fb1d73be465b364c0de27055b6c04048e94fb4f",
+          "cs-claude-remote-sessions": "223ef39af35eaa14222160e709c94ab30a0d71c42a3d28e9a1837136bc4a4fcd",
+          "cs-claude-remote-status": "4197ba136468f5d0b19d790053277a52e2f243bca538957542c92bd3abdd9fbb",
+          "cs-claude-resume": "e861c3e42d49f71c3057be00e9aad5050c9b881d08e03ba19604669179a9a7f6",
+          "cs-claude-turn": "460270ebab233839b3a19173f4496c93d26beddb55798d13d0d0824fc3b92e0c",
+          "cs-codex": "2ad8b7be97b3773285a6ca9d9cbff96836555c2ef4819bc6191e7633bff2a7c6",
+          "cs-codex-remote": "0d3dc748d30bd9694b2258cd159a1a7d7dba2c6ce599dc7d7dc7a34a5e9bcb88",
+          "cs-codex-remote-forget": "e88dccedc1c8b34ba2e0eca42df4df6797c8fdfab8370f5a0e48f3da20643873",
+          "cs-codex-remote-output": "c51c06a7c4f8dd3e571bf55d6b4ed82c7edb84c7b73c8201f8b829539a4d2c8a",
+          "cs-codex-remote-sessions": "08e4ffda850daa76580a5ca6499c9acb11afb9e3fdcb97d3bc95ea978b501e08",
+          "cs-codex-remote-status": "b6be1f9e07fc83e41cd5ce6fac92ed43c0a4cba00baea9b67e6b27e245175f5d",
+          "cs-codex-turn": "ecc3973d3d740f53e69b68514ddbfdbb359917c02045fd50eb461117d2a8d96c",
+          "cs-context-hook": "ab012f145d036bab6d9974a1b637a1b950b865799fb73f509cf0eed0b97c8143",
+          "cs-opencode": "ad1e4332c30321a2d7ca397083d607ed616254ae00b5392fb014c1bfa0b18e1a",
+          "cs-opencode-remote": "0fcbad7f25bcda2e52e93ddcb884c055c222b8a2ea36bab9f219eb74967527df",
+          "cs-opencode-remote-forget": "0b3756739f88217c4499b3657201c10dc6ccd570a854c69cc58ae2039ec7ba01",
+          "cs-opencode-remote-output": "32ddc8ab5c280a22551406f5ac6a4bc43708d7efb3673b73bb1c8aaca59b95fc",
+          "cs-opencode-remote-sessions": "e94cb889d8ff2a30e020ef82e8205d521316aa051f126d4631168f3690cd9b49",
+          "cs-opencode-remote-status": "05f483b850c477f3a6145423fae712be259ff2a3b3b1fc735f6558a48ce6ae5a",
+          "cs-opencode-turn": "797dfe7154e0fe3e434a77d6601c04d9f0c0dc9f1d0bb29940eec624f665cda9",
+          "mdtohtml": "823748ff5e09e67d7e8b621abd8d16321b32bfe6b8f09685629f2212cabdef71",
+          "mdview": "7a06d2283535f6ccaa0bc4c1147591bda9f915552326bc164c65b3d09ba23ca2"
+        }
+      },
+      "seededInputs": {
+        "verifier.md": "1103a07666e923b8de4c8d9b11f654cc0c3dd70bb2e47d4c81173c12ed474914"
+      },
+      "readback": {
+        "member": "verifier",
+        "role": "agent",
+        "branch": "cs-sandbox/verifier-077665b6.task-tracker-01-077665b6",
+        "goal": "Independently verify the exact integrated commit the orchestrator supplies against my own app/database at ~/app, running the supplied tests on a fresh database and checking source citations and EARS statements, returning accepted/rejected criteria with real evidence rather than just a passing test count.",
+        "scope": "I own evidence/verifier/ and reports/verification/ in ~/outputs on my own branch; I must not author or modify the submitted tests, rule statements, or the application itself, and report corrections only through the orchestrator.",
+        "obligations": "I must commit all work to my own branch, write durable results to ~/.local/share/cs-campaign/output, and reply to every dispatch before stopping, because my machine is destroyed at campaign end and only committed branch state, replies, and output files survive.",
+        "at": "2026-11-02T20:03:05.360071658Z",
+        "dispatch": "d001",
+        "inputs": {
+          "verifier.md": "1103a07666e923b8de4c8d9b11f654cc0c3dd70bb2e47d4c81173c12ed474914"
+        }
+      },
+      "session": {
+        "name": "task-tracker-01-077665b61012ba68-verifier"
+      },
+      "profile": {
+        "cli": "opencode",
+        "policy": {
+          "stallSeconds": 180,
+          "freshPerDispatch": true
+        },
+        "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+        "repos": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+            "name": "outputs",
+            "resolvedCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+          }
+        ],
+        "snapshots": [
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app",
+            "name": "app"
+          },
+          {
+            "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime",
+            "name": "runtime"
+          }
+        ],
+        "auth": {
+          "apiKey": [
+            "fireworks"
+          ],
+          "credentials": "lend"
+        },
+        "resources": {
+          "cpus": 4,
+          "memoryMiB": 6144
+        },
+        "imageStores": [
+          "tt-demo-01"
+        ]
+      },
+      "stallSeconds": 180,
+      "freshPerDispatch": true
+    }
+  ]
+}

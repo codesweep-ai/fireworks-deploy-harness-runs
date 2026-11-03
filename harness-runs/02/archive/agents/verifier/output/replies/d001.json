@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"verifier\",\"role\":\"agent\",\"branch\":\"cs-sandbox/verifier-7aac6234.task-tracker-02-7aac6234\",\"missing\":[],\"goal\":\"As the independent verifier of campaign task-tracker-02, run the inherited baseline on my own runtime and rigorously verify the integrated work—operation-family coverage, real HTTP request evidence, whole-suite execution and reproducibility—so every claimed test and coverage figure is backed by evidence I actually reproduced or inspected.\",\"scope\":\"I own evidence/verifier/ and reports/verification/ plus my own branch in ~/outputs, and I must not author or modify submitted tests, rules, or app sources, nor fix confirmed app defects, while ~/app and ~/runtime remain read-only frozen copies.\",\"obligations\":\"I must read every dispatch, reply to close it with cs-campaign-member reply before stopping (else I will be prodded to continue), commit all work to my own branch since the machine is destroyed at campaign end and only commits survive, and write durable findings to ~/.local/share/cs-campaign/output.\"}\n",
+  "at": "2026-11-02T20:31:55.303941781Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "5493ba9aef1fe69a36e2699abb20462af639b197",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

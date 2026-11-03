@@ -1,0 +1,62 @@
+{
+  "run": "task-tracker-01",
+  "frozenAppCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "adjudicator": "orchestrator",
+  "findings": [
+    {
+      "id": "F-001",
+      "origin": "G-APR-001 (rules/R-APR.md, rule-analyst A1)",
+      "title": "bulkClose lets non-approvers reach DONE without a state guard",
+      "classification": "suspected defect",
+      "expected": "Under the approval policy established by R-APR-001/R-APR-004 (only ADMIN/MANAGER may approve; only PENDING_APPROVAL may become DONE), a MEMBER/VIEWER bulk-closing tasks, or bulk-closing a non-PENDING_APPROVAL task, should be refused (403/409).",
+      "observed": "Source shows POST /tasks/action?action=bulkClose&ids=... performs UPDATE task SET status='DONE' for any non-DONE task with no canApprove check and no PENDING_APPROVAL guard (web/TaskActionServlet.java:26-29, 76-88; dao/TaskDao.java:128-147).",
+      "sourceCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+      "reproduction": "Not performed this run: verifier time-boxed it out (evidence/verifier/d002/commands.md 'not verified'); orchestrator did not spend closeout reserve on a non-independent run. Recipe: login dev/dev, POST /tasks/action action=bulkClose ids=2; oracle SELECT id,status FROM task ORDER BY id before/after — expect task 2 IN_PROGRESS -> DONE with a 302 if the suspected behavior is real.",
+      "rationale": "Source behavior does not by itself establish intended policy; the servlet's own approve path enforces both gates, so the inconsistency is at minimum an unresolved-intent finding. Needs product decision + reproduction next run.",
+      "ruleIds": ["R-APR-001", "R-APR-004"],
+      "status": "open — deferred to next numbered run"
+    },
+    {
+      "id": "F-002",
+      "origin": "G-APR-002 (rules/R-APR.md, rule-analyst A1)",
+      "title": "Malformed/missing id on /tasks/action causes unhandled 500",
+      "classification": "suspected defect (robustness)",
+      "expected": "A malformed id parameter should yield a client error (e.g. 400), consistent with the 400 already used for unknown actions.",
+      "observed": "Long.parseLong(req.getParameter(\"id\")) at web/TaskActionServlet.java:31 throws NumberFormatException, unhandled -> HTTP 500.",
+      "sourceCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+      "reproduction": "Not performed this run (same time-box as F-001). Recipe: login mgr/mgr, POST /tasks/action action=approve id=abc -> expect 500.",
+      "rationale": "Error-handling gap, low severity, out of the approval slice; recorded for the next run.",
+      "ruleIds": [],
+      "status": "open — deferred to next numbered run"
+    },
+    {
+      "id": "F-003",
+      "origin": "G-APR-003 (rules/R-APR.md, rule-analyst A1)",
+      "title": "/api/* exemption from AuthFilter",
+      "classification": "not a defect",
+      "expected": "n/a — checked for an approval bypass",
+      "observed": "web/ApiTaskServlet.java is GET-only read-back; no state-mutating route is reachable unauthenticated. Verified by the analyst against source and not contradicted by any test or verifier evidence.",
+      "sourceCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+      "reproduction": "n/a",
+      "rationale": "No approval-relevant capability is exposed; closing as not a defect for this slice.",
+      "ruleIds": ["R-APR-001"],
+      "status": "closed"
+    },
+    {
+      "id": "F-004",
+      "origin": "R-APR-002 disagreement record (rule-analyst A1)",
+      "title": "Duplicated approver check in filter and servlet with different messages and ordering effects",
+      "classification": "not a defect (observation)",
+      "expected": "n/a",
+      "observed": "AuthFilter (40-47) and TaskActionServlet.requireApprover (91-98) apply the same predicate with different 403 messages; the servlet's message is unreachable on the normal route. Check ordering: non-approver + nonexistent id -> 403 (filter first); approver + nonexistent id -> 404.",
+      "sourceCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+      "reproduction": "Ordering cross-checks documented in evidence/analyst/fixtures.md but not test-implemented this run (deferred; see run-summary recommendations).",
+      "rationale": "Same outcome on both layers — no behavioral disagreement; kept as an observation for the next run's ordering tests.",
+      "ruleIds": ["R-APR-001", "R-APR-002"],
+      "status": "closed (observation recorded)"
+    }
+  ],
+  "defectsConfirmed": [],
+  "infrastructureFailures": [],
+  "note": "No defects were confirmed against the submitted slice; no infrastructure failures occurred (runtime, collector, and database all functioned on all three seats). F-001/F-002 remain suspected pending reproduction and product-intent adjudication next run."
+}

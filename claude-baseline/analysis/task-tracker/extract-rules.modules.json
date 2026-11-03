@@ -1,0 +1,94 @@
+[
+ {
+  "name": ".",
+  "domain": "",
+  "files": [
+   "build-war.sh",
+   "run-tests.sh"
+  ],
+  "loc": 92
+ },
+ {
+  "name": "deploy",
+  "domain": "deploy",
+  "files": [
+   "deploy/gen-initdb-configmap.sh"
+  ],
+  "loc": 30
+ },
+ {
+  "name": "src/main/java/com/acme/tracker/dao",
+  "domain": "src/main/java/com/acme/tracker/dao",
+  "files": [
+   "src/main/java/com/acme/tracker/dao/PersonDao.java",
+   "src/main/java/com/acme/tracker/dao/ProjectDao.java",
+   "src/main/java/com/acme/tracker/dao/TaskDao.java"
+  ],
+  "loc": 389
+ },
+ {
+  "name": "src/main/java/com/acme/tracker/db",
+  "domain": "src/main/java/com/acme/tracker/db",
+  "files": [
+   "src/main/java/com/acme/tracker/db/BootstrapListener.java",
+   "src/main/java/com/acme/tracker/db/Database.java"
+  ],
+  "loc": 84
+ },
+ {
+  "name": "src/main/java/com/acme/tracker/model",
+  "domain": "src/main/java/com/acme/tracker/model",
+  "files": [
+   "src/main/java/com/acme/tracker/model/Person.java",
+   "src/main/java/com/acme/tracker/model/Project.java",
+   "src/main/java/com/acme/tracker/model/Role.java",
+   "src/main/java/com/acme/tracker/model/Task.java",
+   "src/main/java/com/acme/tracker/model/TaskStatus.java"
+  ],
+  "loc": 131
+ },
+ {
+  "name": "src/main/java/com/acme/tracker/web",
+  "domain": "src/main/java/com/acme/tracker/web",
+  "files": [
+   "src/main/java/com/acme/tracker/web/ApiTaskServlet.java",
+   "src/main/java/com/acme/tracker/web/AuthFilter.java",
+   "src/main/java/com/acme/tracker/web/LoginServlet.java",
+   "src/main/java/com/acme/tracker/web/LogoutServlet.java",
+   "src/main/java/com/acme/tracker/web/ProjectServlet.java",
+   "src/main/java/com/acme/tracker/web/TaskActionServlet.java",
+   "src/main/java/com/acme/tracker/web/TaskFormServlet.java",
+   "src/main/java/com/acme/tracker/web/TaskListServlet.java"
+  ],
+  "loc": 462
+ },
+ {
+  "name": "src/main/resources/db",
+  "domain": "src/main/resources/db",
+  "files": [
+   "src/main/resources/db/oracle-ro.sql",
+   "src/main/resources/db/schema.sql",
+   "src/main/resources/db/seed.sql"
+  ],
+  "loc": 75
+ },
+ {
+  "name": "src/main/webapp",
+  "domain": "src/main/webapp",
+  "files": [
+   "src/main/webapp/index.jsp"
+  ],
+  "loc": 1
+ },
+ {
+  "name": "src/main/webapp/WEB-INF/jsp",
+  "domain": "src/main/webapp/WEB-INF/jsp",
+  "files": [
+   "src/main/webapp/WEB-INF/jsp/login.jsp",
+   "src/main/webapp/WEB-INF/jsp/projects.jsp",
+   "src/main/webapp/WEB-INF/jsp/task-form.jsp",
+   "src/main/webapp/WEB-INF/jsp/tasks.jsp"
+  ],
+  "loc": 303
+ }
+]

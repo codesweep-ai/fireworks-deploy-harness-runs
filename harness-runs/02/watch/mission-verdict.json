@@ -1,0 +1,22 @@
+{
+  "detectedAt": "2026-11-02T20:54:46.060561+00:00",
+  "reply": {
+    "dispatch": "m1",
+    "phase": "done",
+    "note": "# Run 02 mission reply \u2014 task-tracker-02 (orchestrator)\n\n**Outcome: campaign-exhausted** \u2014 the 30-minute budget ended while progress was still being made. The three residual unmet operations are minutes of work each and were queued behind the mapping-reconciliation and independent-verification critical path. Scope was never narrowed to obtain a better verdict.\n\n## What run 02 delivered (all committed on branch cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234, final commit afd4500)\n\n- **Whole-app discovery**: 8 rule families (R-AUTH/PROJ/FORM/LIFE/BULK/QUERY/API/DATA, 64 new rules) + 51 new EARS specs, inherited R-APR/S-APR IDs stable with explicit cross-ref corrections; complete `rules/app-inventory.json` (10 routes incl. the unmapped /projects/delete, 18 Java sources, 8 views, filters/sorts/validations/schema/seed, 12 typed gaps, defect candidates).\n- **Executable coverage**: 53-test real-HTTP suite (9 inherited preserved + 44 new across 6 non-overlapping family modules), per-test DB resets, read-only-oracle persisted-state asserts, no-mutation refusal asserts, exact id-sequence asserts for every whitelisted sort token. Green on three independent seats; verifier ran it twice with reset between plus once on the final tree (order/state independent).\n- **Mapping**: `reports/tests/mapping.json` idStatus=FINAL \u2014 44 new + 5 inherited rows on stable rule/EARS IDs; verifier confirmed 49/49 mapped rows executed and all 89 cited IDs exist.\n- **Java coverage** (same denominator as run 01): LINE 449/500 (+216), BRANCH 159/188 (+84), METHOD 103/108, CLASS 17/17; denominator accounting includes the zero-counter constants holder (TaskStatus.java), resolving run-01 GAP-COV-001; remaining ~51 lines explained (startup plumbing unreachable via HTTP, error branches, dead code). Java coverage is explicitly never equated with business-rule completeness.\n- **Inherited defects**: F-001 and F-002 reproduced on two independent seats each and adjudicated observed-versus-intended \u2014 F-001's intent stays unresolved (approve-path policy is not bulkClose policy), tests labelled characterization; F-002 confirmed-as-observed robustness defect. New candidates F-005..F-009 all confirmed at HTTP level by the verifier (dead delete link, edit never persists project_id, fake-success edit, control-chars break strict JSON, assignee=abc 500). No app fixes; defect tests stay visible.\n- **Independent verification**: ACCEPT \u2014 `reports/verification/v2-d003-verdict.md` + `evidence/verifier/d003/` (commands, exit codes, logs, before/after oracles, integrity hashes; commits I1 d90a91a and I2 35b9a30 named).\n- **Reports**: current-run `reports/run-summary.json`, `reports/attempts.json` (12 items, 1 rework, T-FORM exhausted 2/2 legitimately), `findings/ledger.json`; frozen-app integrity PASS before and after on every seat; no app edits anywhere.\n\n## Unmet (why not campaign-met)\n\nCriterion 1 is partially unmet \u2014 three required operations have no executed test despite full inventory coverage:\n1. `.css` auth-exemption probe unexecuted (access-exemption set executed for /login and /api/* only).\n2. VIEWER-role bulkClose leg unexecuted (BULK roles dimension executed for ADMIN/MANAGER/MEMBER only).\n3. DATA-family crafted constraint-echo probes (S-DATA-001..003 / planned T-DATA-001..003) unexecuted \u2014 DB constraints exercised only through legal-path behavior.\n\nNext-run work is itemized in reports/run-summary.json (execute the three probes; promote verifier F-005/F-007/F-008 spot-checks into permanent suite tests; resolve F-001/F-006 product intent; cover reachable error branches; non-ASCII end-to-end and session-timeout traces).\n",
+    "outcome": "campaign-exhausted",
+    "unmet": [
+      ".css auth-exemption probe unexecuted (access-exemption set executed for /login and /api/* only)",
+      "VIEWER-role bulkClose leg unexecuted (BULK roles dimension executed for ADMIN/MANAGER/MEMBER only)",
+      "DATA-family crafted constraint-echo probes (S-DATA-001..003 / planned T-DATA-001..003) unexecuted - DB constraints exercised only through legal-path behavior"
+    ],
+    "at": "2026-11-02T20:54:28.686652099Z",
+    "repos": [
+      {
+        "repo": "outputs",
+        "head": "afd45006eb0d3ddaec186913c3cf0a21fba72ec2",
+        "treeDiffersFromBase": true
+      }
+    ]
+  }
+}

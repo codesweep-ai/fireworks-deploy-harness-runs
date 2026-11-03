@@ -1,0 +1,181 @@
+{
+  "layoutVersion": 1,
+  "id": "02",
+  "campaignName": "task-tracker-02",
+  "status": "finished",
+  "startedAt": "2026-11-02T20:30:58.588739+00:00",
+  "finishedAt": "2026-11-02T20:55:04.333953+00:00",
+  "application": {
+    "repository": "../../task-tracker-demo",
+    "origin": "git@github.com:codesweep-ai/task-tracker-demo.git",
+    "commit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+    "frozen": true,
+    "snapshot": "inputs/app",
+    "snapshotDigest": "9a76d3ba424c1ce78103ef8bf8c674792b17d2551ec1c6132cd4cc9d2dac7c44"
+  },
+  "toolchain": {
+    "campaignVersion": "v0.0.0-20261102055029-b0f0bf56f5cd",
+    "dependencyPolicy": "derive sandbox, tracer, and VCR versions from the campaign module",
+    "installedAndVerified": true,
+    "lockFile": "../../toolchain.lock.json",
+    "installationMethod": "imported prebuilt binaries after exact module/version verification; agent tools extracted from pinned sandbox"
+  },
+  "seats": {
+    "orchestrator": {
+      "cli": "opencode",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3"
+    },
+    "rule-analyst": {
+      "cli": "opencode",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3"
+    },
+    "test-engineer": {
+      "cli": "opencode",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3"
+    },
+    "verifier": {
+      "cli": "opencode",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3"
+    }
+  },
+  "modelIdentifierStatus": "exact local configuration identifiers resolved; live provider/readback checks pending",
+  "policy": {
+    "maxAttemptsPerWorkItem": 2,
+    "testSpecificationFormat": "EARS",
+    "applicationChangesAllowed": false,
+    "defectAdjudicator": "orchestrator",
+    "perAttemptLimit": "3m",
+    "campaignResourceLimit": "30m",
+    "closeoutReserve": "3m",
+    "deadlineOrigin": "campaign creation start",
+    "deadlineEnforcement": "host watchdog required; campaign deadline alone does not stop nodes",
+    "timeoutAction": "collect available outputs and archive during closeout; stop nodes at cutoff and retain disks if collection is incomplete",
+    "watchdogImplemented": true,
+    "campaignDurationSeconds": 1800
+  },
+  "scope": {
+    "mode": "whole-app",
+    "focus": "all application routes, operations, roles, validation, queries, persistence constraints, and observable views",
+    "fullCoverageRequired": false,
+    "goals": [
+      "inventory every application operation and all production Java classes",
+      "extract source-backed rules and EARS specifications across the entire app",
+      "retain existing tests and execute expanded success/refusal/boundary cases across all operation families",
+      "reproduce and adjudicate inherited suspected defects",
+      "independently verify the integrated suite and record exact residual scope and branch gaps"
+    ],
+    "unexecutedOperationPolicy": "a required operation left untested is an unmet goal, not silently accepted as covered"
+  },
+  "lineage": {
+    "mode": "continuation",
+    "parentRun": "01",
+    "seedOutputCommit": "5f5751723b921c3ed9e005c4593bccd30de43c22"
+  },
+  "paths": {
+    "packet": "packet",
+    "packetPage": "packet/packet.html",
+    "dispatchViewer": "viewer/index.html",
+    "coveragePage": "repo/reports/coverage/index.html",
+    "inputs": "inputs",
+    "outputRepository": "repo",
+    "outputBundle": "repo.bundle",
+    "archive": "archive",
+    "profile": "packet/profile.yaml",
+    "mission": "packet/mission.md",
+    "roleBriefs": "packet/roles",
+    "resolvedPlan": "packet/plan.json",
+    "progress": "watch/index.html",
+    "baselineCoverage": "packet/baseline-coverage.json",
+    "review": "review/index.html",
+    "cost": "cost/index.html"
+  },
+  "outputCommit": "afd45006eb0d3ddaec186913c3cf0a21fba72ec2",
+  "result": {
+    "elapsedSeconds": 1445.75,
+    "collectionFinished": true,
+    "stopResult": [
+      {
+        "orchestrator": 0,
+        "rule-analyst": 0,
+        "test-engineer": 0,
+        "verifier": 0
+      }
+    ],
+    "collection": {
+      "fetch:orchestrator": 0,
+      "fetch:rule-analyst": 0,
+      "fetch:test-engineer": 0,
+      "fetch:verifier": 0,
+      "archive": 0
+    },
+    "createExitCode": 0,
+    "finishedAt": "2026-11-02T20:55:04.333953+00:00",
+    "viewerExitCode": 0,
+    "outputIntegrationExitCode": 0,
+    "outputCommit": "afd45006eb0d3ddaec186913c3cf0a21fba72ec2",
+    "missionReply": {
+      "dispatch": "m1",
+      "phase": "done",
+      "note": "# Run 02 mission reply \u2014 task-tracker-02 (orchestrator)\n\n**Outcome: campaign-exhausted** \u2014 the 30-minute budget ended while progress was still being made. The three residual unmet operations are minutes of work each and were queued behind the mapping-reconciliation and independent-verification critical path. Scope was never narrowed to obtain a better verdict.\n\n## What run 02 delivered (all committed on branch cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234, final commit afd4500)\n\n- **Whole-app discovery**: 8 rule families (R-AUTH/PROJ/FORM/LIFE/BULK/QUERY/API/DATA, 64 new rules) + 51 new EARS specs, inherited R-APR/S-APR IDs stable with explicit cross-ref corrections; complete `rules/app-inventory.json` (10 routes incl. the unmapped /projects/delete, 18 Java sources, 8 views, filters/sorts/validations/schema/seed, 12 typed gaps, defect candidates).\n- **Executable coverage**: 53-test real-HTTP suite (9 inherited preserved + 44 new across 6 non-overlapping family modules), per-test DB resets, read-only-oracle persisted-state asserts, no-mutation refusal asserts, exact id-sequence asserts for every whitelisted sort token. Green on three independent seats; verifier ran it twice with reset between plus once on the final tree (order/state independent).\n- **Mapping**: `reports/tests/mapping.json` idStatus=FINAL \u2014 44 new + 5 inherited rows on stable rule/EARS IDs; verifier confirmed 49/49 mapped rows executed and all 89 cited IDs exist.\n- **Java coverage** (same denominator as run 01): LINE 449/500 (+216), BRANCH 159/188 (+84), METHOD 103/108, CLASS 17/17; denominator accounting includes the zero-counter constants holder (TaskStatus.java), resolving run-01 GAP-COV-001; remaining ~51 lines explained (startup plumbing unreachable via HTTP, error branches, dead code). Java coverage is explicitly never equated with business-rule completeness.\n- **Inherited defects**: F-001 and F-002 reproduced on two independent seats each and adjudicated observed-versus-intended \u2014 F-001's intent stays unresolved (approve-path policy is not bulkClose policy), tests labelled characterization; F-002 confirmed-as-observed robustness defect. New candidates F-005..F-009 all confirmed at HTTP level by the verifier (dead delete link, edit never persists project_id, fake-success edit, control-chars break strict JSON, assignee=abc 500). No app fixes; defect tests stay visible.\n- **Independent verification**: ACCEPT \u2014 `reports/verification/v2-d003-verdict.md` + `evidence/verifier/d003/` (commands, exit codes, logs, before/after oracles, integrity hashes; commits I1 d90a91a and I2 35b9a30 named).\n- **Reports**: current-run `reports/run-summary.json`, `reports/attempts.json` (12 items, 1 rework, T-FORM exhausted 2/2 legitimately), `findings/ledger.json`; frozen-app integrity PASS before and after on every seat; no app edits anywhere.\n\n## Unmet (why not campaign-met)\n\nCriterion 1 is partially unmet \u2014 three required operations have no executed test despite full inventory coverage:\n1. `.css` auth-exemption probe unexecuted (access-exemption set executed for /login and /api/* only).\n2. VIEWER-role bulkClose leg unexecuted (BULK roles dimension executed for ADMIN/MANAGER/MEMBER only).\n3. DATA-family crafted constraint-echo probes (S-DATA-001..003 / planned T-DATA-001..003) unexecuted \u2014 DB constraints exercised only through legal-path behavior.\n\nNext-run work is itemized in reports/run-summary.json (execute the three probes; promote verifier F-005/F-007/F-008 spot-checks into permanent suite tests; resolve F-001/F-006 product intent; cover reachable error branches; non-ASCII end-to-end and session-timeout traces).\n",
+      "outcome": "campaign-exhausted",
+      "unmet": [
+        ".css auth-exemption probe unexecuted (access-exemption set executed for /login and /api/* only)",
+        "VIEWER-role bulkClose leg unexecuted (BULK roles dimension executed for ADMIN/MANAGER/MEMBER only)",
+        "DATA-family crafted constraint-echo probes (S-DATA-001..003 / planned T-DATA-001..003) unexecuted - DB constraints exercised only through legal-path behavior"
+      ],
+      "at": "2026-11-02T20:54:28.686652099Z",
+      "repos": [
+        {
+          "repo": "outputs",
+          "head": "afd45006eb0d3ddaec186913c3cf0a21fba72ec2",
+          "treeDiffersFromBase": true
+        }
+      ]
+    },
+    "outcome": "campaign-exhausted"
+  },
+  "launchReadiness": {
+    "profileValidated": true,
+    "packetRefusals": 0,
+    "packetWarnings": 0,
+    "toolchainDoctorPassed": true,
+    "sourceIntegrityVerified": true,
+    "sandboxImagePrewarmed": true,
+    "runtimeSmokeVerified": true,
+    "externalRuntimeHarnessReady": true,
+    "hostCutoffVerified": true,
+    "liveProviderSeatsVerified": false,
+    "readyToLaunch": true
+  },
+  "monitoring": {
+    "implemented": true,
+    "liveVerified": false,
+    "command": "make watch RUN=01",
+    "pollSeconds": 15,
+    "outputInactivityFlagSeconds": 180,
+    "hardCutoffEnforced": true
+  },
+  "initialOutputCommit": "5493ba9aef1fe69a36e2699abb20462af639b197",
+  "packetSHA256": "db0d1290f3875fc62e1fa70e5408a25ab1f998cee7313dce8b4aa65ec544fd73",
+  "packetGeneratedAt": "2026-11-02T20:29:59.136919315Z",
+  "runtimeReadinessBasis": "Reuses the identical source digest, image IDs, jar hashes, and externally smoke-tested runtime harness from run 01; each member starts and verifies its own instance.",
+  "archiveAuditRun01": {
+    "passed": true,
+    "incompleteMarkers": 0,
+    "memberTranscripts": 4,
+    "bundleVerified": true
+  },
+  "measuredCounts": {
+    "rules": {
+      "total": 65,
+      "inherited": 5,
+      "new": 60
+    },
+    "specs": {
+      "total": 55,
+      "inherited": 5,
+      "new": 50
+    }
+  },
+  "operatorAssessment": "watch/operator-assessment.json"
+}

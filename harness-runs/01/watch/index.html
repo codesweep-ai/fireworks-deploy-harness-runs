@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="refresh" content="15"><title>Campaign progress</title>
+<style>:root{color-scheme:light dark}body{font:15px system-ui;max-width:1350px;margin:32px auto;padding:0 20px;line-height:1.5}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:left;vertical-align:top;border-bottom:1px solid #80808066}pre{white-space:pre-wrap;overflow-wrap:anywhere}.scroll{overflow-x:auto}a{color:light-dark(#235e9b,#94c7ff)}</style>
+<script>try{document.documentElement.style.colorScheme=localStorage.getItem('campaign-status-theme')||'light dark'}catch(_){}</script>
+<a href="/status.html">← Campaign status</a><h1>task-tracker-01: progress</h1><p>Finished — archive collected, viewer generated, all four nodes stopped. Node readings below are the last live observation. · Checked 2026-11-02T20:13:52.423040+00:00</p><p>Node state comes from cs-campaign observe. File/commit readings are separate probes. Output activity is evidence of change, not proof of correctness; the verifier judges that. No output change for 180 seconds is an attention flag, not a failure verdict.</p><div class=scroll><table><thead><tr><th>Member</th><th>State</th><th>Dispatch</th><th>Detail</th><th>Commit</th><th>Files by area</th><th>Seconds without output change</th><th>Attention</th></tr></thead><tbody><tr><td>orchestrator</td><td>node-replied</td><td>m1</td><td>reply present, not accepted · context 57k</td><td>5f5751723b92</td><td>rules: 1, specs: 1, tests: 3, evidence: 11, findings: 1, reports: 72, harness: 2</td><td>16</td><td></td></tr><tr><td>rule-analyst</td><td>node-free</td><td>d002</td><td>d002 accepted · context 26k</td><td>d7e6bdfd52c2</td><td>rules: 1, specs: 1, tests: 0, evidence: 1, findings: 0, reports: 0, harness: 2</td><td>454</td><td>No output changes observed for at least 180 seconds</td></tr><tr><td>test-engineer</td><td>node-free</td><td>d003</td><td>d003 accepted · context 18k</td><td>8566315b67e3</td><td>rules: 1, specs: 1, tests: 3, evidence: 5, findings: 0, reports: 69, harness: 2</td><td>286</td><td>No output changes observed for at least 180 seconds</td></tr><tr><td>verifier</td><td>node-free</td><td>d002</td><td>d002 accepted · context 28k</td><td>7637027a1275</td><td>rules: 1, specs: 1, tests: 3, evidence: 11, findings: 0, reports: 70, harness: 2</td><td>101</td><td></td></tr></tbody></table></div><h2>Orchestrator claims</h2><pre>[
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:04:18.701721297Z&quot;,
+    &quot;kind&quot;: &quot;plan&quot;,
+    &quot;text&quot;: &quot;# Plan \u2014 run 01 (orchestrator)\n\nDeadline 2026-11-02T20:17:09Z; stop new work 20:14:09Z. Frozen app verified before work: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files).\n\n- A1 (rule-analyst, now): rules/ + EARS specs/ for task-approval slice (permission + starting-state guard), fixtures and assertions for success / role refusal / wrong-state refusal. Budget 3m.\n- T1 (test-engineer, now, parallel): validate prepared runtime (start/reset/sql/fixture/test/coverage), login + task-action request mechanics, seeded users/tasks, test skeleton. Budget 3m.\n- T2 (test-engineer, after A1 accepted): implement real-HTTP tests naming EARS/rule IDs + machine-readable mapping; run suite + coverage. Budget 3m.\n- INT (orchestrator): integrate accepted branches into ~/outputs, single integration commit.\n- V1 (verifier, after INT pushed): independent fresh-database run of integrated tests at named commit, integrity checks, coverage scope check. Budget 3m.\n- Closeout: reports/run-summary.json, reports/attempts.json, findings/ledger.json, final frozen-app check, commit, reply.\n&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:04:27.496149292Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;verifier/d001&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:06:48.936402712Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;rule-analyst/d002&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:07:19.235814409Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d002&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:07:19.449672586Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to test-engineer at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;test-engineer&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;d7e6bdfd52c2d87a6dab25e8ff7ec6874c226c21&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:09:35.768669752Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d003&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:09:40.313633891Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to verifier at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;verifier&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;340dc91a4898092b510c473c4890e831feffda9a&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:12:53.434906001Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;verifier/d002&quot;
+  }
+]</pre><p>Raw observations are saved beside this page. This watcher observes only; the hard cutoff is a separate launch requirement.</p></html>

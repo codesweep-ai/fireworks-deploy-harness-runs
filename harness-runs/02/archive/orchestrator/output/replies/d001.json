@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"orchestrator\",\"role\":\"orchestrator\",\"branch\":\"cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234\",\"missing\":[],\"goal\":\"Coordinate the analyst, test engineer, and verifier to expand rule/spec discovery and executable whole-app test coverage across the entire frozen task-tracker-demo beyond run 01's approval slice, preserve inherited passing tests and stable IDs, reproduce and adjudicate inherited suspected defects, integrate accepted work, and land an honest run-02 verdict with committed reports and an explicit inventory of remaining gaps.\",\"scope\":\"As orchestrator I own whole-app coordination, integration of accepted commits, attempts tracking, findings adjudication, and the final verdict plus reports/run-summary.json, reports/attempts.json, and findings/ledger.json in ~/outputs; I own no test implementation and must never edit the frozen app at ~/app or ~/runtime, weaken tests to force passing, or apply app fixes.\",\"obligations\":\"The campaign requires me to dispatch bounded parallel work immediately, judge every reply on branch evidence rather than words, push exact integration commits to the verifier early enough for independent verification, reply to every dispatch before ending my turn, and commit all useful work to my own branch — an unreplied turn reads as stopped and uncommitted work is destroyed with my machine at campaign end.\"}\n",
+  "at": "2026-11-02T20:31:59.435700063Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "5493ba9aef1fe69a36e2699abb20462af639b197",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

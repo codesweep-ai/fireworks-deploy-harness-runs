@@ -1,0 +1,42 @@
+# d002-analyst reply — whole-app rules, specs, and inventory (run 02)
+
+Dispatch d002, campaign task-tracker-02, member rule-analyst. Frozen app eee783057ec28d28fb36ec05484de9b4b40ceb9c, verified untouched (harness/check-frozen-app.py exit 0 after work). Both work items (A1, A2) completed and committed to my branch; replies are combined here in two per-batch sections as instructed, ending with gaps and unexamined areas.
+
+## Item A1 — families AUTH, PROJ, FORM — commit 24877c8
+Files: rules/R-AUTH.md, rules/R-PROJ.md, rules/R-FORM.md; specs/S-AUTH.md, S-PROJ.md, S-FORM.md; plus an explicit (non-destructive) "Run 02 cross-references" section appended to rules/R-APR.md.
+IDs allocated:
+- R-AUTH-001..008 (login GET/POST success+failure, filter exemptions & protection, logout GET invalidation + 405 on POST, root/index redirect with the welcome-file first-hop flagged unresolved) / S-AUTH-001..007, planned T-AUTH-001..007.
+- R-PROJ-001..008 (list incl. archived, create + blank-name 400, duplicate names ACCEPTED, archive any-role + silent idempotence, dead Delete link → 404, malformed id 500) / S-PROJ-001..008, planned T-PROJ-001..008.
+- R-FORM-001..008 (blank form with LOW-vs-MEDIUM default disagreement, prefill/unknown/malformed id, create defaults OPEN/MEDIUM/nullable assignee, blank-title 200 + input loss, projectId validation incl. archived-project acceptance, edit that never persists project_id, no-op edit with "Saved." banner, crafted-input 500s) / S-FORM-001..008, planned T-FORM-001..008.
+Key observations: no role gates anywhere in PROJ/FORM (VIEWER can create/archive/create tasks — observed, not inferred); FORM validation refusals are 200 re-renders while PROJ uses 400.
+
+## Item A2 — families LIFE, BULK, QUERY, API, DATA + inventory — commits f3b06a0 + bb50a81
+Files: rules/R-LIFE.md, R-BULK.md, R-QUERY.md, R-API.md, R-DATA.md; specs/S-LIFE.md, S-BULK.md, S-QUERY.md, S-API.md, S-DATA.md; rules/app-inventory.json; evidence/analyst/d002-run02-notes.md.
+IDs allocated:
+- R-LIFE-001..009 (start/submit/reopen with guards and NO role gate; R-LIFE-004 cross-refs stable R-APR IDs; general 409 guard shape; 404; 400 unknown/missing action incl. literal "Unknown action: null"; 500 NFE; success redirect return=detail) / S-LIFE-001..007, planned T-LIFE-001..007.
+- R-BULK-001..005 (empty no-op; mixed-status/DONE/unknown ids; NO canApprove + NO state guard — F-001 characterized-of-suspect with INTENDED recorded separately as unresolved in R-BULK-003 and explicitly NOT asserted; malformed ids 500; no id required) / S-BULK-001..005, planned T-BULK-001..005. S-BULK-002/003 are the F-001 reproductions run 01 deferred.
+- R-QUERY-001..007 (default order 4,3,2,1; status filter incl. BOGUS→empty 200; assignee filter incl. malformed→500 and NO unassigned token; combined AND; full sort whitelist status/priority/due/due_date/title/id with exact clauses cited at TaskDao.java:154-172 and seed orders; invalid-sort fallback to updated_at DESC; injection-safety property) / S-QUERY-001..006, planned T-QUERY-001..006.
+- R-API-001..006 (anonymous full readback, no description key; status filter; escaping = backslash+quote only, HTML-specials raw (correct JSON), control chars UNESCAPED → invalid-JSON defect candidate; bare-null assignee/dueDate; GET-only 405; response mechanics) / S-API-001..005, planned T-API-001..005.
+- R-DATA-001..009 (schema constraints incl. no-UNIQUE project name and no transition CHECKs; seed contract; mapping conventions; technical model classes; startup plumbing unreachable via HTTP; dead code TaskDao.findByProject + ProjectDao.findById (grep-verified zero callers); observable JSP behavior incl. status-conditional buttons) / S-DATA-001..006, planned T-DATA-001..003; no-test branches inventoried as GAP-DATA-001..005.
+- rules/app-inventory.json (validated JSON): 10 routes (7 mapped + /projects/delete unmapped + / + /styles.css), all 18 Java sources, 8 views, filter/action/filter-param/sort/validation/schema/seed sections, every entry mapped to source citations + rule/EARS IDs + planned T-* IDs; executed IDs cited ONLY for the run-01 approval tests (nothing new claims execution); 12 explicit gaps; 8 defect-candidate entries.
+
+## Findings / defect candidates (repro recipes in evidence/analyst/d002-run02-notes.md)
+- Suggested F-005: dead Delete link (projects.jsp:32 → unmapped /projects/delete → 404).
+- Suggested F-006: task edit silently never persists project_id (TaskDao.java:98-99 omits it) while UI shows "Saved."
+- Suggested F-007: edit of nonexistent id → 302 saved=1, nothing persisted.
+- Suggested F-008: /api/tasks emits unescaped control characters → strict-JSON invalid (esc covers only \ and ", ApiTaskServlet.java:51-54).
+- Inherited F-001/F-002: now fully characterized at spec level (S-BULK-002/003, S-LIFE-007 + five NFE sites documented); still open, execution with the engineer.
+- F-003 stays closed (not a defect); F-004 ordering observation now speced as S-LIFE-005 (run-01 recommendation implemented).
+- Explicit corrections (not silent): R-APR.md cross-ref section; R-APR-004 single-point-guard note extended to bulkClose; GAP-COV-001 flags run-summary/01's "17 classes" vs scope.json's 18 sources for re-attribution.
+
+## Constraints honored
+No app edits (integrity check exit 0 after work); no test implementation (planned T-* IDs only); no invented execution evidence; every existing R-APR/S-APR ID kept stable; no restriction inferred from role names, archival state, or cross-action policy.
+
+## Remaining unexamined areas (exact)
+1. GAP-AUTH-001: anonymous GET / first hop (/login vs /tasks) — one probe by the engineer resolves it.
+2. All T-* tests are planned, not executed — engineer/verifier supply results.
+3. Non-ASCII form input end-to-end through Postgres/JSP/API not traced (low risk; noted in notes).
+4. deploy/, pom.xml, Dockerfile (build/deploy plumbing) out of the 8 families — not inventoried beyond a note.
+5. GAP-COV-001 coverage-class-count discrepancy (17 vs 18) needs the coverage seat's re-attribution.
+
+Branch: cs-sandbox/rule-analyst-7aac6234.task-tracker-02-7aac6234, base 5493ba9 → head bb50a81 (commits 24877c8, f3b06a0, bb50a81). Durable copies: this file and evidence/analyst/d002-run02-notes.md also live under ~/.local/share/cs-campaign/output.

@@ -1,0 +1,318 @@
+{
+  "campaign": "task-tracker-01",
+  "checkedAt": "2026-11-02T20:13:52.423040+00:00",
+  "status": "Finished \u2014 archive collected, viewer generated, all four nodes stopped. Node readings below are the last live observation.",
+  "members": [
+    {
+      "name": "orchestrator",
+      "role": "orchestrator",
+      "state": "node-replied",
+      "dispatch": "m1",
+      "detail": "reply present, not accepted \u00b7 context 57k",
+      "context": {
+        "tokens": 56706,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/glm-5p3"
+      },
+      "activity": {
+        "commit": "5f5751723b921c3ed9e005c4593bccd30de43c22",
+        "tree": "d65bfe1f6cd8e23102d07c4f05479e0f4e26fec1",
+        "groups": {
+          "rules": {
+            "files": 1,
+            "digest": "03fad85e05eac794a434c1b1d50b3a37f8c9337717b84a95ea8879bc44da6fbe"
+          },
+          "specs": {
+            "files": 1,
+            "digest": "c6f1ad80aa26f2df0f1abd6724440dca86239d71539ad5429c48c1c294615392"
+          },
+          "tests": {
+            "files": 3,
+            "digest": "85fb9b81ff9c045fecaacefad7db568fb21e0e42519c88d828206cf4e006d956"
+          },
+          "evidence": {
+            "files": 11,
+            "digest": "7b3e7194c634d91193204ae47e7a396c9b829b581f4c7e01351b50c81ac69b19"
+          },
+          "findings": {
+            "files": 1,
+            "digest": "5e8e9d5e28b516264aedd5662b652e95021e3f388920e1e438b56aaa49f54793"
+          },
+          "reports": {
+            "files": 72,
+            "digest": "d01ad6e989b4a904268a02e542e0e46c0491b719d12c00d56e0aaa3b4e818c2f"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 16
+    },
+    {
+      "name": "rule-analyst",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d002",
+      "detail": "d002 accepted \u00b7 context 26k",
+      "context": {
+        "tokens": 26496,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/glm-5p3"
+      },
+      "activity": {
+        "commit": "d7e6bdfd52c2d87a6dab25e8ff7ec6874c226c21",
+        "tree": "2cacefa0a85d8ebed446f49cd52734053b1a7bf7",
+        "groups": {
+          "rules": {
+            "files": 1,
+            "digest": "03fad85e05eac794a434c1b1d50b3a37f8c9337717b84a95ea8879bc44da6fbe"
+          },
+          "specs": {
+            "files": 1,
+            "digest": "c6f1ad80aa26f2df0f1abd6724440dca86239d71539ad5429c48c1c294615392"
+          },
+          "tests": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "evidence": {
+            "files": 1,
+            "digest": "0f01811cfe095fca3162773d6c0390f2fd950525c8dab806b4d62de96c2996a5"
+          },
+          "findings": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "reports": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 454,
+      "attention": "No output changes observed for at least 180 seconds"
+    },
+    {
+      "name": "test-engineer",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d003",
+      "detail": "d003 accepted \u00b7 context 18k",
+      "context": {
+        "tokens": 18402,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/kimi-k3"
+      },
+      "activity": {
+        "commit": "8566315b67e379a0e2a38eb0fca33cba09ae2b30",
+        "tree": "4156444b63c80c62b0503f28452687e1d68c02cb",
+        "groups": {
+          "rules": {
+            "files": 1,
+            "digest": "03fad85e05eac794a434c1b1d50b3a37f8c9337717b84a95ea8879bc44da6fbe"
+          },
+          "specs": {
+            "files": 1,
+            "digest": "c6f1ad80aa26f2df0f1abd6724440dca86239d71539ad5429c48c1c294615392"
+          },
+          "tests": {
+            "files": 3,
+            "digest": "85fb9b81ff9c045fecaacefad7db568fb21e0e42519c88d828206cf4e006d956"
+          },
+          "evidence": {
+            "files": 5,
+            "digest": "91599538e65e1ca443af3d0c463f2c617e1782d6a99e4a0e7d7eb5b720ea3279"
+          },
+          "findings": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "reports": {
+            "files": 69,
+            "digest": "3a6ad8968c7dfa2c3bd70b717bc4b1a1ca2fac2ba1991bd481af4efdfb7a7e21"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 286,
+      "attention": "No output changes observed for at least 180 seconds"
+    },
+    {
+      "name": "verifier",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d002",
+      "detail": "d002 accepted \u00b7 context 28k",
+      "context": {
+        "tokens": 28407,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/kimi-k3"
+      },
+      "activity": {
+        "commit": "7637027a1275e99918eedb970aa0c769403ce289",
+        "tree": "cfbc63e94891c6918b4e734a01922319586b58c8",
+        "groups": {
+          "rules": {
+            "files": 1,
+            "digest": "03fad85e05eac794a434c1b1d50b3a37f8c9337717b84a95ea8879bc44da6fbe"
+          },
+          "specs": {
+            "files": 1,
+            "digest": "c6f1ad80aa26f2df0f1abd6724440dca86239d71539ad5429c48c1c294615392"
+          },
+          "tests": {
+            "files": 3,
+            "digest": "85fb9b81ff9c045fecaacefad7db568fb21e0e42519c88d828206cf4e006d956"
+          },
+          "evidence": {
+            "files": 11,
+            "digest": "7b3e7194c634d91193204ae47e7a396c9b829b581f4c7e01351b50c81ac69b19"
+          },
+          "findings": {
+            "files": 0,
+            "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "reports": {
+            "files": 70,
+            "digest": "8c659cdcccdba0bf47666e62c3c710768f8020f9389d2012d1a00d8925e2b8e2"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 101
+    }
+  ],
+  "observation": {
+    "deadline": {
+      "at": "2026-11-02T20:17:09.157916934Z",
+      "remainingSeconds": 196,
+      "attempt": 1,
+      "startedAt": "2026-11-02T20:02:09.157916934Z"
+    },
+    "derived": [
+      {
+        "name": "orchestrator",
+        "role": "orchestrator",
+        "state": "node-replied",
+        "dispatch": "m1",
+        "detail": "reply present, not accepted \u00b7 context 57k",
+        "context": {
+          "tokens": 56706,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/glm-5p3"
+        }
+      },
+      {
+        "name": "rule-analyst",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d002",
+        "detail": "d002 accepted \u00b7 context 26k",
+        "context": {
+          "tokens": 26496,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/glm-5p3"
+        }
+      },
+      {
+        "name": "test-engineer",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d003",
+        "detail": "d003 accepted \u00b7 context 18k",
+        "context": {
+          "tokens": 18402,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/kimi-k3"
+        }
+      },
+      {
+        "name": "verifier",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d002",
+        "detail": "d002 accepted \u00b7 context 28k",
+        "context": {
+          "tokens": 28407,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/kimi-k3"
+        }
+      }
+    ],
+    "claimed": [
+      {
+        "at": "2026-11-02T20:04:18.701721297Z",
+        "kind": "plan",
+        "text": "# Plan \u2014 run 01 (orchestrator)\n\nDeadline 2026-11-02T20:17:09Z; stop new work 20:14:09Z. Frozen app verified before work: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files).\n\n- A1 (rule-analyst, now): rules/ + EARS specs/ for task-approval slice (permission + starting-state guard), fixtures and assertions for success / role refusal / wrong-state refusal. Budget 3m.\n- T1 (test-engineer, now, parallel): validate prepared runtime (start/reset/sql/fixture/test/coverage), login + task-action request mechanics, seeded users/tasks, test skeleton. Budget 3m.\n- T2 (test-engineer, after A1 accepted): implement real-HTTP tests naming EARS/rule IDs + machine-readable mapping; run suite + coverage. Budget 3m.\n- INT (orchestrator): integrate accepted branches into ~/outputs, single integration commit.\n- V1 (verifier, after INT pushed): independent fresh-database run of integrated tests at named commit, integrity checks, coverage scope check. Budget 3m.\n- Closeout: reports/run-summary.json, reports/attempts.json, findings/ledger.json, final frozen-app check, commit, reply.\n"
+      },
+      {
+        "at": "2026-11-02T20:04:27.496149292Z",
+        "kind": "accepted",
+        "text": "verifier/d001"
+      },
+      {
+        "at": "2026-11-02T20:06:48.936402712Z",
+        "kind": "accepted",
+        "text": "rule-analyst/d002"
+      },
+      {
+        "at": "2026-11-02T20:07:19.235814409Z",
+        "kind": "accepted",
+        "text": "test-engineer/d002"
+      },
+      {
+        "at": "2026-11-02T20:07:19.449672586Z",
+        "kind": "delivered",
+        "text": "delivered to test-engineer at refs/campaign/orchestrator",
+        "member": "test-engineer",
+        "repo": "outputs",
+        "commit": "d7e6bdfd52c2d87a6dab25e8ff7ec6874c226c21"
+      },
+      {
+        "at": "2026-11-02T20:09:35.768669752Z",
+        "kind": "accepted",
+        "text": "test-engineer/d003"
+      },
+      {
+        "at": "2026-11-02T20:09:40.313633891Z",
+        "kind": "delivered",
+        "text": "delivered to verifier at refs/campaign/orchestrator",
+        "member": "verifier",
+        "repo": "outputs",
+        "commit": "340dc91a4898092b510c473c4890e831feffda9a"
+      },
+      {
+        "at": "2026-11-02T20:12:53.434906001Z",
+        "kind": "accepted",
+        "text": "verifier/d002"
+      }
+    ],
+    "mission": {
+      "dispatch": "m1",
+      "phase": "done",
+      "note": "# Mission m1 summary \u2014 task-tracker-01 \u2014 outcome: campaign-met\n\n## What was accomplished\nThe full discovery \u2192 EARS specification \u2192 executable test \u2192 independent verification loop ran end-to-end on one coherent approval slice of the frozen task-tracker-demo (`~/app` @ eee783057ec28d28fb36ec05484de9b4b40ceb9c): approve/reject on `POST /tasks/action` \u2014 approver-role permission (AuthFilter + TaskActionServlet.requireApprover, predicate Role.canApprove = ADMIN||MANAGER) and starting-state guard (PENDING_APPROVAL only; approve\u2192DONE, reject\u2192IN_PROGRESS).\n\n## Commits (my branch, base 679cd02)\n- Integration commit supplied to the verifier: **340dc91a4898092b510c473c4890e831feffda9a** (merges analyst d7e6bdf: rules/R-APR.md R-APR-001..005 + specs/S-APR.md S-APR-001..005 + fixtures; engineer b1a2ee6: harness validation + httpcase.py skeleton; engineer 8566315: tests/test_approval_slice.py, mapping.json, coverage)\n- V1 evidence merge: 64d0b5c (verifier 7637027: evidence/verifier/d002/ + reports/verification/d002-verdict.md, verdict ACCEPTED)\n- Closeout: **5f5751723b921c3ed9e005c4593bccd30de43c22** (reports/run-summary.json, reports/attempts.json, findings/ledger.json)\n\n## Measured results\n- Tests: `python3 harness/runtime.py test` \u2192 exit 0, **9/9 OK** (5 EARS-tagged approval-slice tests + 4 smoke) on the engineer seat, and independently on the verifier's own app/database at 340dc91 with a fresh DB; a second no-reset run also passed (no dependence on prior state).\n- Coverage: `python3 harness/runtime.py coverage` \u2192 **LINE 233/500 (46.6%), BRANCH 75/188 (39.9%)**; scope: all 17 compiled production Java classes in the frozen WAR (JSP/SQL/CSS not measured); verifier reproduced the collection with a byte-identical summary.\n- Frozen-app integrity: `check-frozen-app.py` exit 0 (41 files) **before** (20:04Z) and **after** (20:13Z) testing, plus independently by the verifier. No app edits.\n\n## Acceptance criteria 1-6: all met\nRules/specs with stable IDs and verified citations (verifier confirmed 14/14); real-HTTP tests through filter+servlet asserting responses, persisted effects, and unchanged state after refusals, with machine-readable mapping; independent verification at a named commit with commands/exit codes/logs; coverage recorded with stated scope and commands; the three orchestrator reports committed with measurements, adjudications, and next-run recommendations; source hashes unchanged.\n\n## Findings (findings/ledger.json)\n- F-001 suspected defect (open, deferred): bulkClose path lets MEMBER/VIEWER set any non-DONE task to DONE with no canApprove check and no PENDING_APPROVAL guard (TaskActionServlet.java:26-29,76-88; TaskDao.java:128-147). Not reproduced this run \u2014 verifier time-boxed out; reproducer recipe recorded.\n- F-002 suspected defect (open, deferred): malformed `id` \u2192 unhandled NumberFormatException \u2192 HTTP 500 (TaskActionServlet.java:31). Reproducer recipe recorded.\n- F-003 not a defect: /api/* filter exemption exposes only GET read-back.\n- F-004 observation: duplicated filter/servlet approver check, different 403 messages, ordering effects documented.\n- No defects confirmed in the submitted slice; no infrastructure failures; 0 reworks; every work item accepted on attempt 1.\n\n## Next-run recommendations\nReproduce F-001/F-002 first (single-request reproductions), adjudicate bulkClose against product intent, add the documented ordering cross-check tests (403-before-404), and measure per-spec coverage attribution.\n",
+      "outcome": "campaign-met",
+      "at": "2026-11-02T20:13:52.341627773Z",
+      "repos": [
+        {
+          "repo": "outputs",
+          "head": "5f5751723b921c3ed9e005c4593bccd30de43c22",
+          "treeDiffersFromBase": true
+        }
+      ]
+    }
+  },
+  "stoppedAt": "2026-11-02T20:14:12.653388+00:00"
+}

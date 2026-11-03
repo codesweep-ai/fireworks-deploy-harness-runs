@@ -1,0 +1,394 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Run 01 — rules and tests</title><style>:root{color-scheme:light dark}body{font:15px system-ui;max-width:1100px;margin:30px auto;padding:0 20px;line-height:1.6}nav{display:flex;gap:16px;flex-wrap:wrap;position:sticky;top:0;background:Canvas;padding:12px 0;border-bottom:1px solid GrayText}a{color:light-dark(#235e9b,#94c7ff)}details{padding:16px;margin:14px 0;border:1px solid #80808066;border-radius:7px}summary{font-weight:650;cursor:pointer}pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;background:light-dark(#eef3f8,#19242f)}code{font-size:.9em}td{padding:8px;border:1px solid #80808066;vertical-align:top}table{border-collapse:collapse}.scroll{overflow-x:auto}section{scroll-margin-top:70px}h2{margin-top:30px}h3{font-size:1.15rem}</style>
+<script>try{document.documentElement.style.colorScheme=localStorage.getItem('campaign-status-theme')||'light dark'}catch(_){}</script>
+<a href="/status.html">← Campaign status</a><h1>Run 01 — rules and tests</h1><p>Frozen app: <code>eee783057ec2</code>. Test specifications are Markdown; runnable tests are Python. Coverage and results describe this run only.</p><p>Output snapshot: <code>5f5751723b92</code>. Run complete.</p><p>Catalog: <strong>5 rule definitions</strong> and <strong>5 EARS specifications</strong>, counted by unique definition IDs.</p><nav><a href="#section-0">Rules</a><a href="#section-3">EARS specifications</a><a href="#section-6">Executable tests</a><a href="#section-11">Test mappings</a><a href="#section-14">Findings</a><a href="/runs/01/repo/reports/coverage/index.html">Coverage</a></nav><section id="section-0"><h2>Rules</h2><details open><summary>rules/R-APR.md</summary><p><a href="/runs/01/repo/rules/R-APR.md">Raw file</a></p><h2>Approval-slice rules — task-tracker-demo @ eee783057ec28d28fb36ec05484de9b4b40ceb9c (frozen ~/app)</h2>
+<p>Slice: <code>approve</code>/<code>reject</code> on <code>POST /tasks/action</code>. All paths relative to <code>src/main/java/com/acme/tracker/</code> unless noted. Current behavior only; no intended-policy claims.</p>
+<h3>R-APR-001 — Filter-level approver gate on /tasks/action</h3>
+<p>- <strong>Source:</strong> <code>web/AuthFilter.java:40-47</code> (mapped to <code>/*</code> by <code>src/main/webapp/WEB-INF/web.xml:20-23</code>)</p>
+<p>- <strong>Actors:</strong> any authenticated user (session attribute <code>user</code> non-null; unauthenticated is handled earlier at <code>AuthFilter.java:33-38</code> by 302 redirect to <code>/login</code>).</p>
+<p>- <strong>Preconditions:</strong> request reached the filter; path is <code>/tasks/action</code> (not one of the <code>/login</code>, <code>/api/*</code>, <code>*.css</code> exemptions at <code>AuthFilter.java:28-31</code>); user authenticated.</p>
+<p>- <strong>Trigger:</strong> <code>POST /tasks/action</code> with <code>action</code> = <code>approve</code> or <code>reject</code>.</p>
+<p>- <strong>Effects:</strong> if <code>user.getRole().canApprove()</code> is false → <code>403 Forbidden</code>, body message <code>&quot;Only managers or admins may approve or reject tasks&quot;</code>; request never reaches the servlet. Otherwise chain continues.</p>
+<p>- <strong>Refusal behavior:</strong> 403, no DB write (filter runs before any DAO call).</p>
+<p>- <strong>Confidence:</strong> high (direct code). Ambiguity: none.</p>
+<h3>R-APR-002 — Servlet-level approver re-check (defense-in-depth duplicate)</h3>
+<p>- <strong>Source:</strong> <code>web/TaskActionServlet.java:91-98</code> (<code>requireApprover</code>), invoked at <code>:49</code> (approve) and <code>:54</code> (reject).</p>
+<p>- <strong>Actors/preconditions:</strong> user already passed the filter (authenticated) AND task <code>id</code> parsed and found (404 at <code>:31-36</code> happens first).</p>
+<p>- <strong>Trigger:</strong> approve/reject switch cases.</p>
+<p>- <strong>Effects:</strong> if <code>user == null || !user.getRole().canApprove()</code> → <code>403</code>, message <code>&quot;Approval requires a manager or admin&quot;</code>.</p>
+<p>- <strong>Refusal behavior:</strong> 403, no DB write (checked before <code>guard</code> and <code>updateStatus</code>).</p>
+<p>- <strong>Confidence:</strong> high. <strong>Disagreement record (filter vs servlet):</strong> the two layers use the *same predicate* (<code>Role.canApprove()</code>) but different messages, and the filter fires first on every normal route to <code>/tasks/action</code> (no exemption covers it), so the servlet&#x27;s 403 message is unreachable through the standard route. No outcome-level disagreement — only duplicated enforcement and divergent refusal text. Also note check <strong>ordering</strong>: existence (404) precedes the servlet role check, but the filter role check precedes existence — so a non-approver probing a nonexistent id sees 403 (filter), not 404; an approver sees 404.</p>
+<h3>R-APR-003 — Definition of &quot;may approve&quot; (the deciding code path)</h3>
+<p>- <strong>Source:</strong> <code>model/Role.java:13-16</code> — <code>canApprove()</code> returns <code>this == ADMIN || this == MANAGER</code>.</p>
+<p>- <strong>Actors:</strong> roles ADMIN, MANAGER pass; MEMBER, VIEWER refuse. This is decided by this method (called from <code>AuthFilter.java:42</code> and <code>TaskActionServlet.java:93</code>), <strong>not</strong> inferred from role names.</p>
+<p>- <strong>Preconditions/trigger:</strong> n/a (pure predicate).</p>
+<p>- <strong>Effects:</strong> defines the approver set for R-APR-001/002.</p>
+<p>- <strong>Refusal behavior:</strong> n/a.</p>
+<p>- <strong>Confidence:</strong> high. Related but non-deciding: <code>db/schema.sql:14-15</code> CHECK only constrains <code>person.role</code> to the four legal values — it grants no approval rights and does not mirror <code>canApprove</code>.</p>
+<h3>R-APR-004 — Starting-state guard: approve/reject require PENDING_APPROVAL</h3>
+<p>- <strong>Source:</strong> <code>web/TaskActionServlet.java:48-57</code> (approve <code>:48-52</code>, reject <code>:53-57</code>) + <code>guard()</code> at <code>:100-109</code>; invoked at <code>:50</code> and <code>:55</code> with <code>expected = TaskStatus.PENDING_APPROVAL</code>.</p>
+<p>- <strong>Actors:</strong> any user who passed the approver checks (R-APR-001/002).</p>
+<p>- <strong>Preconditions:</strong> task exists; user is an approver.</p>
+<p>- <strong>Trigger:</strong> approve or reject on a task whose <code>status != &#x27;PENDING_APPROVAL&#x27;</code>.</p>
+<p>- <strong>Effects:</strong> <code>409 Conflict</code>, message <code>&quot;Cannot &lt;action&gt; a task in status &lt;current&gt; (expected PENDING_APPROVAL)&quot;</code>; no DB write.</p>
+<p>- <strong>Refusal behavior:</strong> 409; task row untouched (observable via oracle <code>SELECT id,status FROM task ORDER BY id</code>).</p>
+<p>- <strong>Confidence:</strong> high. Ambiguity: none.</p>
+<h3>R-APR-005 — Transitions and persistence for successful approve/reject</h3>
+<p>- <strong>Source:</strong> <code>web/TaskActionServlet.java:51</code> (approve → <code>TaskStatus.DONE</code>), <code>:56</code> (reject → <code>TaskStatus.IN_PROGRESS</code>); write via <code>dao/TaskDao.java:115-125</code> <code>updateStatus</code> — unconditional <code>UPDATE task SET status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?</code>.</p>
+<p>- <strong>Preconditions:</strong> R-APR-001..004 all passed.</p>
+<p>- <strong>Effects:</strong> new status persisted; <code>updated_at</code> bumped; response <code>302</code> redirect to <code>/tasks</code> (or <code>/tasks/form?id=&lt;id&gt;</code> when <code>return=detail</code>, <code>:66-73</code>).</p>
+<p>- <strong>Refusal behavior:</strong> n/a (success rule).</p>
+<p>- <strong>Confidence:</strong> high. <strong>Note:</strong> the status precondition lives *only* in the servlet; neither <code>updateStatus</code> SQL nor <code>db/schema.sql:33</code> (CHECK enumerates the four statuses, not transitions) enforces it. DAO/DB would accept any legal status from any current status — the guard is single-point in <code>TaskActionServlet</code>.</p>
+<h3>Gaps (discovered, deliberately not expanded into this pilot)</h3>
+<p>- <strong>G-APR-001:</strong> <code>bulkClose</code> (<code>web/TaskActionServlet.java:26-29, 76-88</code>; <code>dao/TaskDao.java:128-147</code>) sets any non-DONE task to DONE in one UPDATE with <strong>no</strong> <code>canApprove</code> check and <strong>no</strong> PENDING_APPROVAL guard — a MEMBER/VIEWER can reach DONE (approve-equivalent) via <code>POST /tasks/action?action=bulkClose&amp;ids=…</code>. Out of slice; flagged for orchestrator.</p>
+<p>- <strong>G-APR-002:</strong> <code>Long.parseLong(req.getParameter(&quot;id&quot;))</code> at <code>TaskActionServlet.java:31</code> throws NumberFormatException (unhandled → 500) on missing/malformed <code>id</code>. Out of slice.</p>
+<p>- <strong>G-APR-003:</strong> <code>/api/*</code> is exempt from <code>AuthFilter</code> (<code>AuthFilter.java:28</code>) but <code>web/ApiTaskServlet.java</code> is GET-only read-back — no approval bypass there (verified).</p></details></section><section id="section-3"><h2>EARS specifications</h2><details open><summary>specs/S-APR.md</summary><p><a href="/runs/01/repo/specs/S-APR.md">Raw file</a></p><h2>EARS specs — approval slice — task-tracker-demo @ eee783057ec28d28fb36ec05484de9b4b40ceb9c</h2>
+<p>System under specification: the task-tracker web app (frozen ~/app). All specs are <strong>current behavior</strong>, derived from the sources cited in <code>rules/R-APR.md</code>.</p>
+<h3>S-APR-001 — approve success (state + event driven)</h3>
+<p><strong>While</strong> the authenticated user&#x27;s role satisfies <code>canApprove()</code> (ADMIN or MANAGER, per <code>model/Role.java:14-16</code>) <strong>and</strong> the target task&#x27;s status is <code>PENDING_APPROVAL</code>, <strong>when</strong> the system receives <code>POST /tasks/action</code> with <code>action=approve</code> and <code>id</code> of that task, <strong>the system shall</strong> set that task&#x27;s status to <code>DONE</code>, refresh its <code>updated_at</code>, and respond <code>302</code> redirecting to <code>/tasks</code>.</p>
+<p>- Observable: HTTP 302 with <code>Location: /tasks</code>; oracle <code>SELECT id,status FROM task ORDER BY id</code> shows the task <code>DONE</code>.</p>
+<h3>S-APR-002 — reject success (state + event driven)</h3>
+<p><strong>While</strong> the authenticated user&#x27;s role satisfies <code>canApprove()</code> <strong>and</strong> the target task&#x27;s status is <code>PENDING_APPROVAL</code>, <strong>when</strong> the system receives <code>POST /tasks/action</code> with <code>action=reject</code> and <code>id</code> of that task, <strong>the system shall</strong> set that task&#x27;s status to <code>IN_PROGRESS</code>, refresh its <code>updated_at</code>, and respond <code>302</code> redirecting to <code>/tasks</code>.</p>
+<p>- Observable: HTTP 302; oracle shows the task <code>IN_PROGRESS</code>.</p>
+<h3>S-APR-003 — role refusal (unwanted behavior)</h3>
+<p><strong>When</strong> the system receives <code>POST /tasks/action</code> with <code>action=approve</code> or <code>action=reject</code>, <strong>if</strong> the authenticated user&#x27;s role does not satisfy <code>canApprove()</code> (MEMBER or VIEWER), <strong>then the system shall</strong> respond <code>403 Forbidden</code> and leave the task&#x27;s status unchanged.</p>
+<p>- Observable: HTTP 403; body contains <code>&quot;Only managers or admins may approve or reject tasks&quot;</code> (filter message, <code>web/AuthFilter.java:42-45</code> — fires before the servlet&#x27;s own check); oracle shows task status unchanged. (If the filter were bypassed, the servlet&#x27;s <code>requireApprover</code>, <code>web/TaskActionServlet.java:93-95</code>, yields 403 with <code>&quot;Approval requires a manager or admin&quot;</code> — same outcome, different text; see rules/R-APR.md disagreement record.)</p>
+<h3>S-APR-004 — wrong-starting-state refusal (unwanted behavior)</h3>
+<p><strong>When</strong> an authenticated user whose role satisfies <code>canApprove()</code> sends <code>POST /tasks/action</code> with <code>action=approve</code> or <code>action=reject</code>, <strong>if</strong> the target task&#x27;s status is not <code>PENDING_APPROVAL</code>, <strong>then the system shall</strong> respond <code>409 Conflict</code> and leave the task&#x27;s status unchanged.</p>
+<p>- Observable: HTTP 409; body matches <code>Cannot &lt;action&gt; a task in status &lt;current&gt; (expected PENDING_APPROVAL)</code> (<code>web/TaskActionServlet.java:101-108</code>); oracle shows task status unchanged.</p>
+<h3>S-APR-005 — unauthenticated request (supporting precondition)</h3>
+<p><strong>When</strong> the system receives <code>POST /tasks/action</code> with <code>action=approve</code> or <code>action=reject</code>, <strong>if</strong> no authenticated user is bound to the session, <strong>then the system shall</strong> respond <code>302</code> redirecting to <code>/login</code> and leave the task&#x27;s status unchanged.</p>
+<p>- Observable: HTTP 302 <code>Location: /login</code> (<code>web/AuthFilter.java:33-38</code>); oracle unchanged.</p>
+<p>All five cases are source-supported; none was unsupported. Coverage note: (a)=S-APR-001/002, (b)=S-APR-003, (c)=S-APR-004 per dispatch item 2.</p></details></section><section id="section-6"><h2>Executable tests</h2><details open><summary>tests/httpcase.py</summary><p><a href="/runs/01/repo/tests/httpcase.py">Raw file</a></p><pre><code>&quot;&quot;&quot;Reusable real-HTTP plumbing for task-tracker tests (Python stdlib only).
+
+Base URL is http://127.0.0.1:8080 (override with TT_BASE_URL). Each test case
+gets its own cookie jar, i.e. its own session. Redirects are NOT followed, so
+tests can assert on 302/Location themselves. 4xx/5xx responses are returned as
+response objects instead of raising.
+&quot;&quot;&quot;
+import http.cookiejar
+import os
+import unittest
+import urllib.error
+import urllib.parse
+import urllib.request
+
+BASE_URL = os.environ.get(&quot;TT_BASE_URL&quot;, &quot;http://127.0.0.1:8080&quot;).rstrip(&quot;/&quot;)
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+class HttpCase(unittest.TestCase):
+    &quot;&quot;&quot;Base class: session-cookie HTTP client plus login/action helpers.&quot;&quot;&quot;
+
+    def setUp(self):
+        self.jar = http.cookiejar.CookieJar()
+        self.opener = urllib.request.build_opener(
+            urllib.request.ProxyHandler({}),
+            urllib.request.HTTPCookieProcessor(self.jar),
+            _NoRedirect(),
+        )
+
+    def request(self, method, path, params=None):
+        data = None if params is None else urllib.parse.urlencode(params).encode()
+        req = urllib.request.Request(BASE_URL + path, data=data, method=method)
+        try:
+            return self.opener.open(req, timeout=10)
+        except urllib.error.HTTPError as exc:  # 4xx/5xx are answers, not crashes
+            return exc
+
+    def login(self, username, password):
+        &quot;&quot;&quot;POST /login. Success: 302 to /tasks + JSESSIONID cookie.
+        Failure: 200, login page with &#x27;Invalid credentials&#x27;.&quot;&quot;&quot;
+        return self.request(&quot;POST&quot;, &quot;/login&quot;, {&quot;username&quot;: username, &quot;password&quot;: password})
+
+    def task_action(self, task_id, action, **extra):
+        &quot;&quot;&quot;POST /tasks/action as the currently logged-in user.&quot;&quot;&quot;
+        params = {&quot;id&quot;: str(task_id), &quot;action&quot;: action}
+        params.update(extra)
+        return self.request(&quot;POST&quot;, &quot;/tasks/action&quot;, params)
+
+    def session_cookie(self):
+        return next((c for c in self.jar if c.name == &quot;JSESSIONID&quot;), None)
+</code></pre></details><details open><summary>tests/test_approval_slice.py</summary><p><a href="/runs/01/repo/tests/test_approval_slice.py">Raw file</a></p><pre><code>&quot;&quot;&quot;Approval-slice tests: one per accepted EARS spec (S-APR-001..005).
+
+Specs: specs/S-APR.md; rules: rules/R-APR.md; fixtures/oracle expectations:
+evidence/analyst/fixtures.md (commit d7e6bdf). Persisted-state assertions go
+through the read-only oracle (`harness/runtime.py sql`), not HTML scraping.
+Mutating cases reset the seat&#x27;s isolated database first so task 3 is
+PENDING_APPROVAL again; no reliance on test order or generated ids.
+&quot;&quot;&quot;
+import subprocess
+import unittest
+from pathlib import Path
+
+from httpcase import HttpCase
+
+OUTPUTS = Path(__file__).resolve().parent.parent
+
+
+def reset_db():
+    subprocess.run(
+        [&quot;python3&quot;, &quot;harness/runtime.py&quot;, &quot;reset&quot;],
+        cwd=OUTPUTS, check=True, capture_output=True, text=True,
+    )
+
+
+def oracle_statuses():
+    &quot;&quot;&quot;Read-only oracle: {id: status} from `SELECT id,status FROM task`.&quot;&quot;&quot;
+    out = subprocess.run(
+        [&quot;python3&quot;, &quot;harness/runtime.py&quot;, &quot;sql&quot;,
+         &quot;SELECT id,status FROM task ORDER BY id&quot;],
+        cwd=OUTPUTS, check=True, capture_output=True, text=True,
+    ).stdout
+    return {int(line.split(&quot;|&quot;)[0]): line.split(&quot;|&quot;)[1].strip()
+            for line in out.strip().splitlines()}
+
+
+class TestApproveSuccess(HttpCase):
+    &quot;&quot;&quot;S-APR-001 (rules R-APR-001, R-APR-003, R-APR-004, R-APR-005):
+    mgr approves task 3 (PENDING_APPROVAL) -&gt; 302 to /tasks; task 3 DONE,
+    all other tasks unchanged.&quot;&quot;&quot;
+
+    def setUp(self):
+        super().setUp()
+        reset_db()
+
+    def test_s_apr_001_mgr_approve_task3(self):
+        r = self.login(&quot;mgr&quot;, &quot;mgr&quot;)
+        self.assertEqual(302, r.status)
+        self.assertIsNotNone(self.session_cookie())
+        r = self.task_action(3, &quot;approve&quot;)
+        self.assertEqual(302, r.status)
+        self.assertEqual(&quot;/tasks&quot;, r.headers.get(&quot;Location&quot;))
+        self.assertEqual(
+            {1: &quot;OPEN&quot;, 2: &quot;IN_PROGRESS&quot;, 3: &quot;DONE&quot;, 4: &quot;DONE&quot;},
+            oracle_statuses(),
+        )
+
+
+class TestRejectSuccess(HttpCase):
+    &quot;&quot;&quot;S-APR-002 (rules R-APR-001, R-APR-003, R-APR-004, R-APR-005):
+    admin rejects task 3 (PENDING_APPROVAL) -&gt; 302 to /tasks; task 3
+    IN_PROGRESS, all other tasks unchanged.&quot;&quot;&quot;
+
+    def setUp(self):
+        super().setUp()
+        reset_db()
+
+    def test_s_apr_002_admin_reject_task3(self):
+        r = self.login(&quot;admin&quot;, &quot;admin&quot;)
+        self.assertEqual(302, r.status)
+        r = self.task_action(3, &quot;reject&quot;)
+        self.assertEqual(302, r.status)
+        self.assertEqual(&quot;/tasks&quot;, r.headers.get(&quot;Location&quot;))
+        self.assertEqual(
+            {1: &quot;OPEN&quot;, 2: &quot;IN_PROGRESS&quot;, 3: &quot;IN_PROGRESS&quot;, 4: &quot;DONE&quot;},
+            oracle_statuses(),
+        )
+
+
+class TestRoleRefusal(HttpCase):
+    &quot;&quot;&quot;S-APR-003 (rule R-APR-001): dev (MEMBER, canApprove=false) attempts
+    approve on task 3 -&gt; 403 &#x27;Only managers or admins may approve or reject
+    tasks&#x27;; no mutation, task 3 stays PENDING_APPROVAL.&quot;&quot;&quot;
+
+    def setUp(self):
+        super().setUp()
+        reset_db()
+
+    def test_s_apr_003_dev_approve_forbidden(self):
+        r = self.login(&quot;dev&quot;, &quot;dev&quot;)
+        self.assertEqual(302, r.status)
+        r = self.task_action(3, &quot;approve&quot;)
+        self.assertEqual(403, r.status)
+        self.assertIn(&quot;Only managers or admins may approve or reject tasks&quot;,
+                      r.read().decode())
+        self.assertEqual(
+            {1: &quot;OPEN&quot;, 2: &quot;IN_PROGRESS&quot;, 3: &quot;PENDING_APPROVAL&quot;, 4: &quot;DONE&quot;},
+            oracle_statuses(),
+        )
+
+
+class TestWrongStateRefusal(HttpCase):
+    &quot;&quot;&quot;S-APR-004 (rule R-APR-004): mgr approves task 1 (OPEN, not
+    PENDING_APPROVAL) -&gt; 409 &#x27;Cannot approve a task in status OPEN (expected
+    PENDING_APPROVAL)&#x27;; no mutation, task 1 stays OPEN.&quot;&quot;&quot;
+
+    def setUp(self):
+        super().setUp()
+        reset_db()
+
+    def test_s_apr_004_approve_open_task_conflict(self):
+        r = self.login(&quot;mgr&quot;, &quot;mgr&quot;)
+        self.assertEqual(302, r.status)
+        r = self.task_action(1, &quot;approve&quot;)
+        self.assertEqual(409, r.status)
+        self.assertIn(&quot;Cannot approve a task in status OPEN &quot;
+                      &quot;(expected PENDING_APPROVAL)&quot;, r.read().decode())
+        self.assertEqual(
+            {1: &quot;OPEN&quot;, 2: &quot;IN_PROGRESS&quot;, 3: &quot;PENDING_APPROVAL&quot;, 4: &quot;DONE&quot;},
+            oracle_statuses(),
+        )
+
+
+class TestNoSessionRefusal(HttpCase):
+    &quot;&quot;&quot;S-APR-005 (rule R-APR-001): no login; POST approve id=3 -&gt; 302 to
+    /login; no mutation, task 3 stays PENDING_APPROVAL.&quot;&quot;&quot;
+
+    def setUp(self):
+        super().setUp()
+        reset_db()
+
+    def test_s_apr_005_anonymous_redirected_to_login(self):
+        self.assertIsNone(self.session_cookie())
+        r = self.task_action(3, &quot;approve&quot;)
+        self.assertEqual(302, r.status)
+        self.assertEqual(&quot;/login&quot;, r.headers.get(&quot;Location&quot;))
+        self.assertEqual(
+            {1: &quot;OPEN&quot;, 2: &quot;IN_PROGRESS&quot;, 3: &quot;PENDING_APPROVAL&quot;, 4: &quot;DONE&quot;},
+            oracle_statuses(),
+        )
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre></details><details open><summary>tests/test_skeleton.py</summary><p><a href="/runs/01/repo/tests/test_skeleton.py">Raw file</a></p><pre><code>&quot;&quot;&quot;Harness smoke tests: prove real-HTTP + session-cookie plumbing works.
+
+EARS-tagged rule tests land in a follow-up dispatch; this module keeps
+`python3 harness/runtime.py test` non-empty and validates the login helper.
+&quot;&quot;&quot;
+import unittest
+
+try:  # imported as top-level module by unittest discovery (start dir = tests/)
+    from httpcase import HttpCase
+except ImportError:  # imported as part of the tests package
+    from tests.httpcase import HttpCase
+
+
+class TestSkeleton(HttpCase):
+    def test_login_page_served(self):
+        resp = self.request(&quot;GET&quot;, &quot;/login&quot;)
+        self.assertEqual(resp.status, 200)
+        self.assertIn(b&quot;Sign in&quot;, resp.read())
+
+    def test_anonymous_is_redirected_to_login(self):
+        resp = self.request(&quot;GET&quot;, &quot;/tasks&quot;)
+        self.assertEqual(resp.status, 302)
+        self.assertTrue(resp.headers[&quot;Location&quot;].endswith(&quot;/login&quot;))
+
+    def test_login_success_redirects_and_sets_session_cookie(self):
+        resp = self.login(&quot;mgr&quot;, &quot;mgr&quot;)
+        self.assertEqual(resp.status, 302)
+        self.assertTrue(resp.headers[&quot;Location&quot;].endswith(&quot;/tasks&quot;))
+        self.assertIsNotNone(self.session_cookie())
+        self.assertEqual(self.request(&quot;GET&quot;, &quot;/tasks&quot;).status, 200)
+
+    def test_login_failure_returns_login_page_with_error(self):
+        resp = self.login(&quot;mgr&quot;, &quot;wrong-password&quot;)
+        self.assertEqual(resp.status, 200)
+        self.assertIn(b&quot;Invalid credentials&quot;, resp.read())
+        # NB: JSP rendering sets JSESSIONID even on failure; the cookie alone
+        # is not proof of auth — the session must also reach /tasks.
+        self.assertEqual(self.request(&quot;GET&quot;, &quot;/tasks&quot;).status, 302)
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre></details></section><section id="section-11"><h2>Test mappings</h2><details open><summary>reports/tests/mapping.json</summary><p><a href="/runs/01/repo/reports/tests/mapping.json">Raw file</a></p><pre><code>{
+  &quot;dispatch&quot;: &quot;d003&quot;,
+  &quot;workItem&quot;: &quot;T2&quot;,
+  &quot;generated&quot;: &quot;2026-11-02T20:09Z&quot;,
+  &quot;suites&quot;: {
+    &quot;tests/test_approval_slice.py&quot;: &quot;approval slice (one test per EARS spec)&quot;,
+    &quot;tests/test_skeleton.py&quot;: &quot;d002 smoke/skeleton tests (no spec mapping)&quot;
+  },
+  &quot;mapping&quot;: {
+    &quot;test_approval_slice.TestApproveSuccess.test_s_apr_001_mgr_approve_task3&quot;: {
+      &quot;specs&quot;: [&quot;S-APR-001&quot;],
+      &quot;rules&quot;: [&quot;R-APR-001&quot;, &quot;R-APR-003&quot;, &quot;R-APR-004&quot;, &quot;R-APR-005&quot;]
+    },
+    &quot;test_approval_slice.TestRejectSuccess.test_s_apr_002_admin_reject_task3&quot;: {
+      &quot;specs&quot;: [&quot;S-APR-002&quot;],
+      &quot;rules&quot;: [&quot;R-APR-001&quot;, &quot;R-APR-003&quot;, &quot;R-APR-004&quot;, &quot;R-APR-005&quot;]
+    },
+    &quot;test_approval_slice.TestRoleRefusal.test_s_apr_003_dev_approve_forbidden&quot;: {
+      &quot;specs&quot;: [&quot;S-APR-003&quot;],
+      &quot;rules&quot;: [&quot;R-APR-001&quot;]
+    },
+    &quot;test_approval_slice.TestWrongStateRefusal.test_s_apr_004_approve_open_task_conflict&quot;: {
+      &quot;specs&quot;: [&quot;S-APR-004&quot;],
+      &quot;rules&quot;: [&quot;R-APR-004&quot;]
+    },
+    &quot;test_approval_slice.TestNoSessionRefusal.test_s_apr_005_anonymous_redirected_to_login&quot;: {
+      &quot;specs&quot;: [&quot;S-APR-005&quot;],
+      &quot;rules&quot;: [&quot;R-APR-001&quot;]
+    }
+  }
+}
+</code></pre></details></section><section id="section-14"><h2>Findings</h2><details open><summary>findings/ledger.json</summary><p><a href="/runs/01/repo/findings/ledger.json">Raw file</a></p><pre><code>{
+  &quot;run&quot;: &quot;task-tracker-01&quot;,
+  &quot;frozenAppCommit&quot;: &quot;eee783057ec28d28fb36ec05484de9b4b40ceb9c&quot;,
+  &quot;adjudicator&quot;: &quot;orchestrator&quot;,
+  &quot;findings&quot;: [
+    {
+      &quot;id&quot;: &quot;F-001&quot;,
+      &quot;origin&quot;: &quot;G-APR-001 (rules/R-APR.md, rule-analyst A1)&quot;,
+      &quot;title&quot;: &quot;bulkClose lets non-approvers reach DONE without a state guard&quot;,
+      &quot;classification&quot;: &quot;suspected defect&quot;,
+      &quot;expected&quot;: &quot;Under the approval policy established by R-APR-001/R-APR-004 (only ADMIN/MANAGER may approve; only PENDING_APPROVAL may become DONE), a MEMBER/VIEWER bulk-closing tasks, or bulk-closing a non-PENDING_APPROVAL task, should be refused (403/409).&quot;,
+      &quot;observed&quot;: &quot;Source shows POST /tasks/action?action=bulkClose&amp;ids=... performs UPDATE task SET status=&#x27;DONE&#x27; for any non-DONE task with no canApprove check and no PENDING_APPROVAL guard (web/TaskActionServlet.java:26-29, 76-88; dao/TaskDao.java:128-147).&quot;,
+      &quot;sourceCommit&quot;: &quot;eee783057ec28d28fb36ec05484de9b4b40ceb9c&quot;,
+      &quot;reproduction&quot;: &quot;Not performed this run: verifier time-boxed it out (evidence/verifier/d002/commands.md &#x27;not verified&#x27;); orchestrator did not spend closeout reserve on a non-independent run. Recipe: login dev/dev, POST /tasks/action action=bulkClose ids=2; oracle SELECT id,status FROM task ORDER BY id before/after — expect task 2 IN_PROGRESS -&gt; DONE with a 302 if the suspected behavior is real.&quot;,
+      &quot;rationale&quot;: &quot;Source behavior does not by itself establish intended policy; the servlet&#x27;s own approve path enforces both gates, so the inconsistency is at minimum an unresolved-intent finding. Needs product decision + reproduction next run.&quot;,
+      &quot;ruleIds&quot;: [&quot;R-APR-001&quot;, &quot;R-APR-004&quot;],
+      &quot;status&quot;: &quot;open — deferred to next numbered run&quot;
+    },
+    {
+      &quot;id&quot;: &quot;F-002&quot;,
+      &quot;origin&quot;: &quot;G-APR-002 (rules/R-APR.md, rule-analyst A1)&quot;,
+      &quot;title&quot;: &quot;Malformed/missing id on /tasks/action causes unhandled 500&quot;,
+      &quot;classification&quot;: &quot;suspected defect (robustness)&quot;,
+      &quot;expected&quot;: &quot;A malformed id parameter should yield a client error (e.g. 400), consistent with the 400 already used for unknown actions.&quot;,
+      &quot;observed&quot;: &quot;Long.parseLong(req.getParameter(\&quot;id\&quot;)) at web/TaskActionServlet.java:31 throws NumberFormatException, unhandled -&gt; HTTP 500.&quot;,
+      &quot;sourceCommit&quot;: &quot;eee783057ec28d28fb36ec05484de9b4b40ceb9c&quot;,
+      &quot;reproduction&quot;: &quot;Not performed this run (same time-box as F-001). Recipe: login mgr/mgr, POST /tasks/action action=approve id=abc -&gt; expect 500.&quot;,
+      &quot;rationale&quot;: &quot;Error-handling gap, low severity, out of the approval slice; recorded for the next run.&quot;,
+      &quot;ruleIds&quot;: [],
+      &quot;status&quot;: &quot;open — deferred to next numbered run&quot;
+    },
+    {
+      &quot;id&quot;: &quot;F-003&quot;,
+      &quot;origin&quot;: &quot;G-APR-003 (rules/R-APR.md, rule-analyst A1)&quot;,
+      &quot;title&quot;: &quot;/api/* exemption from AuthFilter&quot;,
+      &quot;classification&quot;: &quot;not a defect&quot;,
+      &quot;expected&quot;: &quot;n/a — checked for an approval bypass&quot;,
+      &quot;observed&quot;: &quot;web/ApiTaskServlet.java is GET-only read-back; no state-mutating route is reachable unauthenticated. Verified by the analyst against source and not contradicted by any test or verifier evidence.&quot;,
+      &quot;sourceCommit&quot;: &quot;eee783057ec28d28fb36ec05484de9b4b40ceb9c&quot;,
+      &quot;reproduction&quot;: &quot;n/a&quot;,
+      &quot;rationale&quot;: &quot;No approval-relevant capability is exposed; closing as not a defect for this slice.&quot;,
+      &quot;ruleIds&quot;: [&quot;R-APR-001&quot;],
+      &quot;status&quot;: &quot;closed&quot;
+    },
+    {
+      &quot;id&quot;: &quot;F-004&quot;,
+      &quot;origin&quot;: &quot;R-APR-002 disagreement record (rule-analyst A1)&quot;,
+      &quot;title&quot;: &quot;Duplicated approver check in filter and servlet with different messages and ordering effects&quot;,
+      &quot;classification&quot;: &quot;not a defect (observation)&quot;,
+      &quot;expected&quot;: &quot;n/a&quot;,
+      &quot;observed&quot;: &quot;AuthFilter (40-47) and TaskActionServlet.requireApprover (91-98) apply the same predicate with different 403 messages; the servlet&#x27;s message is unreachable on the normal route. Check ordering: non-approver + nonexistent id -&gt; 403 (filter first); approver + nonexistent id -&gt; 404.&quot;,
+      &quot;sourceCommit&quot;: &quot;eee783057ec28d28fb36ec05484de9b4b40ceb9c&quot;,
+      &quot;reproduction&quot;: &quot;Ordering cross-checks documented in evidence/analyst/fixtures.md but not test-implemented this run (deferred; see run-summary recommendations).&quot;,
+      &quot;rationale&quot;: &quot;Same outcome on both layers — no behavioral disagreement; kept as an observation for the next run&#x27;s ordering tests.&quot;,
+      &quot;ruleIds&quot;: [&quot;R-APR-001&quot;, &quot;R-APR-002&quot;],
+      &quot;status&quot;: &quot;closed (observation recorded)&quot;
+    }
+  ],
+  &quot;defectsConfirmed&quot;: [],
+  &quot;infrastructureFailures&quot;: [],
+  &quot;note&quot;: &quot;No defects were confirmed against the submitted slice; no infrastructure failures occurred (runtime, collector, and database all functioned on all three seats). F-001/F-002 remain suspected pending reproduction and product-intent adjudication next run.&quot;
+}
+</code></pre></details></section></html>

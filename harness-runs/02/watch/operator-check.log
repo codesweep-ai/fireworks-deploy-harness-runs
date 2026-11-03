@@ -1,0 +1,71 @@
+Warning: Permanently added 'tt-demo-run02-check.default' (ED25519) to the list of known hosts.
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+Ready: http://127.0.0.1:8080
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+test_s_api_002_assignee_param_ignored (test_api_json.TestApiAssigneeParamIgnored.test_s_api_002_assignee_param_ignored) ... ok
+test_s_api_003_004_escaping_and_null_rendering (test_api_json.TestApiEscapingAndNulls.test_s_api_003_004_escaping_and_null_rendering) ... ok
+test_s_api_005_post_and_put_refused_405 (test_api_json.TestApiNonGetMethods.test_s_api_005_post_and_put_refused_405) ... ok
+test_s_api_001_readback_structure_and_order (test_api_json.TestApiReadback.test_s_api_001_readback_structure_and_order) ... ok
+test_s_api_002_status_filter (test_api_json.TestApiStatusFilter.test_s_api_002_status_filter) ... ok
+test_s_apr_001_mgr_approve_task3 (test_approval_slice.TestApproveSuccess.test_s_apr_001_mgr_approve_task3) ... ok
+test_s_apr_005_anonymous_redirected_to_login (test_approval_slice.TestNoSessionRefusal.test_s_apr_005_anonymous_redirected_to_login) ... ok
+test_s_apr_002_admin_reject_task3 (test_approval_slice.TestRejectSuccess.test_s_apr_002_admin_reject_task3) ... ok
+test_s_apr_003_dev_approve_forbidden (test_approval_slice.TestRoleRefusal.test_s_apr_003_dev_approve_forbidden) ... ok
+test_s_apr_004_approve_open_task_conflict (test_approval_slice.TestWrongStateRefusal.test_s_apr_004_approve_open_task_conflict) ... ok
+test_s_auth_004_anonymous_gets_redirect_to_login (test_auth_session.TestAnonymousGetProtectedRoutes.test_s_auth_004_anonymous_gets_redirect_to_login) ... ok
+test_s_auth_004_anonymous_posts_redirect_without_mutation (test_auth_session.TestAnonymousPostNoMutation.test_s_auth_004_anonymous_posts_redirect_without_mutation) ... ok
+test_s_auth_005_api_tasks_reachable_anonymously (test_auth_session.TestApiExemptFromAuth.test_s_auth_005_api_tasks_reachable_anonymously) ... ok
+test_s_auth_006_logout_then_tasks_redirects_to_login (test_auth_session.TestLogoutInvalidatesSession.test_s_auth_006_logout_then_tasks_redirects_to_login) ... ok
+test_s_auth_007_root_and_index_redirect_per_auth_state (test_auth_session.TestRootAndWelcomeFile.test_s_auth_007_root_and_index_redirect_per_auth_state) ... ok
+test_s_query_003_assignee_filter (test_filters_sorts.TestAssigneeFilter.test_s_query_003_assignee_filter) ... ok
+test_s_query_003_empty_assignee_means_no_filter (test_filters_sorts.TestAssigneeFilter.test_s_query_003_empty_assignee_means_no_filter) ... ok
+test_s_query_003_non_numeric_assignee_observed_500 (test_filters_sorts.TestAssigneeFilter.test_s_query_003_non_numeric_assignee_observed_500) ... ok
+test_s_query_004_status_and_assignee (test_filters_sorts.TestCombinedFilter.test_s_query_004_status_and_assignee) ... ok
+test_s_query_001_default_order_updated_desc (test_filters_sorts.TestDefaultOrdering.test_s_query_001_default_order_updated_desc) ... ok
+test_s_query_006_invalid_sorts_fall_back_to_default (test_filters_sorts.TestInvalidSortFallback.test_s_query_006_invalid_sorts_fall_back_to_default) ... ok
+test_s_query_002_each_status_filter (test_filters_sorts.TestStatusFilter.test_s_query_002_each_status_filter) ... ok
+test_s_query_002_unknown_status_matches_nothing (test_filters_sorts.TestStatusFilter.test_s_query_002_unknown_status_matches_nothing) ... ok
+test_s_query_005_every_whitelisted_sort_token (test_filters_sorts.TestWhitelistedSorts.test_s_query_005_every_whitelisted_sort_token) ... ok
+test_s_bulk_003_member_bulkclose_pending_task_observed_mutation (test_lifecycle_bulk.TestBulkCloseByMember.test_s_bulk_003_member_bulkclose_pending_task_observed_mutation) ... ok
+test_s_bulk_001_bulkclose_without_ids_is_noop (test_lifecycle_bulk.TestBulkCloseMixedAndEmpty.test_s_bulk_001_bulkclose_without_ids_is_noop) ... ok
+test_s_bulk_002_bulkclose_mixed_states (test_lifecycle_bulk.TestBulkCloseMixedAndEmpty.test_s_bulk_002_bulkclose_mixed_states) ... ok
+test_s_life_007_malformed_id_observed_500 (test_lifecycle_bulk.TestMalformedId.test_s_life_007_malformed_id_observed_500) ... ok
+test_s_life_007_missing_id_observed_500 (test_lifecycle_bulk.TestMalformedId.test_s_life_007_missing_id_observed_500) ... ok
+test_s_life_005_approver_missing_id_404 (test_lifecycle_bulk.TestNotFoundAndOrdering.test_s_life_005_approver_missing_id_404) ... ok
+test_s_life_005_non_approver_missing_id_403_first (test_lifecycle_bulk.TestNotFoundAndOrdering.test_s_life_005_non_approver_missing_id_403_first) ... ok
+test_s_life_003_reopen_done_task (test_lifecycle_bulk.TestReopenTransition.test_s_life_003_reopen_done_task) ... ok
+test_s_life_004_reopen_wrong_state_conflict (test_lifecycle_bulk.TestReopenTransition.test_s_life_004_reopen_wrong_state_conflict) ... ok
+test_s_life_001_start_open_task (test_lifecycle_bulk.TestStartTransition.test_s_life_001_start_open_task) ... ok
+test_s_life_004_start_wrong_state_conflict (test_lifecycle_bulk.TestStartTransition.test_s_life_004_start_wrong_state_conflict) ... ok
+test_s_life_002_submit_in_progress_task (test_lifecycle_bulk.TestSubmitTransition.test_s_life_002_submit_in_progress_task) ... ok
+test_s_life_004_submit_wrong_state_conflict (test_lifecycle_bulk.TestSubmitTransition.test_s_life_004_submit_wrong_state_conflict) ... ok
+test_s_life_006_unknown_action_400 (test_lifecycle_bulk.TestUnknownAction.test_s_life_006_unknown_action_400) ... ok
+test_s_proj_005_archive_and_rearchive (test_projects.TestArchiveProject.test_s_proj_005_archive_and_rearchive) ... ok
+test_s_proj_003_blank_name_refused_no_mutation (test_projects.TestCreateProjectBlankNameRefused.test_s_proj_003_blank_name_refused_no_mutation) ... ok
+test_s_proj_002_create_persists_active_owned_row (test_projects.TestCreateProjectValid.test_s_proj_002_create_persists_active_owned_row) ... ok
+test_s_proj_004_duplicate_name_persists_second_row (test_projects.TestDuplicateProjectName.test_s_proj_004_duplicate_name_persists_second_row) ... ok
+test_s_proj_001_projects_list_includes_archived (test_projects.TestProjectListAfterLogin.test_s_proj_001_projects_list_includes_archived) ... ok
+test_anonymous_is_redirected_to_login (test_skeleton.TestSkeleton.test_anonymous_is_redirected_to_login) ... ok
+test_login_failure_returns_login_page_with_error (test_skeleton.TestSkeleton.test_login_failure_returns_login_page_with_error) ... ok
+test_login_page_served (test_skeleton.TestSkeleton.test_login_page_served) ... ok
+test_login_success_redirects_and_sets_session_cookie (test_skeleton.TestSkeleton.test_login_success_redirects_and_sets_session_cookie) ... ok
+test_s_form_004_blank_title_rerenders_without_row (test_task_form.TestTaskCreateBlankTitleRefused.test_s_form_004_blank_title_rerenders_without_row) ... ok
+test_s_form_003_create_with_defaults (test_task_form.TestTaskCreateDefaults.test_s_form_003_create_with_defaults) ... ok
+test_s_form_005_missing_or_unknown_project_refused (test_task_form.TestTaskCreateInvalidProjectRefused.test_s_form_005_missing_or_unknown_project_refused) ... ok
+test_s_form_002_edit_form_prefilled (test_task_form.TestTaskEditPrefill.test_s_form_002_edit_form_prefilled) ... ok
+test_s_form_001_blank_form_served (test_task_form.TestTaskFormDisplay.test_s_form_001_blank_form_served) ... ok
+test_s_form_006_nullable_fields_round_trip (test_task_form.TestTaskNullableRoundTrip.test_s_form_006_nullable_fields_round_trip) ... ok
+
+----------------------------------------------------------------------
+Ran 53 tests in 18.952s
+
+OK
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+[INFO] Connecting to /127.0.0.1:6300.
+[INFO] Writing execution data to /coverage/jacoco.exec.
+[INFO] Loading execution data file /coverage/jacoco.exec.
+[INFO] Analyzing 17 classes.
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+{"applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c", "scope": "All compiled production Java classes in the frozen WAR; JSP, SQL, and CSS are not measured", "command": "python3 harness/runtime.py coverage", "counters": {"INSTRUCTION": {"covered": 1975, "missed": 180}, "BRANCH": {"covered": 159, "missed": 29}, "LINE": {"covered": 449, "missed": 51}, "COMPLEXITY": {"covered": 171, "missed": 33}, "METHOD": {"covered": 103, "missed": 5}, "CLASS": {"covered": 17, "missed": 0}}}
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)

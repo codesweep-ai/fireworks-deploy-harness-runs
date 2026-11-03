@@ -1,0 +1,339 @@
+{
+  "campaign": "task-tracker-02",
+  "checkedAt": "2026-11-02T20:54:44.060378+00:00",
+  "status": "Finished \u2014 campaign-exhausted; 53 tests passed, three required-operation gaps remain. Archive collected; all four campaign nodes stopped. Readings below are the last live observation.",
+  "members": [
+    {
+      "name": "orchestrator",
+      "role": "orchestrator",
+      "state": "node-replied",
+      "dispatch": "m1",
+      "detail": "reply present, not accepted \u00b7 context 107k",
+      "context": {
+        "tokens": 106657,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/glm-5p3"
+      },
+      "activity": {
+        "commit": "afd45006eb0d3ddaec186913c3cf0a21fba72ec2",
+        "tree": "90d9c9d5ad33ace7fc9d29581da32b686bbd15f9",
+        "groups": {
+          "rules": {
+            "files": 10,
+            "digest": "4c9bce603a5f12446cd1fc6c2ca2cd9ba8e992be17ee7ee24d396db2629e7283"
+          },
+          "specs": {
+            "files": 9,
+            "digest": "059fcb60782cf56cbd551a8b09542683e6f28d4c6bbca2d31b3a5f09014ca89e"
+          },
+          "tests": {
+            "files": 9,
+            "digest": "365e44b05d92a63ed1900f844df3565ddad5779cd0e605db9ad9bf3d3591523b"
+          },
+          "evidence": {
+            "files": 30,
+            "digest": "1a0ff7c9401e7b8fba569c97638e25ba28a1c410a9495053e816c99e67145805"
+          },
+          "findings": {
+            "files": 1,
+            "digest": "1a1cf0349e7e3f96d3c333765df82422c702c102ba7772a527af4163389d70be"
+          },
+          "reports": {
+            "files": 73,
+            "digest": "552badccd00f74fecc8595afe3dd0e3a60441e5b10aa31727ab7c25cc8840d97"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 16
+    },
+    {
+      "name": "rule-analyst",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d002",
+      "detail": "d002 accepted \u00b7 context 105k",
+      "context": {
+        "tokens": 104847,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/glm-5p3"
+      },
+      "activity": {
+        "commit": "de6e55461c5472a0e2ebcc558839842535f54744",
+        "tree": "a9822b87880ddafe771b9557b4b5025f46a8ce85",
+        "groups": {
+          "rules": {
+            "files": 10,
+            "digest": "4c9bce603a5f12446cd1fc6c2ca2cd9ba8e992be17ee7ee24d396db2629e7283"
+          },
+          "specs": {
+            "files": 9,
+            "digest": "059fcb60782cf56cbd551a8b09542683e6f28d4c6bbca2d31b3a5f09014ca89e"
+          },
+          "tests": {
+            "files": 3,
+            "digest": "85fb9b81ff9c045fecaacefad7db568fb21e0e42519c88d828206cf4e006d956"
+          },
+          "evidence": {
+            "files": 2,
+            "digest": "d08d529c5f7a4c176b6350404631d895206bac4568481e07957d0e938d41db3a"
+          },
+          "findings": {
+            "files": 1,
+            "digest": "62e2ce937c8c26dcec3413fd7da473cd7689ea90d35ac9e6e5693edc13749bd0"
+          },
+          "reports": {
+            "files": 2,
+            "digest": "1e58c85dca15bda6c1c079c381c998bb72c62ad366121f9e030c8eed44a1ff50"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 608,
+      "attention": "No output changes observed for at least 180 seconds"
+    },
+    {
+      "name": "test-engineer",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d003",
+      "detail": "d003 accepted \u00b7 context 41k",
+      "context": {
+        "tokens": 41295,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/kimi-k3"
+      },
+      "activity": {
+        "commit": "f63a5e81643ec8847148390bbb26087ea332927c",
+        "tree": "0163e3083967a8a532f2c1593c27ad5a578235e1",
+        "groups": {
+          "rules": {
+            "files": 1,
+            "digest": "03fad85e05eac794a434c1b1d50b3a37f8c9337717b84a95ea8879bc44da6fbe"
+          },
+          "specs": {
+            "files": 1,
+            "digest": "c6f1ad80aa26f2df0f1abd6724440dca86239d71539ad5429c48c1c294615392"
+          },
+          "tests": {
+            "files": 9,
+            "digest": "365e44b05d92a63ed1900f844df3565ddad5779cd0e605db9ad9bf3d3591523b"
+          },
+          "evidence": {
+            "files": 4,
+            "digest": "106e9c6552e755f638d39da91c2aac651578a6c34d16eb62ff93e5bd028519f2"
+          },
+          "findings": {
+            "files": 1,
+            "digest": "62e2ce937c8c26dcec3413fd7da473cd7689ea90d35ac9e6e5693edc13749bd0"
+          },
+          "reports": {
+            "files": 69,
+            "digest": "d6d4765e2daad455ff6e1d80428f1f4661174c461f80aeb7306599c3f0fa5b55"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 320,
+      "attention": "No output changes observed for at least 180 seconds"
+    },
+    {
+      "name": "verifier",
+      "role": "agent",
+      "state": "node-free",
+      "dispatch": "d003",
+      "detail": "d003 accepted \u00b7 context 46k",
+      "context": {
+        "tokens": 45998,
+        "compactions": 0,
+        "model": "accounts/fireworks/models/kimi-k3"
+      },
+      "activity": {
+        "commit": "c79e671d5b63548ae1a49035a846a7a937e1b9de",
+        "tree": "c8f32e8115bedb7f222735338b8f4916c05f3f32",
+        "groups": {
+          "rules": {
+            "files": 10,
+            "digest": "4c9bce603a5f12446cd1fc6c2ca2cd9ba8e992be17ee7ee24d396db2629e7283"
+          },
+          "specs": {
+            "files": 9,
+            "digest": "059fcb60782cf56cbd551a8b09542683e6f28d4c6bbca2d31b3a5f09014ca89e"
+          },
+          "tests": {
+            "files": 9,
+            "digest": "365e44b05d92a63ed1900f844df3565ddad5779cd0e605db9ad9bf3d3591523b"
+          },
+          "evidence": {
+            "files": 30,
+            "digest": "1a0ff7c9401e7b8fba569c97638e25ba28a1c410a9495053e816c99e67145805"
+          },
+          "findings": {
+            "files": 1,
+            "digest": "62e2ce937c8c26dcec3413fd7da473cd7689ea90d35ac9e6e5693edc13749bd0"
+          },
+          "reports": {
+            "files": 71,
+            "digest": "45fc92bbe5bb234c8e4124a463359369375e38b9e511ce270f706823200ec6ac"
+          },
+          "harness": {
+            "files": 2,
+            "digest": "133a2f7e42a9c78bde94f61496c9e1c899fcfee06c765a21ff574a4881c3abe2"
+          }
+        }
+      },
+      "secondsWithoutOutputChange": 151
+    }
+  ],
+  "observation": {
+    "deadline": {
+      "at": "2026-11-02T21:00:58.594088732Z",
+      "remainingSeconds": 374,
+      "attempt": 1,
+      "startedAt": "2026-11-02T20:30:58.594088732Z"
+    },
+    "derived": [
+      {
+        "name": "orchestrator",
+        "role": "orchestrator",
+        "state": "node-replied",
+        "dispatch": "m1",
+        "detail": "reply present, not accepted \u00b7 context 107k",
+        "context": {
+          "tokens": 106657,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/glm-5p3"
+        }
+      },
+      {
+        "name": "rule-analyst",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d002",
+        "detail": "d002 accepted \u00b7 context 105k",
+        "context": {
+          "tokens": 104847,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/glm-5p3"
+        }
+      },
+      {
+        "name": "test-engineer",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d003",
+        "detail": "d003 accepted \u00b7 context 41k",
+        "context": {
+          "tokens": 41295,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/kimi-k3"
+        }
+      },
+      {
+        "name": "verifier",
+        "role": "agent",
+        "state": "node-free",
+        "dispatch": "d003",
+        "detail": "d003 accepted \u00b7 context 46k",
+        "context": {
+          "tokens": 45998,
+          "compactions": 0,
+          "model": "accounts/fireworks/models/kimi-k3"
+        }
+      }
+    ],
+    "claimed": [
+      {
+        "at": "2026-11-02T20:33:53.34713413Z",
+        "kind": "plan",
+        "text": "# Plan \u2014 task-tracker-02 run 02 (orchestrator)\n\nStarted ~20:32Z. Deadline 21:00:58Z. Stop-new-implementation 20:52:58Z. Reply-by 20:57:58Z.\n\n## Dispatches opened (all ~20:36Z)\n- rule-analyst/d002: A1 = AUTH/PROJ/FORM rules+specs; A2 = LIFE/BULK/QUERY/API/DATA + rules/app-inventory.json. Keep R-APR/S-APR IDs stable.\n- test-engineer/d002: family test items T-AUTH, T-PROJ, T-FORM, T-LIFE (incl. F-001/F-002 reproduction, labelled characterization), T-QUERY, T-API. Preserve inherited 9 tests. mapping.json reconciliation.\n- verifier/d002 (V1): own runtime, baseline audit (9 tests, 233/500 lines, 75/188 branches), gap list. Then V2 on my pushed integration commit: double-run, per-family mapping/aassertion verification, independent F-001/F-002 + coverage.\n\n## Loop\n- wait -> judge each reply on branch evidence (fetch + read), accept or rework (2 attempts/item, ~3m each).\n- Integrate accepted batches into my branch; push exact integration commit to verifier EARLY (target: first integration push ~20:45-20:48 so V2 gets a full run).\n- Pass analyst IDs to engineer promptly via --continue if needed.\n- Stop new implementation dispatches 20:52:58Z. Final: reports/run-summary.json, reports/attempts.json, findings/ledger.json (F-001/F-002 adjudication from observed vs intended evidence), commit, reply by 20:57:58Z.\n\n## Acceptance watch-list (from mission.md)\n1. Whole-app inventory, every family present, executed evidence links. 2. Rules/specs per artifact-format, IDs stable. 3. Suite green incl. inherited 9; mapping complete. 4. F-001/F-002 reproduced + adjudicated, no app fixes. 5. Verifier double-run evidence. 6. Coverage delta vs 233/500 + 75/188, full denominator. 7. run-summary/attempts/ledger committed, hashes checked.\n\nRisk: whole-app breadth in ~17 min of work time is tight. If breadth is incomplete at cutoff -> honest non-met outcome listing unmet items. No scope shrink.\n"
+      },
+      {
+        "at": "2026-11-02T20:35:59.369863864Z",
+        "kind": "accepted",
+        "text": "verifier/d002"
+      },
+      {
+        "at": "2026-11-02T20:45:21.934767494Z",
+        "kind": "accepted",
+        "text": "rule-analyst/d002"
+      },
+      {
+        "at": "2026-11-02T20:45:22.279719666Z",
+        "kind": "accepted",
+        "text": "test-engineer/d002"
+      },
+      {
+        "at": "2026-11-02T20:45:57.701072111Z",
+        "kind": "delivered",
+        "text": "delivered to rule-analyst at refs/campaign/orchestrator",
+        "member": "rule-analyst",
+        "repo": "outputs",
+        "commit": "de6e55461c5472a0e2ebcc558839842535f54744"
+      },
+      {
+        "at": "2026-11-02T20:45:57.914911642Z",
+        "kind": "delivered",
+        "text": "delivered to test-engineer at refs/campaign/orchestrator",
+        "member": "test-engineer",
+        "repo": "outputs",
+        "commit": "de6e55461c5472a0e2ebcc558839842535f54744"
+      },
+      {
+        "at": "2026-11-02T20:46:00.596512945Z",
+        "kind": "delivered",
+        "text": "delivered to verifier at refs/campaign/orchestrator",
+        "member": "verifier",
+        "repo": "outputs",
+        "commit": "d90a91a49e3ae2552323ae9e0acf0e615ecd219b"
+      },
+      {
+        "at": "2026-11-02T20:49:56.211791444Z",
+        "kind": "accepted",
+        "text": "test-engineer/d003"
+      },
+      {
+        "at": "2026-11-02T20:50:07.042316325Z",
+        "kind": "delivered",
+        "text": "delivered to verifier at refs/campaign/orchestrator",
+        "member": "verifier",
+        "repo": "outputs",
+        "commit": "35b9a30fff4e5f3438baca60edc794ba87a64ea8"
+      },
+      {
+        "at": "2026-11-02T20:52:53.121745296Z",
+        "kind": "accepted",
+        "text": "verifier/d003"
+      }
+    ],
+    "mission": {
+      "dispatch": "m1",
+      "phase": "done",
+      "note": "# Run 02 mission reply \u2014 task-tracker-02 (orchestrator)\n\n**Outcome: campaign-exhausted** \u2014 the 30-minute budget ended while progress was still being made. The three residual unmet operations are minutes of work each and were queued behind the mapping-reconciliation and independent-verification critical path. Scope was never narrowed to obtain a better verdict.\n\n## What run 02 delivered (all committed on branch cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234, final commit afd4500)\n\n- **Whole-app discovery**: 8 rule families (R-AUTH/PROJ/FORM/LIFE/BULK/QUERY/API/DATA, 64 new rules) + 51 new EARS specs, inherited R-APR/S-APR IDs stable with explicit cross-ref corrections; complete `rules/app-inventory.json` (10 routes incl. the unmapped /projects/delete, 18 Java sources, 8 views, filters/sorts/validations/schema/seed, 12 typed gaps, defect candidates).\n- **Executable coverage**: 53-test real-HTTP suite (9 inherited preserved + 44 new across 6 non-overlapping family modules), per-test DB resets, read-only-oracle persisted-state asserts, no-mutation refusal asserts, exact id-sequence asserts for every whitelisted sort token. Green on three independent seats; verifier ran it twice with reset between plus once on the final tree (order/state independent).\n- **Mapping**: `reports/tests/mapping.json` idStatus=FINAL \u2014 44 new + 5 inherited rows on stable rule/EARS IDs; verifier confirmed 49/49 mapped rows executed and all 89 cited IDs exist.\n- **Java coverage** (same denominator as run 01): LINE 449/500 (+216), BRANCH 159/188 (+84), METHOD 103/108, CLASS 17/17; denominator accounting includes the zero-counter constants holder (TaskStatus.java), resolving run-01 GAP-COV-001; remaining ~51 lines explained (startup plumbing unreachable via HTTP, error branches, dead code). Java coverage is explicitly never equated with business-rule completeness.\n- **Inherited defects**: F-001 and F-002 reproduced on two independent seats each and adjudicated observed-versus-intended \u2014 F-001's intent stays unresolved (approve-path policy is not bulkClose policy), tests labelled characterization; F-002 confirmed-as-observed robustness defect. New candidates F-005..F-009 all confirmed at HTTP level by the verifier (dead delete link, edit never persists project_id, fake-success edit, control-chars break strict JSON, assignee=abc 500). No app fixes; defect tests stay visible.\n- **Independent verification**: ACCEPT \u2014 `reports/verification/v2-d003-verdict.md` + `evidence/verifier/d003/` (commands, exit codes, logs, before/after oracles, integrity hashes; commits I1 d90a91a and I2 35b9a30 named).\n- **Reports**: current-run `reports/run-summary.json`, `reports/attempts.json` (12 items, 1 rework, T-FORM exhausted 2/2 legitimately), `findings/ledger.json`; frozen-app integrity PASS before and after on every seat; no app edits anywhere.\n\n## Unmet (why not campaign-met)\n\nCriterion 1 is partially unmet \u2014 three required operations have no executed test despite full inventory coverage:\n1. `.css` auth-exemption probe unexecuted (access-exemption set executed for /login and /api/* only).\n2. VIEWER-role bulkClose leg unexecuted (BULK roles dimension executed for ADMIN/MANAGER/MEMBER only).\n3. DATA-family crafted constraint-echo probes (S-DATA-001..003 / planned T-DATA-001..003) unexecuted \u2014 DB constraints exercised only through legal-path behavior.\n\nNext-run work is itemized in reports/run-summary.json (execute the three probes; promote verifier F-005/F-007/F-008 spot-checks into permanent suite tests; resolve F-001/F-006 product intent; cover reachable error branches; non-ASCII end-to-end and session-timeout traces).\n",
+      "outcome": "campaign-exhausted",
+      "unmet": [
+        ".css auth-exemption probe unexecuted (access-exemption set executed for /login and /api/* only)",
+        "VIEWER-role bulkClose leg unexecuted (BULK roles dimension executed for ADMIN/MANAGER/MEMBER only)",
+        "DATA-family crafted constraint-echo probes (S-DATA-001..003 / planned T-DATA-001..003) unexecuted - DB constraints exercised only through legal-path behavior"
+      ],
+      "at": "2026-11-02T20:54:28.686652099Z",
+      "repos": [
+        {
+          "repo": "outputs",
+          "head": "afd45006eb0d3ddaec186913c3cf0a21fba72ec2",
+          "treeDiffersFromBase": true
+        }
+      ]
+    }
+  },
+  "stoppedAt": "2026-11-02T20:55:04.333953+00:00"
+}

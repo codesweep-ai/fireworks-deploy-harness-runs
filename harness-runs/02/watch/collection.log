@@ -1,0 +1,21 @@
+cs-sandbox: fetch orchestrator-7aac6234.task-tracker-02-7aac6234:outputs (cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234)
+  /home/rishi/.tmp/firecracker-deploy/runs/02/repo  cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234 -> afd4500 Run 02 closeout: run-summary, attempts ledger, findings ledger (F-001/F-002 reproduced+adjudicated, F-005..F-009 confirmed observed); outcome campaign-exhausted with 3 residual unmet operations
+outputs cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234 — tree differs from base (real changes present)
+cs-sandbox: fetch rule-analyst-7aac6234.task-tracker-02-7aac6234:outputs (cs-sandbox/rule-analyst-7aac6234.task-tracker-02-7aac6234)
+  /home/rishi/.tmp/firecracker-deploy/runs/02/repo  cs-sandbox/rule-analyst-7aac6234.task-tracker-02-7aac6234 -> de6e554 d002: analyst reply summary (A1+A2) for orchestrator
+outputs cs-sandbox/rule-analyst-7aac6234.task-tracker-02-7aac6234 — tree differs from base (real changes present)
+cs-sandbox: fetch test-engineer-7aac6234.task-tracker-02-7aac6234:outputs (cs-sandbox/test-engineer-7aac6234.task-tracker-02-7aac6234)
+  /home/rishi/.tmp/firecracker-deploy/runs/02/repo  cs-sandbox/test-engineer-7aac6234.task-tracker-02-7aac6234 -> f63a5e8 d003 rework: reconcile placeholder EARS IDs to final analyst IDs (44 rows), 53/53 green
+outputs cs-sandbox/test-engineer-7aac6234.task-tracker-02-7aac6234 — tree differs from base (real changes present)
+cs-sandbox: fetch verifier-7aac6234.task-tracker-02-7aac6234:outputs (cs-sandbox/verifier-7aac6234.task-tracker-02-7aac6234)
+  /home/rishi/.tmp/firecracker-deploy/runs/02/repo  cs-sandbox/verifier-7aac6234.task-tracker-02-7aac6234 -> c79e671 d003 V2: independent verification of I1/I2 — 53/53 x3, coverage 449/500 LINE 159/188 BRANCH 17/17 CLASS reproduced, F-001/F-002/F-005..F-009 confirmed, mappings+inventory verified
+outputs cs-sandbox/verifier-7aac6234.task-tracker-02-7aac6234 — tree differs from base (real changes present)
+/home/rishi/.tmp/firecracker-deploy/runs/02/archive
+Updating c79e671..afd4500
+Fast-forward
+ findings/ledger.json     | 142 +++++++++++++++++++++++++++++++++--------------
+ reports/attempts.json    | 113 +++++++++++++++++++++++++++++++++++++
+ reports/run-summary.json |  89 +++++++++++++++++++++++++++++
+ 3 files changed, 302 insertions(+), 42 deletions(-)
+ create mode 100644 reports/attempts.json
+ create mode 100644 reports/run-summary.json

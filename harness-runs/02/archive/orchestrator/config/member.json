@@ -1,0 +1,39 @@
+{
+  "campaign": "task-tracker-02",
+  "member": "orchestrator",
+  "role": "orchestrator",
+  "network": "cs-sandbox-task-tracker-02-7aac6234",
+  "branch": "cs-sandbox/orchestrator-7aac6234.task-tracker-02-7aac6234",
+  "repos": [
+    {
+      "name": "outputs",
+      "base": "5493ba9aef1fe69a36e2699abb20462af639b197"
+    }
+  ],
+  "snapshots": [
+    "app",
+    "runtime"
+  ],
+  "inputs": [
+    "ORIENTATION.md",
+    "orchestrator.md",
+    "mission.md",
+    "roles/rule-analyst.md",
+    "roles/test-engineer.md",
+    "roles/verifier.md"
+  ],
+  "inputDir": ".local/share/cs-campaign/input",
+  "outputDir": ".local/share/cs-campaign/output",
+  "orientation": ".local/share/cs-campaign/input/ORIENTATION.md",
+  "policy": {
+    "continueAttempts": 2,
+    "restarts": 1,
+    "elapsedSeconds": 1800,
+    "blindProbes": 3,
+    "pollSeconds": 5,
+    "settlingSeconds": 15,
+    "providerWaitSeconds": 60,
+    "stallSeconds": 180
+  },
+  "deadline": "2026-11-02T21:00:58.594088732Z"
+}

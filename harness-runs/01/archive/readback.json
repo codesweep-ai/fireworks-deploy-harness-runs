@@ -1,0 +1,80 @@
+{
+  "members": [
+    {
+      "member": "orchestrator",
+      "role": "orchestrator",
+      "cli": "opencode",
+      "readback": {
+        "member": "orchestrator",
+        "role": "orchestrator",
+        "branch": "cs-sandbox/orchestrator-077665b6.task-tracker-01-077665b6",
+        "goal": "Within the 15-minute pilot, orchestrate the team to extract one approval/permission slice of the frozen task-tracker-demo, specify it in EARS, implement and run real-HTTP executable tests, obtain the verifier's independent reproduction at a named integration commit, measure coverage if the collector works, and leave reports and evidence of anything unmet.",
+        "scope": "I own integration, scope, attempt adjudication and the final verdict in ~/outputs, including reports/run-summary.json, reports/attempts.json, findings/ledger.json and integration commits; I must not edit the frozen ~/app sources (Java, JSP, SQL, build files, dependencies, scripts) or teammates' owned files except through reviewed integration, and members only communicate through me.",
+        "obligations": "I must keep every dispatch answered (ending a turn without a reply reads as stopped), commit all work to my own branch and write durable results to the campaign output directory, since my machine is destroyed at campaign end and only committed/output-written work survives.",
+        "at": "2026-11-02T20:03:10.230716735Z",
+        "dispatch": "d001",
+        "inputs": {
+          "mission.md": "0f50998e8eb275ae6f19951c03abc28fbacb859e7919fb8fd53caf817b72f16e",
+          "orchestrator.md": "7f9fc7ca9bafe399a93170522277b324e172b7725d546fe6822dff3a75a4be0f",
+          "roles/rule-analyst.md": "2d8f6554112b6e3c09c2024c90037c30edf954304938f1e823dd1e8a685a0944",
+          "roles/test-engineer.md": "1cd38d647a10aecf732adc337f3adca44329052cdb885da9c706e728a65b3a6d",
+          "roles/verifier.md": "1103a07666e923b8de4c8d9b11f654cc0c3dd70bb2e47d4c81173c12ed474914"
+        }
+      }
+    },
+    {
+      "member": "rule-analyst",
+      "role": "agent",
+      "cli": "opencode",
+      "readback": {
+        "member": "rule-analyst",
+        "role": "agent",
+        "branch": "cs-sandbox/rule-analyst-077665b6.task-tracker-01-077665b6",
+        "goal": "Analyze the staged task-tracker commit to discover, from source (filters, servlets, DAOs, SQL, routes/views), the actual rules governing task approval permissions and starting-state guards, and record them as stable, source-cited rules and EARS test specifications in my ~/outputs branch.",
+        "scope": "I own rules/, specs/, and evidence/analyst/ in ~/outputs and may read the frozen ~/app and ~/runtime snapshots, but I must not write executable tests, make application edits or fixes, infer permissions from role names, or expand beyond task approval permissions and starting-state guards.",
+        "obligations": "For each dispatch I must reply via cs-campaign-member to close it, commit useful work to my own branch, and write durable results to ~/.local/share/cs-campaign/output — if I fail to reply I will be continued as unfinished, and anything not committed or written to output is lost when my machine is destroyed at campaign end.",
+        "at": "2026-11-02T20:03:05.394167228Z",
+        "dispatch": "d001",
+        "inputs": {
+          "rule-analyst.md": "2d8f6554112b6e3c09c2024c90037c30edf954304938f1e823dd1e8a685a0944"
+        }
+      }
+    },
+    {
+      "member": "test-engineer",
+      "role": "agent",
+      "cli": "opencode",
+      "readback": {
+        "member": "test-engineer",
+        "role": "agent",
+        "branch": "cs-sandbox/test-engineer-077665b6.task-tracker-01-077665b6",
+        "goal": "Own the test slice of the task-tracker campaign: check the supplied runtime, and once accepted EARS/rule IDs are delivered, implement small real-HTTP stdlib tests with session cookies that verify responses, persisted task state, and no mutation after refusal, with EARS-ID-referenced test names and a machine-readable mapping plus collected logs and coverage.",
+        "scope": "I own tests/, authored harness/ additions, evidence/test-engineer/, and reports/tests/ plus reports/coverage/ in ~/outputs, using only the host-prepared harness interface against this seat's isolated database; I must not edit the app's POM, copy modified app sources into a test build, make rule-policy decisions, perform app fixes, or touch the frozen ~/app and ~/runtime copies.",
+        "obligations": "I must commit all work to my own branch and write durable results to ~/.local/share/cs-campaign/output before replying to each dispatch, because the machine is destroyed at campaign end and only committed branch work and output files survive; ending a turn without a reply reads as stopped and forfeits unsaved reasoning.",
+        "at": "2026-11-02T20:03:10.132207243Z",
+        "dispatch": "d001",
+        "inputs": {
+          "test-engineer.md": "1cd38d647a10aecf732adc337f3adca44329052cdb885da9c706e728a65b3a6d"
+        }
+      }
+    },
+    {
+      "member": "verifier",
+      "role": "agent",
+      "cli": "opencode",
+      "readback": {
+        "member": "verifier",
+        "role": "agent",
+        "branch": "cs-sandbox/verifier-077665b6.task-tracker-01-077665b6",
+        "goal": "Independently verify the exact integrated commit the orchestrator supplies against my own app/database at ~/app, running the supplied tests on a fresh database and checking source citations and EARS statements, returning accepted/rejected criteria with real evidence rather than just a passing test count.",
+        "scope": "I own evidence/verifier/ and reports/verification/ in ~/outputs on my own branch; I must not author or modify the submitted tests, rule statements, or the application itself, and report corrections only through the orchestrator.",
+        "obligations": "I must commit all work to my own branch, write durable results to ~/.local/share/cs-campaign/output, and reply to every dispatch before stopping, because my machine is destroyed at campaign end and only committed branch state, replies, and output files survive.",
+        "at": "2026-11-02T20:03:05.360071658Z",
+        "dispatch": "d001",
+        "inputs": {
+          "verifier.md": "1103a07666e923b8de4c8d9b11f654cc0c3dd70bb2e47d4c81173c12ed474914"
+        }
+      }
+    }
+  ]
+}

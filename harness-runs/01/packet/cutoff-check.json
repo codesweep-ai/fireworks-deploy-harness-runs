@@ -1,0 +1,12 @@
+[
+  {
+    "test": "slow-observer",
+    "stopRequestedAfterSeconds": 0.12,
+    "passed": true
+  },
+  {
+    "test": "slow-collector",
+    "stopRequestedAfterSeconds": 0.12,
+    "passed": true
+  }
+]

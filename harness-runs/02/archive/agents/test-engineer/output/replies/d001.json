@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"test-engineer\",\"role\":\"agent\",\"branch\":\"cs-sandbox/test-engineer-7aac6234.task-tracker-02-7aac6234\",\"missing\":[],\"goal\":\"Build and maintain a comprehensive, isolated, deterministic test suite for the task-tracker app covering auth, task forms and lifecycle, filters/sorts, and the public API, with EARS-ID traceability, coverage against the full production Java denominator, and honest reporting of runs, failures, and defects.\",\"scope\":\"I own tests/test_*.py, test helpers, reports/tests/, reports/coverage/, and evidence/test-engineer/; I must not edit application source, the frozen POM/build, or delete/skip/weaken failing tests to force green.\",\"obligations\":\"I must reply to every dispatch, commit all work to my own branch, and write durable results to the campaign output directory, because the machine is destroyed at campaign end and anything not committed or written there is lost.\"}\n",
+  "at": "2026-11-02T20:31:56.789162199Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "5493ba9aef1fe69a36e2699abb20462af639b197",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="refresh" content="15"><title>Campaign progress</title>
+<style>:root{color-scheme:light dark}body{font:15px system-ui;max-width:1350px;margin:32px auto;padding:0 20px;line-height:1.5}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:left;vertical-align:top;border-bottom:1px solid #80808066}pre{white-space:pre-wrap;overflow-wrap:anywhere}.scroll{overflow-x:auto}a{color:light-dark(#235e9b,#94c7ff)}</style>
+<script>try{document.documentElement.style.colorScheme=localStorage.getItem('campaign-status-theme')||'light dark'}catch(_){}</script>
+<a href="/status.html">← Campaign status</a><h1>task-tracker-02: progress</h1><p>Finished — campaign-exhausted; 53 tests passed, three required-operation gaps remain. Archive collected; all four campaign nodes stopped. Readings below are the last live observation. · Checked 2026-11-02T20:54:44.060378+00:00</p><p>Node state comes from cs-campaign observe. File/commit readings are separate probes. Output activity is evidence of change, not proof of correctness; the verifier judges that. No output change for 180 seconds is an attention flag, not a failure verdict.</p><div class=scroll><table><thead><tr><th>Member</th><th>State</th><th>Dispatch</th><th>Detail</th><th>Commit</th><th>Files by area</th><th>Seconds without output change</th><th>Attention</th></tr></thead><tbody><tr><td>orchestrator</td><td>node-replied</td><td>m1</td><td>reply present, not accepted · context 107k</td><td>afd45006eb0d</td><td>rules: 10, specs: 9, tests: 9, evidence: 30, findings: 1, reports: 73, harness: 2</td><td>16</td><td></td></tr><tr><td>rule-analyst</td><td>node-free</td><td>d002</td><td>d002 accepted · context 105k</td><td>de6e55461c54</td><td>rules: 10, specs: 9, tests: 3, evidence: 2, findings: 1, reports: 2, harness: 2</td><td>608</td><td>No output changes observed for at least 180 seconds</td></tr><tr><td>test-engineer</td><td>node-free</td><td>d003</td><td>d003 accepted · context 41k</td><td>f63a5e81643e</td><td>rules: 1, specs: 1, tests: 9, evidence: 4, findings: 1, reports: 69, harness: 2</td><td>320</td><td>No output changes observed for at least 180 seconds</td></tr><tr><td>verifier</td><td>node-free</td><td>d003</td><td>d003 accepted · context 46k</td><td>c79e671d5b63</td><td>rules: 10, specs: 9, tests: 9, evidence: 30, findings: 1, reports: 71, harness: 2</td><td>151</td><td></td></tr></tbody></table></div><h2>Orchestrator claims</h2><pre>[
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:33:53.34713413Z&quot;,
+    &quot;kind&quot;: &quot;plan&quot;,
+    &quot;text&quot;: &quot;# Plan \u2014 task-tracker-02 run 02 (orchestrator)\n\nStarted ~20:32Z. Deadline 21:00:58Z. Stop-new-implementation 20:52:58Z. Reply-by 20:57:58Z.\n\n## Dispatches opened (all ~20:36Z)\n- rule-analyst/d002: A1 = AUTH/PROJ/FORM rules+specs; A2 = LIFE/BULK/QUERY/API/DATA + rules/app-inventory.json. Keep R-APR/S-APR IDs stable.\n- test-engineer/d002: family test items T-AUTH, T-PROJ, T-FORM, T-LIFE (incl. F-001/F-002 reproduction, labelled characterization), T-QUERY, T-API. Preserve inherited 9 tests. mapping.json reconciliation.\n- verifier/d002 (V1): own runtime, baseline audit (9 tests, 233/500 lines, 75/188 branches), gap list. Then V2 on my pushed integration commit: double-run, per-family mapping/aassertion verification, independent F-001/F-002 + coverage.\n\n## Loop\n- wait -&gt; judge each reply on branch evidence (fetch + read), accept or rework (2 attempts/item, ~3m each).\n- Integrate accepted batches into my branch; push exact integration commit to verifier EARLY (target: first integration push ~20:45-20:48 so V2 gets a full run).\n- Pass analyst IDs to engineer promptly via --continue if needed.\n- Stop new implementation dispatches 20:52:58Z. Final: reports/run-summary.json, reports/attempts.json, findings/ledger.json (F-001/F-002 adjudication from observed vs intended evidence), commit, reply by 20:57:58Z.\n\n## Acceptance watch-list (from mission.md)\n1. Whole-app inventory, every family present, executed evidence links. 2. Rules/specs per artifact-format, IDs stable. 3. Suite green incl. inherited 9; mapping complete. 4. F-001/F-002 reproduced + adjudicated, no app fixes. 5. Verifier double-run evidence. 6. Coverage delta vs 233/500 + 75/188, full denominator. 7. run-summary/attempts/ledger committed, hashes checked.\n\nRisk: whole-app breadth in ~17 min of work time is tight. If breadth is incomplete at cutoff -&gt; honest non-met outcome listing unmet items. No scope shrink.\n&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:35:59.369863864Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;verifier/d002&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:45:21.934767494Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;rule-analyst/d002&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:45:22.279719666Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d002&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:45:57.701072111Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to rule-analyst at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;rule-analyst&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;de6e55461c5472a0e2ebcc558839842535f54744&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:45:57.914911642Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to test-engineer at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;test-engineer&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;de6e55461c5472a0e2ebcc558839842535f54744&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:46:00.596512945Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to verifier at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;verifier&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;d90a91a49e3ae2552323ae9e0acf0e615ecd219b&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:49:56.211791444Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;test-engineer/d003&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:50:07.042316325Z&quot;,
+    &quot;kind&quot;: &quot;delivered&quot;,
+    &quot;text&quot;: &quot;delivered to verifier at refs/campaign/orchestrator&quot;,
+    &quot;member&quot;: &quot;verifier&quot;,
+    &quot;repo&quot;: &quot;outputs&quot;,
+    &quot;commit&quot;: &quot;35b9a30fff4e5f3438baca60edc794ba87a64ea8&quot;
+  },
+  {
+    &quot;at&quot;: &quot;2026-11-02T20:52:53.121745296Z&quot;,
+    &quot;kind&quot;: &quot;accepted&quot;,
+    &quot;text&quot;: &quot;verifier/d003&quot;
+  }
+]</pre><p>Raw observations are saved beside this page. This watcher observes only; the hard cutoff is a separate launch requirement.</p></html>

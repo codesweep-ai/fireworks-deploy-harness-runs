@@ -1,0 +1,52 @@
+[1/2] STEP 1/6: FROM docker.io/library/maven:3.9-eclipse-temurin-17 AS build
+Trying to pull docker.io/library/maven:3.9-eclipse-temurin-17...
+Getting image source signatures
+Copying blob sha256:6ed9971a62fa977a56b299303af6d9bd1a25e1c68c7eec80c15b38deb612c755
+Copying blob sha256:edd1ed89f0d443580bd42e5a10cd8736aba5a3438b2a0645c2ebb50119bb0eba
+Copying blob sha256:528b48a07f784fe320d419ad522c6ea0b720de09023f17b205ceb39b82259996
+Copying blob sha256:dd1380fd83f09a4e55ae12e3e7ad45b77ab8bd2670e34e271f271a3533200b34
+Copying blob sha256:0d6621ed68d388094866adb9ba01b741a60d2bb48ebf618655da32db30bc613f
+Copying blob sha256:0187a0cde513bac1578240fe660c2923c2c5eab87249c03ac120b45580519ee9
+Copying blob sha256:b2a6841fdc6cbd085097deb1d9c720069dbacee84cf1687213de59da32ae5805
+Copying blob sha256:67f774a47cb5f1b0e174ed3c41b21e8cb9df75ccf312e886bb784ab409447775
+Copying blob sha256:021db8d0ef42ba2ac0d1304afe6b7ebcc7a91b31c61d21c849976c83a4af3935
+Copying blob sha256:4fe30289cca7ad88561d2fd5028f587b6089f314c9ef89c81166202dbd18ed26
+Copying config sha256:caa1c99435b94bae143279df3c73652ef32fb1bae6a4f21ea544da05c85c16ee
+Writing manifest to image destination
+[1/2] STEP 2/6: WORKDIR /src
+--> 4f033ab3ce3d
+[1/2] STEP 3/6: COPY pom.xml .
+--> 7b65681a759d
+[1/2] STEP 4/6: RUN mvn -q -DskipTests dependency:go-offline || true
+--> 64176091ceb3
+[1/2] STEP 5/6: COPY src ./src
+--> 3232e76d736f
+[1/2] STEP 6/6: RUN mvn -q -DskipTests package
+--> c9e008635228
+[2/2] STEP 1/5: FROM docker.io/library/tomcat:9-jre17
+Trying to pull docker.io/library/tomcat:9-jre17...
+Getting image source signatures
+Copying blob sha256:871684199c33b60f7e90eaaabe0b28a6a37df73ae51fe3e450cd6c2b9f9c6747
+Copying blob sha256:f3f25b84a7d74315d94ee4108231f8f5e0cd2a44725a7204d5dd6ce91c151697
+Copying blob sha256:edafa32f5d9e4d9629f0dbc6c01e63c79ff08133c01cfb7d3363aa8bd8a614cf
+Copying blob sha256:4bb9a6f797c90c19b207f662dd0f04d610ee6996cb4e99983312c1a86cd18403
+Copying blob sha256:55276dea08ee0fcfc88e30a530566765c5d6cc5bcb9b628b018695288903b8a1
+Copying blob sha256:8a5d3dd27cd5bc2c69c78656a4679822f4b6d7962b05dd941df3766cb0336eb9
+Copying blob sha256:3e6e165cb7ed203ee0022da143cc5e2b74dd06491f089723da82ebce206bf290
+Copying blob sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1
+Copying blob sha256:167bd7da1f3deff89ee30e7701b18d3cd1c246ac32228aa764352306e57c6214
+Copying blob sha256:a06b1677e7a2054adc27b47e775c8cd1674ebd1567637c0a6e467c23b287fdcb
+Copying blob sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1
+Copying config sha256:e2bb2db66ac34a238ea4e53e73c1c2bb0cdf16d32751ca79275c2048772a54bd
+Writing manifest to image destination
+[2/2] STEP 2/5: RUN rm -rf /usr/local/tomcat/webapps/*
+--> a61be6098210
+[2/2] STEP 3/5: COPY --from=build /src/target/task-tracker.war /usr/local/tomcat/webapps/ROOT.war
+--> 97f71991815f
+[2/2] STEP 4/5: EXPOSE 8080
+--> 185dbea4f576
+[2/2] STEP 5/5: CMD ["catalina.sh", "run"]
+[2/2] COMMIT localhost/task-tracker-demo:run01
+--> 5329cfa51bee
+Successfully tagged localhost/task-tracker-demo:run01
+5329cfa51beeeb8b8134b47d144f01be3c471dc13edf9111a760e1ffedbac5ba

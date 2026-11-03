@@ -1,0 +1,8 @@
+[
+  {
+    "issue": "Watcher member probes initially failed on SSH argument forwarding",
+    "impact": "Derived node-state observations remained available; output-file activity unavailable briefly",
+    "resolution": "Use the CLI argument separator and one quoted SSH command; verified on live nodes",
+    "resolved": true
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"orchestrator\",\"role\":\"orchestrator\",\"branch\":\"cs-sandbox/orchestrator-077665b6.task-tracker-01-077665b6\",\"missing\":[],\"goal\":\"Within the 15-minute pilot, orchestrate the team to extract one approval/permission slice of the frozen task-tracker-demo, specify it in EARS, implement and run real-HTTP executable tests, obtain the verifier's independent reproduction at a named integration commit, measure coverage if the collector works, and leave reports and evidence of anything unmet.\",\"scope\":\"I own integration, scope, attempt adjudication and the final verdict in ~/outputs, including reports/run-summary.json, reports/attempts.json, findings/ledger.json and integration commits; I must not edit the frozen ~/app sources (Java, JSP, SQL, build files, dependencies, scripts) or teammates' owned files except through reviewed integration, and members only communicate through me.\",\"obligations\":\"I must keep every dispatch answered (ending a turn without a reply reads as stopped), commit all work to my own branch and write durable results to the campaign output directory, since my machine is destroyed at campaign end and only committed/output-written work survives.\"}\n",
+  "at": "2026-11-02T20:03:06.428974937Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "679cd0218739b6c019660c3a0e787d6b89ef42de",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

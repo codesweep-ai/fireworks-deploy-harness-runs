@@ -1,0 +1,139 @@
+{
+  "layoutVersion": 1,
+  "id": "01",
+  "campaignName": "task-tracker-01",
+  "status": "finished",
+  "startedAt": "2026-11-02T20:02:09.152983+00:00",
+  "finishedAt": "2026-11-02T20:14:12.653388+00:00",
+  "application": {
+    "repository": "../../task-tracker-demo",
+    "origin": "git@github.com:codesweep-ai/task-tracker-demo.git",
+    "commit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+    "frozen": true,
+    "snapshot": "inputs/app",
+    "snapshotDigest": "9a76d3ba424c1ce78103ef8bf8c674792b17d2551ec1c6132cd4cc9d2dac7c44"
+  },
+  "toolchain": {
+    "campaignVersion": "v0.0.0-20261102055029-b0f0bf56f5cd",
+    "dependencyPolicy": "derive sandbox, tracer, and VCR versions from the campaign module",
+    "installedAndVerified": true,
+    "lockFile": "../../toolchain.lock.json",
+    "installationMethod": "imported prebuilt binaries after exact module/version verification; agent tools extracted from pinned sandbox"
+  },
+  "seats": {
+    "orchestrator": {
+      "cli": "opencode",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3"
+    },
+    "rule-analyst": {
+      "cli": "opencode",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3"
+    },
+    "test-engineer": {
+      "cli": "opencode",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3"
+    },
+    "verifier": {
+      "cli": "opencode",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3"
+    }
+  },
+  "modelIdentifierStatus": "exact local configuration identifiers resolved; live provider/readback checks pending",
+  "policy": {
+    "maxAttemptsPerWorkItem": 2,
+    "testSpecificationFormat": "EARS",
+    "applicationChangesAllowed": false,
+    "defectAdjudicator": "orchestrator",
+    "perAttemptLimit": "3m",
+    "campaignResourceLimit": "15m",
+    "closeoutReserve": "3m",
+    "deadlineOrigin": "campaign creation start",
+    "deadlineEnforcement": "host watchdog required; campaign deadline alone does not stop nodes",
+    "timeoutAction": "collect available outputs and archive during closeout; stop nodes at cutoff and retain disks if collection is incomplete",
+    "watchdogImplemented": true
+  },
+  "scope": {
+    "mode": "pilot",
+    "focus": "one task lifecycle/permission slice",
+    "goals": [
+      "validate campaign coordination and the runnable app",
+      "produce a small evidence-backed EARS specification and linked executable test slice",
+      "independently verify available tests and collect coverage where working",
+      "record infrastructure failures, defects, and unmet goals for the next run"
+    ],
+    "fullCoverageRequired": false
+  },
+  "lineage": {
+    "mode": "fresh",
+    "parentRun": null,
+    "seedOutputCommit": null
+  },
+  "paths": {
+    "packet": "packet",
+    "packetPage": "packet/packet.html",
+    "dispatchViewer": "viewer/index.html",
+    "coveragePage": "repo/reports/coverage/index.html",
+    "inputs": "inputs",
+    "outputRepository": "repo",
+    "outputBundle": "repo.bundle",
+    "archive": "archive",
+    "profile": "packet/profile.yaml",
+    "mission": "packet/mission.md",
+    "roleBriefs": "packet/roles",
+    "resolvedPlan": "packet/plan.json",
+    "progress": "watch/index.html",
+    "baselineCoverage": "packet/baseline-coverage.json",
+    "cost": "cost/index.html",
+    "review": "review/index.html"
+  },
+  "outputCommit": "5f5751723b921c3ed9e005c4593bccd30de43c22",
+  "result": {
+    "elapsedSeconds": 723.5,
+    "collectionFinished": true,
+    "stopResult": [
+      {
+        "orchestrator": 0,
+        "rule-analyst": 0,
+        "test-engineer": 0,
+        "verifier": 0
+      }
+    ],
+    "collection": {
+      "fetch:orchestrator": 0,
+      "fetch:rule-analyst": 0,
+      "fetch:test-engineer": 0,
+      "fetch:verifier": 0,
+      "archive": 0
+    },
+    "createExitCode": 0,
+    "finishedAt": "2026-11-02T20:14:12.653388+00:00",
+    "viewerExitCode": 0,
+    "outputIntegrationExitCode": 0,
+    "outputCommit": "5f5751723b921c3ed9e005c4593bccd30de43c22",
+    "outcome": "campaign-met"
+  },
+  "packetGeneratedAt": "2026-11-02T19:46:04.025546+00:00",
+  "initialOutputCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de",
+  "launchReadiness": {
+    "profileValidated": true,
+    "packetRefusals": 0,
+    "packetWarnings": 0,
+    "toolchainDoctorPassed": true,
+    "sourceIntegrityVerified": true,
+    "sandboxImagePrewarmed": true,
+    "runtimeSmokeVerified": true,
+    "externalRuntimeHarnessReady": true,
+    "hostCutoffVerified": true,
+    "liveProviderSeatsVerified": true,
+    "readyToLaunch": true
+  },
+  "packetSHA256": "06989dfa93dfe1b21764cb48563bbbf7c6615022314264bb52d260da687f055e",
+  "monitoring": {
+    "implemented": true,
+    "liveVerified": true,
+    "command": "make watch RUN=01",
+    "pollSeconds": 15,
+    "outputInactivityFlagSeconds": 180,
+    "hardCutoffEnforced": true
+  }
+}

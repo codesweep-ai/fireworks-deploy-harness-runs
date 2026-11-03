@@ -1,0 +1,19 @@
+{
+  "manifestVersion": 1,
+  "tool": "cs-tracer",
+  "toolVersion": "dev",
+  "generatedAt": "2026-11-02T20:14:12Z",
+  "files": [
+    "index.html",
+    "assets/app.js",
+    "assets/app.css",
+    "traces/ses_e622492a4ffeWzhAORWeUs6l0O.html",
+    "traces/ses_e6223288effe1ALIUCjnHwhWLB.html",
+    "traces/ses_e622492d9ffeQkn3Usr4SNQeTE.html",
+    "traces/ses_e621fff93ffeBm41ocO4Kaz08x.html",
+    "traces/ses_e622327e8ffe679BPLALXmdtf6.html",
+    "traces/ses_e6224930affeE2mJ3fhueqKgp6.html",
+    "traces/ses_e621e06beffeONXZF3KwHYF5NW.html",
+    "traces/ses_e62249307ffeSOjuRbqTRlyyBf.html"
+  ]
+}

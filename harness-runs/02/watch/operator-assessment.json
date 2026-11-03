@@ -1,0 +1,55 @@
+{
+  "run": "02",
+  "outputCommit": "afd45006eb0d3ddaec186913c3cf0a21fba72ec2",
+  "measuredCounts": {
+    "rules": {
+      "total": 65,
+      "inherited": 5,
+      "new": 60
+    },
+    "specs": {
+      "total": 55,
+      "inherited": 5,
+      "new": 50
+    }
+  },
+  "operatorExecution": {
+    "testedCommit": "c79e671d5b63548ae1a49035a846a7a937e1b9de",
+    "testAndHarnessCodeIdenticalToFinal": true,
+    "testsRun": 53,
+    "successful": true,
+    "coverageReproducedExactly": true,
+    "appIntegrityPassed": true,
+    "log": "operator-check.log"
+  },
+  "nativeOutcome": "campaign-exhausted",
+  "wallClock": {
+    "maximumSeconds": 1800,
+    "actualSeconds": 1445.75,
+    "hardCutoffReached": false
+  },
+  "reportDiscrepancies": [
+    {
+      "item": "Rule count",
+      "reported": "64 new rules",
+      "measured": "60 new rule definitions; 65 total"
+    },
+    {
+      "item": "EARS count",
+      "reported": "51 new EARS specs",
+      "measured": "50 new definitions; 55 total"
+    },
+    {
+      "item": "Exhaustion wording",
+      "reported": "30-minute budget ended",
+      "measured": "Mission replied and supervisor stopped after about 24 minutes; hard 30-minute cutoff was not reached. Implementation dispatches were constrained by an earlier phase cutoff."
+    }
+  ],
+  "archiveAudit": {
+    "passed": true,
+    "incompleteMarkers": 0,
+    "memberTranscriptBundles": 4,
+    "gitBundleVerified": true
+  },
+  "modelCostUSD": "6.16178568"
+}

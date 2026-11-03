@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"test-engineer\",\"role\":\"agent\",\"branch\":\"cs-sandbox/test-engineer-077665b6.task-tracker-01-077665b6\",\"missing\":[],\"goal\":\"Own the test slice of the task-tracker campaign: check the supplied runtime, and once accepted EARS/rule IDs are delivered, implement small real-HTTP stdlib tests with session cookies that verify responses, persisted task state, and no mutation after refusal, with EARS-ID-referenced test names and a machine-readable mapping plus collected logs and coverage.\",\"scope\":\"I own tests/, authored harness/ additions, evidence/test-engineer/, and reports/tests/ plus reports/coverage/ in ~/outputs, using only the host-prepared harness interface against this seat's isolated database; I must not edit the app's POM, copy modified app sources into a test build, make rule-policy decisions, perform app fixes, or touch the frozen ~/app and ~/runtime copies.\",\"obligations\":\"I must commit all work to my own branch and write durable results to ~/.local/share/cs-campaign/output before replying to each dispatch, because the machine is destroyed at campaign end and only committed branch work and output files survive; ending a turn without a reply reads as stopped and forfeits unsaved reasoning.\"}\n",
+  "at": "2026-11-02T20:03:04.739556626Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "679cd0218739b6c019660c3a0e787d6b89ef42de",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+Ready: http://127.0.0.1:8080
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+Database reset: 4 tasks
+[INFO] Connecting to /127.0.0.1:6300.
+[INFO] Writing execution data to /coverage/jacoco.exec.
+[INFO] Loading execution data file /coverage/jacoco.exec.
+[INFO] Analyzing 17 classes.
+Frozen app verified: eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)
+{"applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c", "scope": "All compiled production Java classes in the frozen WAR; JSP, SQL, and CSS are not measured", "command": "python3 harness/runtime.py coverage", "counters": {"INSTRUCTION": {"covered": 425, "missed": 1730}, "BRANCH": {"covered": 20, "missed": 168}, "LINE": {"covered": 99, "missed": 401}, "COMPLEXITY": {"covered": 41, "missed": 163}, "METHOD": {"covered": 36, "missed": 72}, "CLASS": {"covered": 6, "missed": 11}}}

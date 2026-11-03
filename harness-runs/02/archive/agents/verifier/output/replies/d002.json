@@ -1,0 +1,14 @@
+{
+  "dispatch": "d002",
+  "phase": "done",
+  "note": "# d002 V1 (run 02) — verifier baseline audit reply\n\nCommit on my branch: `5737f81` — `evidence/verifier/d002-run02/` (commands.md + verbatim logs).\n\n## V1 results (all on my own seat, runtime at 127.0.0.1:8080)\n\n1. **Reset + test**: `runtime.py reset` (4 tasks) then `runtime.py test` → **9/9 OK, exit 0**\n   (5 approval-slice S-APR-001..005 + 4 skeleton). Matches baseline.json.\n2. **Coverage reproduces baseline EXACTLY** — LINE 233/500, BRANCH 75/188, INSTRUCTION 1021/2155,\n   METHOD 64/108, CLASS 12/17, COMPLEXITY 85/119. My regenerated summary.json is byte-identical\n   to history/01's. Denominator = frozen app (17 classes / 500 lines); Java-only scope honestly\n   stated — not equated with JSP/SQL/CSS/rule coverage.\n3. **Source integrity**: `harness/check-frozen-app.py ~/app` → exit 0,\n   `eee783057ec28d28fb36ec05484de9b4b40ceb9c (41 files)`; runtime re-verifies internally per command.\n4. **Gap audit** — run 01 confirmed F-001 (bulkClose no role/state guard) and F-002 (malformed\n   id → 500) were never reproduced on any seat; only the approval slice was verified. Run 02 still\n   owes (all to be produced by me post-integration, item V2):\n   - F-001 reproduction: dev/dev POST bulkClose ids=2 + before/after status oracle (real HTTP).\n   - F-002 reproduction: mgr/mgr POST approve id=abc → expect 500 (real HTTP).\n   - All 8 scope families with real HTTP: pre-integration suite covers only family 1 partially\n     (no logout, no /api/* or *.css exemption checks) and family 4 partially (no start/submit/\n     reopen/not-found/unknown-action); families 2,3,5,6,7,8 have zero executed tests.\n   - Mapping verification: every mapping row must point at tests that actually ran in my logs.\n   - Double-run isolation: whole integrated suite TWICE with reset between.\n   - Coverage delta vs the baseline reproduced above.\n\nFull detail: `evidence/verifier/d002-run02/commands.md` on my branch.\n\n## State\n\nBranch differs from base by the V1 audit commit. No tests/rules/specs/app sources touched.\nRuntime left UP. Ready for V2: awaiting the integration commit on `refs/campaign/orchestrator`.\n",
+  "at": "2026-11-02T20:35:44.438328148Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "5737f815c01709f78cbb3174f2e22270653ebb0c",
+      "treeDiffersFromBase": true,
+      "dirty": true
+    }
+  ]
+}

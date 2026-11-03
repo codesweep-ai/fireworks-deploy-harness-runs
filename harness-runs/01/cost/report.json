@@ -1,0 +1,131 @@
+{
+  "run": "01",
+  "generatedAt": "2026-11-02T20:41:17.867603+00:00",
+  "currency": "USD",
+  "reportedCostUSD": "1.70043398",
+  "complete": true,
+  "reportedEvents": 136,
+  "eligibleEvents": 136,
+  "members": {
+    "verifier": {
+      "reportedCostUSD": "0.3810792",
+      "sessions": 2,
+      "reportedEvents": 24,
+      "eligibleEvents": 24,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/kimi-k3"
+      ]
+    },
+    "test-engineer": {
+      "reportedCostUSD": "0.5730696",
+      "sessions": 3,
+      "reportedEvents": 42,
+      "eligibleEvents": 42,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/kimi-k3"
+      ]
+    },
+    "rule-analyst": {
+      "reportedCostUSD": "0.16179374",
+      "sessions": 2,
+      "reportedEvents": 19,
+      "eligibleEvents": 19,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/glm-5p3"
+      ]
+    },
+    "orchestrator": {
+      "reportedCostUSD": "0.58449144",
+      "sessions": 1,
+      "reportedEvents": 51,
+      "eligibleEvents": 51,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/glm-5p3"
+      ]
+    }
+  },
+  "sessions": [
+    {
+      "session": "ses_e621e06beffeONXZF3KwHYF5NW",
+      "member": "verifier",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.3248640",
+      "reportedEvents": 19,
+      "eligibleEvents": 19,
+      "complete": true,
+      "source": "viewer/traces/ses_e621e06beffeONXZF3KwHYF5NW.json"
+    },
+    {
+      "session": "ses_e621fff93ffeBm41ocO4Kaz08x",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.1903863",
+      "reportedEvents": 17,
+      "eligibleEvents": 17,
+      "complete": true,
+      "source": "viewer/traces/ses_e621fff93ffeBm41ocO4Kaz08x.json"
+    },
+    {
+      "session": "ses_e622327e8ffe679BPLALXmdtf6",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.3235542",
+      "reportedEvents": 19,
+      "eligibleEvents": 19,
+      "complete": true,
+      "source": "viewer/traces/ses_e622327e8ffe679BPLALXmdtf6.json"
+    },
+    {
+      "session": "ses_e6223288effe1ALIUCjnHwhWLB",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+      "reportedCostUSD": "0.12926422",
+      "reportedEvents": 13,
+      "eligibleEvents": 13,
+      "complete": true,
+      "source": "viewer/traces/ses_e6223288effe1ALIUCjnHwhWLB.json"
+    },
+    {
+      "session": "ses_e622492a4ffeWzhAORWeUs6l0O",
+      "member": "orchestrator",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+      "reportedCostUSD": "0.58449144",
+      "reportedEvents": 51,
+      "eligibleEvents": 51,
+      "complete": true,
+      "source": "viewer/traces/ses_e622492a4ffeWzhAORWeUs6l0O.json"
+    },
+    {
+      "session": "ses_e622492d9ffeQkn3Usr4SNQeTE",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+      "reportedCostUSD": "0.03252952",
+      "reportedEvents": 6,
+      "eligibleEvents": 6,
+      "complete": true,
+      "source": "viewer/traces/ses_e622492d9ffeQkn3Usr4SNQeTE.json"
+    },
+    {
+      "session": "ses_e62249307ffeSOjuRbqTRlyyBf",
+      "member": "verifier",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.0562152",
+      "reportedEvents": 5,
+      "eligibleEvents": 5,
+      "complete": true,
+      "source": "viewer/traces/ses_e62249307ffeSOjuRbqTRlyyBf.json"
+    },
+    {
+      "session": "ses_e6224930affeE2mJ3fhueqKgp6",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.0591291",
+      "reportedEvents": 6,
+      "eligibleEvents": 6,
+      "complete": true,
+      "source": "viewer/traces/ses_e6224930affeE2mJ3fhueqKgp6.json"
+    }
+  ],
+  "method": "Sum reportedCostUSD on events in each unique viewer/traces/*.json session, once. Cross-check against totals.cost.reportedByEvents; never add both figures.",
+  "scope": "CLI-reported model usage, including campaign briefing/readback sessions. Excludes host infrastructure, runtime preparation, and the operator's setup conversation; not reconciled to a provider invoice."
+}

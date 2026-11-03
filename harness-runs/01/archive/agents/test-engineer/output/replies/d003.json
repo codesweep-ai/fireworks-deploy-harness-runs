@@ -1,0 +1,13 @@
+{
+  "dispatch": "d003",
+  "phase": "done",
+  "note": "# d003 / T2 reply — approval-slice tests\n\n**Commit:** `8566315` on `cs-sandbox/test-engineer-077665b6.task-tracker-01-077665b6`\n(includes merge `1175e63` of orchestrator d7e6bdf: R-APR/S-APR/fixtures — inspected, not re-litigated).\n\n## Test command \u0026 result\n- `python3 harness/runtime.py test` → **exit 0**, 9 tests, all OK (log: `evidence/test-engineer/t2-test.log`).\n- New tests in `tests/test_approval_slice.py` (built on `httpcase.py`; per-test `reset`, oracle via `runtime.py sql`, never HTML scraping; no reliance on ids/order).\n\n## Pass/fail per spec (all PASS)\n| Test | Spec | Rules | Result |\n|---|---|---|---|\n| test_s_apr_001_mgr_approve_task3 | S-APR-001 | R-APR-001,003,004,005 | PASS — 302 /tasks; oracle 3 DONE, others unchanged |\n| test_s_apr_002_admin_reject_task3 | S-APR-002 | R-APR-001,003,004,005 | PASS — 302 /tasks; oracle 3 IN_PROGRESS |\n| test_s_apr_003_dev_approve_forbidden | S-APR-003 | R-APR-001 | PASS — 403 + exact refusal body; task 3 still PENDING_APPROVAL |\n| test_s_apr_004_approve_open_task_conflict | S-APR-004 | R-APR-004 | PASS — 409 + exact \"Cannot approve a task in status OPEN (expected PENDING_APPROVAL)\"; task 1 still OPEN |\n| test_s_apr_005_anonymous_redirected_to_login | S-APR-005 | R-APR-001 | PASS — 302 Location /login; task 3 unchanged |\n\nNo suspected defects: observed behavior matches all accepted specs.\n\n## Mapping\n`reports/tests/mapping.json` — test name → spec ID(s) + rule ID(s), machine-readable.\n\n## Coverage (`python3 harness/runtime.py coverage`, exit 0; log `evidence/test-engineer/t2-coverage.log`)\nMeasured on frozen production sources @ `eee7830…`; scope per `reports/coverage/summary.json`:\n**all compiled production Java classes in the frozen WAR; JSP, SQL, CSS not measured.**\n- **LINE: 233 covered / 267 missed (500 total, ~46.6%)**\n- **BRANCH: 75 covered / 113 missed (188 total, ~39.9%)**\n- (METHOD 64/44, CLASS 12/5.) Totals include d002 smoke/skeleton tests plus the new slice.\n\n## Evidence\n`t2-test.log`, `t2-coverage.log` in `evidence/test-engineer/` (d002 evidence untouched); full JaCoCo report + `summary.json` under `reports/coverage/`.\n\n## Gaps / notes\n- Ordering cross-checks from fixtures.md (id=999 403/404 variants) not yet implemented — candidates for a later slice.\n- Coverage above is whole-suite; per-spec attribution not measured.\n",
+  "at": "2026-11-02T20:09:06.302906994Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "8566315b67e379a0e2a38eb0fca33cba09ae2b30",
+      "treeDiffersFromBase": true
+    }
+  ]
+}

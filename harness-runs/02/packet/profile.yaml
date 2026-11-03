@@ -1,0 +1,47 @@
+apiVersion: codesweep.ai/v1alpha1
+kind: CampaignProfile
+defaults:
+  engine: firecracker
+  deadline: 30m
+  credentials: lend
+  imageStores: [tt-demo-01]
+  resources: {cpus: 4, memoryMiB: 6144}
+  policy:
+    pollSeconds: 5
+    continueAttempts: 0
+    restarts: 0
+    blindProbes: 3
+    settlingSeconds: 15
+    providerWaitSeconds: 60
+    elapsedSeconds: 1800
+orchestrator:
+  cli: opencode
+  model: fireworks-ai/accounts/fireworks/models/glm-5p3
+  providerHeaderTimeoutSeconds: 60
+  auth: {apiKey: [fireworks]}
+  repos: [{path: ../repo, name: outputs}]
+  snapshots: [{path: ../inputs/app, name: app}, {path: ../inputs/runtime, name: runtime}]
+  policy: {stallSeconds: 180}
+agents:
+  rule-analyst:
+    cli: opencode
+    model: fireworks-ai/accounts/fireworks/models/glm-5p3
+    providerHeaderTimeoutSeconds: 60
+    auth: {apiKey: [fireworks]}
+    repos: [{path: ../repo, name: outputs}]
+    snapshots: [{path: ../inputs/app, name: app}, {path: ../inputs/runtime, name: runtime}]
+    policy: {stallSeconds: 180, freshPerDispatch: true}
+  test-engineer:
+    cli: opencode
+    model: fireworks-ai/accounts/fireworks/models/kimi-k3
+    auth: {apiKey: [fireworks]}
+    repos: [{path: ../repo, name: outputs}]
+    snapshots: [{path: ../inputs/app, name: app}, {path: ../inputs/runtime, name: runtime}]
+    policy: {stallSeconds: 180, freshPerDispatch: true}
+  verifier:
+    cli: opencode
+    model: fireworks-ai/accounts/fireworks/models/kimi-k3
+    auth: {apiKey: [fireworks]}
+    repos: [{path: ../repo, name: outputs}]
+    snapshots: [{path: ../inputs/app, name: app}, {path: ../inputs/runtime, name: runtime}]
+    policy: {stallSeconds: 180, freshPerDispatch: true}

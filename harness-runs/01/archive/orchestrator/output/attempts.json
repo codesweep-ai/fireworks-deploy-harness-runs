@@ -1,0 +1,53 @@
+{
+  "run": "task-tracker-01",
+  "policy": "max 2 attempts per stable work item, 3 min per attempt, stop new work at deadline-3m (20:14:09Z), deadline 2026-11-02T20:17:09Z",
+  "briefingReadbacksNotAttempts": [
+    {"member": "orchestrator", "dispatch": "d001", "at": "2026-11-02T20:03:05Z", "note": "readback confirmed, all inputs present"},
+    {"member": "verifier", "dispatch": "d001", "at": "2026-11-02T20:03:01Z", "note": "readback confirmed, all inputs present, accepted"}
+  ],
+  "workItems": [
+    {
+      "id": "A1",
+      "owner": "rule-analyst",
+      "title": "Approval-slice rules + EARS specs + fixtures",
+      "attempts": [
+        {"number": 1, "dispatch": "rule-analyst/d002", "sent": "2026-11-02T20:04:40Z", "replied": "2026-11-02T20:06:17Z", "result": "accepted", "commit": "d7e6bdfd52c2d87a6dab25e8ff7ec6874c226c21", "verification": "orchestrator spot-checked all cited line ranges against ~/app source (AuthFilter 28-47, TaskActionServlet 26-57/91-109, Role 13-16, seed.sql) — all confirmed; branch fetched and files inspected"}
+      ]
+    },
+    {
+      "id": "T1",
+      "owner": "test-engineer",
+      "title": "Validate prepared harness + request mechanics + test skeleton",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d002", "sent": "2026-11-02T20:04:40Z", "replied": "2026-11-02T20:06:27Z", "result": "accepted", "commit": "b1a2ee671779a1669de6c2947994594ae13774f3", "verification": "branch fetched; runtime log, request-mechanics notes, httpcase.py skeleton, and smoke coverage artifacts inspected by orchestrator"}
+      ]
+    },
+    {
+      "id": "T2",
+      "owner": "test-engineer",
+      "title": "Approval-slice tests S-APR-001..005 + mapping + coverage",
+      "attempts": [
+        {"number": 1, "dispatch": "test-engineer/d003", "sent": "2026-11-02T20:08:50Z", "replied": "2026-11-02T20:09:06Z", "result": "accepted", "commit": "8566315b67e379a0e2a38eb0fca33cba09ae2b30 (includes merge 1175e63 of A1)", "verification": "branch fetched; tests/test_approval_slice.py, mapping.json, t2-test.log (9/9 OK exit 0), coverage summary.json inspected by orchestrator"}
+      ]
+    },
+    {
+      "id": "INT",
+      "owner": "orchestrator",
+      "title": "Integration of A1+T1+T2 into orchestrator branch",
+      "attempts": [
+        {"number": 1, "dispatch": "n/a (orchestrator-owned)", "sent": "n/a", "replied": "n/a", "result": "integrated", "commit": "340dc91a4898092b510c473c4890e831feffda9a", "verification": "merge of accepted branches; tree identical to verified engineer tip; pushed to verifier at refs/campaign/orchestrator"}
+      ]
+    },
+    {
+      "id": "V1",
+      "owner": "verifier",
+      "title": "Independent verification of integration commit 340dc91",
+      "attempts": [
+        {"number": 1, "dispatch": "verifier/d002 (+ --continue addendum for G-APR repro)", "sent": "2026-11-02T20:11:00Z", "replied": "2026-11-02T20:12:27Z", "result": "accepted", "commit": "7637027a1275e99918eedb970aa0c769403ce289", "verification": "orchestrator inspected evidence/verifier/d002/ and verdict; all 5 criteria ACCEPTED; independent fresh-DB run 9/9 OK; second no-reset run OK; coverage reproduced byte-identical; 14/14 citations confirmed; frozen-app integrity PASS"}
+      ]
+    }
+  ],
+  "reworksUsed": 0,
+  "exhaustedItems": [],
+  "notes": "No rework was needed on any item; every item passed on attempt 1. G-APR-001/002 reproduction was requested via addendum but time-boxed out by the verifier; recorded as unverified suspected findings rather than retried under new IDs."
+}

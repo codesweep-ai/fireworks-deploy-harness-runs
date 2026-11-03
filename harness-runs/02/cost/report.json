@@ -1,0 +1,141 @@
+{
+  "run": "02",
+  "generatedAt": "2026-11-02T20:56:28.295893+00:00",
+  "currency": "USD",
+  "reportedCostUSD": "6.16178568",
+  "complete": true,
+  "reportedEvents": 269,
+  "eligibleEvents": 269,
+  "members": {
+    "verifier": {
+      "reportedCostUSD": "1.1451639",
+      "sessions": 3,
+      "reportedEvents": 72,
+      "eligibleEvents": 72,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/kimi-k3"
+      ]
+    },
+    "test-engineer": {
+      "reportedCostUSD": "2.2244799",
+      "sessions": 3,
+      "reportedEvents": 71,
+      "eligibleEvents": 71,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/kimi-k3"
+      ]
+    },
+    "rule-analyst": {
+      "reportedCostUSD": "1.17242570",
+      "sessions": 2,
+      "reportedEvents": 49,
+      "eligibleEvents": 49,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/glm-5p3"
+      ]
+    },
+    "orchestrator": {
+      "reportedCostUSD": "1.61971618",
+      "sessions": 1,
+      "reportedEvents": 77,
+      "eligibleEvents": 77,
+      "models": [
+        "fireworks-ai/accounts/fireworks/models/glm-5p3"
+      ]
+    }
+  },
+  "sessions": [
+    {
+      "session": "ses_e61fce5e1ffeRXnCYdzh8c216q",
+      "member": "verifier",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.7842381",
+      "reportedEvents": 52,
+      "eligibleEvents": 52,
+      "complete": true,
+      "source": "viewer/traces/ses_e61fce5e1ffeRXnCYdzh8c216q.json"
+    },
+    {
+      "session": "ses_e61fcebeeffe5MM0AISSz7nN9e",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.4389093",
+      "reportedEvents": 12,
+      "eligibleEvents": 12,
+      "complete": true,
+      "source": "viewer/traces/ses_e61fcebeeffe5MM0AISSz7nN9e.json"
+    },
+    {
+      "session": "ses_e62081c78ffeS9uYdFCRab3LqR",
+      "member": "verifier",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.2800116",
+      "reportedEvents": 15,
+      "eligibleEvents": 15,
+      "complete": true,
+      "source": "viewer/traces/ses_e62081c78ffeS9uYdFCRab3LqR.json"
+    },
+    {
+      "session": "ses_e620825a7ffe75aNypyiUhxN9r",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "1.7220516",
+      "reportedEvents": 53,
+      "eligibleEvents": 53,
+      "complete": true,
+      "source": "viewer/traces/ses_e620825a7ffe75aNypyiUhxN9r.json"
+    },
+    {
+      "session": "ses_e62083602ffeLM7aigiq1AjNFI",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+      "reportedCostUSD": "1.13761852",
+      "reportedEvents": 43,
+      "eligibleEvents": 43,
+      "complete": true,
+      "source": "viewer/traces/ses_e62083602ffeLM7aigiq1AjNFI.json"
+    },
+    {
+      "session": "ses_e620a3313ffeMs7njjasB2ubC2",
+      "member": "test-engineer",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.0635190",
+      "reportedEvents": 6,
+      "eligibleEvents": 6,
+      "complete": true,
+      "source": "viewer/traces/ses_e620a3313ffeMs7njjasB2ubC2.json"
+    },
+    {
+      "session": "ses_e620a334effeeJOeH6xMBAAc9i",
+      "member": "orchestrator",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+      "reportedCostUSD": "1.61971618",
+      "reportedEvents": 77,
+      "eligibleEvents": 77,
+      "complete": true,
+      "source": "viewer/traces/ses_e620a334effeeJOeH6xMBAAc9i.json"
+    },
+    {
+      "session": "ses_e620a3362ffeVrJc9Xzkdtk40e",
+      "member": "rule-analyst",
+      "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+      "reportedCostUSD": "0.03480718",
+      "reportedEvents": 6,
+      "eligibleEvents": 6,
+      "complete": true,
+      "source": "viewer/traces/ses_e620a3362ffeVrJc9Xzkdtk40e.json"
+    },
+    {
+      "session": "ses_e620a3391ffegruLIC2f3sz8Gt",
+      "member": "verifier",
+      "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+      "reportedCostUSD": "0.0809142",
+      "reportedEvents": 5,
+      "eligibleEvents": 5,
+      "complete": true,
+      "source": "viewer/traces/ses_e620a3391ffegruLIC2f3sz8Gt.json"
+    }
+  ],
+  "method": "Sum reportedCostUSD on events in each unique viewer/traces/*.json session, once. Cross-check against totals.cost.reportedByEvents; never add both figures.",
+  "scope": "CLI-reported model usage, including campaign briefing/readback sessions. Excludes host infrastructure, runtime preparation, and the operator's setup conversation; not reconciled to a provider invoice."
+}

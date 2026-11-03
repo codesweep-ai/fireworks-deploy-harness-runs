@@ -1,0 +1,3 @@
+/home/rishi/.tmp/firecracker-deploy/runs/02/viewer/tracer will be 2.2 MB (9 traces, 917 events)
+/home/rishi/.tmp/firecracker-deploy/runs/02/viewer/index.html (611745 bytes, 33 events, 1 issues, 9 sessions, 30 anchors)
+/home/rishi/.tmp/firecracker-deploy/runs/02/viewer: run-data.json, facts.json, AGENTS.md, and traces/ beside it; start an agent there to ask about the run

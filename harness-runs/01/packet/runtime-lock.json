@@ -1,0 +1,17 @@
+{
+  "applicationCommit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+  "images": {
+    "app": "5329cfa51beeeb8b8134b47d144f01be3c471dc13edf9111a760e1ffedbac5ba",
+    "postgres": "1b3c642526f8d274b12bdcd93b90aeb7e68a1f59eb20613adb96ed561c01d98c"
+  },
+  "buildImages": {
+    "maven": "caa1c99435b94bae143279df3c73652ef32fb1bae6a4f21ea544da05c85c16ee",
+    "tomcat": "e2bb2db66ac34a238ea4e53e73c1c2bb0cdf16d32751ca79275c2048772a54bd"
+  },
+  "jacocoVersion": "0.8.12",
+  "jars": {
+    "jacocoagent.jar": "115e8e6e6593ca3a9892dfef695df4d487c706e59e71e64dc0ab95716ee02622",
+    "jacococli.jar": "594c01125b84864a7fc5a9efab19b71b7de36b27346863f6d7cd0cd45400ceb0"
+  },
+  "imageStore": "tt-demo-01"
+}

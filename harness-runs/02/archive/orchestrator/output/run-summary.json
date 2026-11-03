@@ -1,0 +1,89 @@
+{
+  "run": "task-tracker-02",
+  "generated": "2026-11-02T20:56:30Z (approx)",
+  "orchestrator": "GLM 5.3 via OpenCode",
+  "frozenApp": {
+    "commit": "eee783057ec28d28fb36ec05484de9b4b40ceb9c",
+    "integrityChecks": "harness/check-frozen-app.py PASS on every seat before and after all work (41 files); runtime re-verified internally on every harness command",
+    "appEdits": "none (forbidden and none attempted)"
+  },
+  "continuation": {
+    "run01OutputCommit": "5f5751723b921c3ed9e005c4593bccd30de43c22",
+    "run02BaseCommit": "5493ba9",
+    "integrationCommits": {
+      "I1": "d90a91a (analyst de6e554 + engineer 3df5112 merged)",
+      "I2": "35b9a30 (engineer mapping reconciliation f63a5e8 merged)",
+      "final": "c79e671 (verifier V2 evidence + I2 merged; orchestrator reports committed on top)"
+    }
+  },
+  "breadthByFamily": {
+    "authentication/session/logout/access exemptions": {"tests": "test_skeleton (4 inherited) + test_auth_session (5)", "executed": true, "notes": "login success/failure, logout invalidation, anonymous GET/POST protection, /api/* exemption (F-003), root/index.jsp redirects; .css exemption probe NOT executed (gap)"},
+    "projects list/create/archive/validation": {"tests": "test_projects (5)", "executed": true, "notes": "list incl. archived, create + oracle persistence, blank-name 400 no-mutation, duplicate-name characterization (no UNIQUE), archive + idempotent re-archive"},
+    "task form display/create/edit/defaults/validation": {"tests": "test_task_form (6)", "executed": true, "notes": "blank form, edit prefill all fields, create defaults OPEN/MEDIUM/nulls, blank-title + bad-project 200 re-render no-mutation, nullable round-trip incl. F-006 characterization"},
+    "task lifecycle start/submit/approve/reject/reopen/guards": {"tests": "test_approval_slice (5 inherited) + test_lifecycle_bulk (11 lifecycle rows)", "executed": true, "notes": "start/submit/reopen success + wrong-state 409 no-mutation, 404 missing id, 403-before-404 ordering (F-004), unknown action 400, F-002 malformed/missing id 500 characterization"},
+    "bulk close": {"tests": "test_lifecycle_bulk (3 bulk rows)", "executed": true, "notes": "no-ids no-op, mixed states, MEMBER bulkClose PENDING_APPROVAL->DONE (F-001 characterization, reproduced independently by verifier); VIEWER leg NOT executed (gap)"},
+    "status/assignee filters and all sort tokens": {"tests": "test_filters_sorts (9)", "executed": true, "notes": "status x4 + bogus, assignee incl. no-unassigned-token characterization + non-numeric 500 (F-009), combined, all 6 whitelisted tokens + default with exact id-sequence assertions, invalid/injection tokens fall back to default"},
+    "public JSON API": {"tests": "test_api_json (5)", "executed": true, "notes": "anonymous readback [4,3,2,1] exact key set, status filter, assignee-param-ignored characterization, escaping round-trip valid JSON, null rendering, 405 non-GET"},
+    "database constraints/mapping/technical/JSP": {"tests": "partial — via FORM/PROJ/LIFE/API rows", "executed": "partial", "notes": "title NOT NULL + FK-project checked behaviorally, status/priority CHECKs exercised through legal transitions, null/date mapping asserted via API; crafted constraint-echo probes (S-DATA-001..003 / T-DATA-001..003) NOT executed (gap); technical/unreachable files inventoried with no-counter/unreachable typing"}
+  },
+  "tests": {
+    "inherited": "9 (5 approval-slice S-APR-001..005 + 4 skeleton) — all preserved, passing, unweakened",
+    "new": "44 across 6 non-overlapping family modules",
+    "total": 53,
+    "results": {
+      "engineerSeat": "53/53 OK exit 0 (evidence/test-engineer/d002-test-run.log)",
+      "orchestratorSeat": "53/53 OK exit 0 (run this summary, after I2 integration)",
+      "verifierSeat": "53/53 OK x3 — twice on I1 with reset between (rt-test1/rt-test2.log) and once on I2 (rt-test3-i2.log) — order/state independent"
+    },
+    "mapping": "reports/tests/mapping.json idStatus=FINAL: 44 new rows + 5 inherited APR rows on stable rule/EARS IDs; 49/49 mapped rows verified executed by verifier; only unmapped = 4 declared skeleton smoke tests; all 89 cited rule/spec IDs exist"
+  },
+  "coverage": {
+    "command": "python3 harness/runtime.py coverage",
+    "scope": "All compiled production Java classes in the frozen WAR (Java-only; JSP/SQL/CSS checked behaviorally, outside this metric — never equate with business-rule completeness)",
+    "denominator": "18 Java source files in _campaign/scope.json; 17 produce executable counters; TaskStatus.java is a constants holder with zero counters (resolves run-01 GAP-COV-001)",
+    "baseline": {"LINE": "233/500", "BRANCH": "75/188", "INSTRUCTION": "1021/2155", "METHOD": "64/108", "CLASS": "12/17", "COMPLEXITY": "85/119"},
+    "run02": {"LINE": "449/500", "BRANCH": "159/188", "INSTRUCTION": "1975/2155", "METHOD": "103/108", "CLASS": "17/17", "COMPLEXITY": "see reports/coverage/summary.json"},
+    "delta": {"LINE": "+216", "BRANCH": "+84", "METHOD": "+39", "CLASS": "+5"},
+    "reproducedIndependently": "verifier rt-cov.log matches exactly",
+    "remainingUncovered": "~51 lines: Database/BootstrapListener startup plumbing (unreachable via HTTP by design), remaining error/exception branches, ApiTaskServlet control-char path, dead code (TaskDao.findByProject, ProjectDao.findById — zero callers)"
+  },
+  "adjudications": {
+    "method": "observed-versus-intended: reproduction establishes observation; a requirement is only what a source or document states; inferred expectations recorded as unmet intended requirements, never asserted as passing tests",
+    "F-001": "reproduced on two seats (engineer suite + verifier real HTTP): MEMBER bulkClose moves PENDING_APPROVAL->DONE with no role/state guard. INTENT UNRESOLVED — approve-path policy is not automatically bulkClose policy; stays suspected defect with unmet intended requirement recorded; tests labelled characterization",
+    "F-002": "reproduced on two seats: malformed/missing id -> unhandled 500 (five NFE sites inventoried). Confirmed-as-observed robustness defect; intended 4xx inferred from app conventions and recorded as unmet intended requirement",
+    "F-003": "stays closed (not a defect); anonymous /api readback now under executed characterization test",
+    "F-004": "closed; ordering observation now executed as tests (403-before-404)",
+    "F-005": "NEW, confirmed observed (verifier HTTP): dead /projects/delete link -> 404",
+    "F-006": "NEW, reproduced observed (engineer test + verifier confirmation): task edit never persists project_id while UI shows Saved.; intent unresolved",
+    "F-007": "NEW, confirmed observed (verifier HTTP): edit of nonexistent id -> 302 saved=1 with nothing persisted",
+    "F-008": "NEW, confirmed observed (verifier HTTP): control chars in stored title make /api/tasks strict-JSON-invalid",
+    "F-009": "NEW, confirmed observed (engineer test + verifier HTTP): GET /tasks?assignee=abc -> 500",
+    "appFixes": "none — frozen app; all defect characterizations remain visible in the suite"
+  },
+  "verification": {
+    "independentVerifier": "ACCEPT — reports/verification/v2-d003-verdict.md, evidence/verifier/d003/ (all commands, exit codes, logs, before/after oracle states, integrity hashes)",
+    "verifiedBy": "double suite run + I2 rerun, coverage reproduction, 49/49 mapping execution check, 89 ID existence check, F-001/F-002 independent reproduction, F-005..F-009 HTTP spot-checks, inventory audit (10 routes / 18 sources / 8 families), integrity PASS before+after",
+    "unverifiedByVerifier": "nothing from the dispatch"
+  },
+  "achievedCriteria": [
+    "2. Source-backed rules in rules/*.md and EARS specs in specs/*.md for all 8 families per artifact-format.json, existing APR IDs stable, corrections explicit (R-APR cross-ref section; GAP-COV-001 resolved)",
+    "3. External real-HTTP unittest suite extended to 53 tests across every operation family with per-test resets, oracle-verified persisted effects, no-mutation refusal asserts; inherited 9 preserved and passing; mapping.json complete on final stable IDs",
+    "4. F-001/F-002 reproduced (two seats each) and adjudicated observed-vs-intended with ambiguity retained; ledger updated with F-005..F-009; no app fixes",
+    "5. Independent verifier: own runtime, exact commits named (I1 d90a91a, I2 35b9a30), suite run twice + I2 rerun for isolation, mappings and representative assertions verified per family, coverage independently reproduced, commands/exit codes/logs/integrity saved",
+    "6. Java coverage collected against the same denominator as run 01: 449/500 lines (+216), 159/188 branches (+84); all 18 sources accounted incl. the zero-counter constants holder; remaining gaps explained; Java percentages never presented as whole-app completeness",
+    "7. Current-run reports/attempts.json, reports/run-summary.json, findings/ledger.json committed with initial/integration commit IDs and frozen-app hash checks; stable artifact paths and IDs preserved"
+  ],
+  "unmetCriteria": [
+    "1 (partial). Required operations left without executed tests despite full inventory: (a) .css auth-exemption probe (access-exemption set executed for /login and /api/* only); (b) VIEWER-role bulkClose leg (BULK roles dimension executed for ADMIN/MANAGER/MEMBER only); (c) DATA-family crafted constraint-echo probes (S-DATA-001..003 / planned T-DATA-001..003: direct CHECK/length/FK violation surfaces) — constraints were exercised only through legal-path behavior"
+  ],
+  "outcome": "campaign-exhausted — the 30-minute budget ended while progress was still being made; the three residual operations above are minutes of work each and were queued behind the mapping-reconciliation and independent-verification critical path",
+  "nextRunWork": [
+    "Execute the three unexecuted operation probes (.css exemption, VIEWER bulkClose, S-DATA-001..003 crafted writes) and fold them into the family modules",
+    "Promote verifier F-005/F-007/F-008 spot-checks into permanent suite tests (evidence exists; tests do not)",
+    "Resolve F-001/F-006 product intent with owners; until then keep characterizations labelled",
+    "Cover remaining ~51 uncovered lines where reachable: error/exception branches, ApiTaskServlet control-char path; document dead code (findByProject, ProjectDao.findById) as no-test-possible",
+    "Trace non-ASCII form input end-to-end (Postgres/JSP/API) and session timeout semantics"
+  ],
+  "attemptsLedger": "reports/attempts.json (12 work items, 1 rework used, T-FORM exhausted 2/2 legitimately, no relabelling)",
+  "honesty": "No old results copied as current; every current report names this run and its commits; history/01 treated as input only; denominator never narrowed; Java coverage never equated with business-rule completeness; unexecuted required operations reported as unmet, not as covered-by-documentation"
+}

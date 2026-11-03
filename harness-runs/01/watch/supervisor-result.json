@@ -1,0 +1,24 @@
+{
+  "elapsedSeconds": 723.5,
+  "collectionFinished": true,
+  "stopResult": [
+    {
+      "orchestrator": 0,
+      "rule-analyst": 0,
+      "test-engineer": 0,
+      "verifier": 0
+    }
+  ],
+  "collection": {
+    "fetch:orchestrator": 0,
+    "fetch:rule-analyst": 0,
+    "fetch:test-engineer": 0,
+    "fetch:verifier": 0,
+    "archive": 0
+  },
+  "createExitCode": 0,
+  "finishedAt": "2026-11-02T20:14:12.653388+00:00",
+  "viewerExitCode": 0,
+  "outputIntegrationExitCode": 0,
+  "outputCommit": "5f5751723b921c3ed9e005c4593bccd30de43c22"
+}

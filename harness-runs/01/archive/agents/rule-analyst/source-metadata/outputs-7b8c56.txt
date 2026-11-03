@@ -1,0 +1,140 @@
+branch=cs-sandbox/rule-analyst-077665b6.task-tracker-01-077665b6
+base=679cd0218739b6c019660c3a0e787d6b89ef42de
+commit=d7e6bdfd52c2d87a6dab25e8ff7ec6874c226c21
+subject=A1: approval-slice rules R-APR-001..005, EARS specs S-APR-001..005, fixtures + oracle
+diff --git a/evidence/analyst/fixtures.md b/evidence/analyst/fixtures.md
+new file mode 100644
+index 0000000..af4d6d2
+--- /dev/null
++++ b/evidence/analyst/fixtures.md
+@@ -0,0 +1,44 @@
++# Fixtures & oracle expectations — approval slice — @ eee783057ec28d28fb36ec05484de9b4b40ceb9c
++
++Seeded users (`~/app/src/main/resources/db/seed.sql:1-6`; password = username; ids via IDENTITY 1..4):
++
++| username | password | role | canApprove (Role.java:14-16) |
++|---|---|---|---|
++| admin | admin | ADMIN | yes |
++| mgr | mgr | MANAGER | yes |
++| dev | dev | MEMBER | no |
++| view | view | VIEWER | no |
++
++Seeded tasks (`seed.sql:17-24`; ids 1..4):
++
++| id | title | starting status |
++|---|---|---|
++| 1 | Design login page | OPEN |
++| 2 | Wire up SSO | IN_PROGRESS |
++| 3 | Migrate invoices | **PENDING_APPROVAL** |
++| 4 | Archive old data | DONE |
++
++Login (all cases): `POST /login` with form params `username`, `password` (`web/LoginServlet.java:23-35`) → 302 to `/tasks` + session cookie. Keep one session per case; rerun seed between mutating cases so task 3 stays PENDING_APPROVAL.
++
++Oracle after each case: `SELECT id,status FROM task ORDER BY id`. Refusals must leave the row byte-identical (no `updated_at` bump — no DAO write occurs on refusal paths).
++
++## Case (a) success — mgr approves task 3
++- Request: `POST /tasks/action`, params `action=approve`, `id=3` (session: mgr/mgr).
++- Expected: `302` → `Location: /tasks`.
++- Persisted: task 3 `PENDING_APPROVAL → DONE`. Oracle: 1 OPEN, 2 IN_PROGRESS, 3 DONE, 4 DONE.
++- Parallel success (S-APR-002): `action=reject&id=3` as admin → 302, task 3 `→ IN_PROGRESS`.
++
++## Case (b) role refusal — dev attempts approve on task 3
++- Request: `POST /tasks/action`, params `action=approve`, `id=3` (session: dev/dev).
++- Expected: `403`; body contains `Only managers or admins may approve or reject tasks` (AuthFilter.java:42-45 — fires before the servlet; servlet's variant message is unreachable on this route).
++- Persisted: none. Oracle: 3 remains PENDING_APPROVAL. (view/viewer behaves identically.)
++
++## Case (c) wrong-starting-state refusal — mgr approves task 1 (OPEN)
++- Request: `POST /tasks/action`, params `action=approve`, `id=1` (session: mgr/mgr — passes both canApprove gates).
++- Expected: `409`; body `Cannot approve a task in status OPEN (expected PENDING_APPROVAL)`.
++- Persisted: none. Oracle: 1 remains OPEN. (Same shape for reject on any non-PENDING_APPROVAL task, e.g. `action=reject&id=4` → 409 `... status DONE ...`.)
++
++## Ordering cross-checks (from code, cheap to assert if desired)
++- dev + nonexistent id (e.g. `id=999`) + approve → **403** (filter role check precedes servlet's 404).
++- mgr + `id=999` + approve → **404** `No such task` (TaskActionServlet.java:33-36).
++- No session + approve → **302** to `/login` (AuthFilter.java:35-37).
+diff --git a/rules/R-APR.md b/rules/R-APR.md
+new file mode 100644
+index 0000000..63eb1de
+--- /dev/null
++++ b/rules/R-APR.md
+@@ -0,0 +1,49 @@
++# Approval-slice rules — task-tracker-demo @ eee783057ec28d28fb36ec05484de9b4b40ceb9c (frozen ~/app)
++
++Slice: `approve`/`reject` on `POST /tasks/action`. All paths relative to `src/main/java/com/acme/tracker/` unless noted. Current behavior only; no intended-policy claims.
++
++## R-APR-001 — Filter-level approver gate on /tasks/action
++- **Source:** `web/AuthFilter.java:40-47` (mapped to `/*` by `src/main/webapp/WEB-INF/web.xml:20-23`)
++- **Actors:** any authenticated user (session attribute `user` non-null; unauthenticated is handled earlier at `AuthFilter.java:33-38` by 302 redirect to `/login`).
++- **Preconditions:** request reached the filter; path is `/tasks/action` (not one of the `/login`, `/api/*`, `*.css` exemptions at `AuthFilter.java:28-31`); user authenticated.
++- **Trigger:** `POST /tasks/action` with `action` = `approve` or `reject`.
++- **Effects:** if `user.getRole().canApprove()` is false → `403 Forbidden`, body message `"Only managers or admins may approve or reject tasks"`; request never reaches the servlet. Otherwise chain continues.
++- **Refusal behavior:** 403, no DB write (filter runs before any DAO call).
++- **Confidence:** high (direct code). Ambiguity: none.
++
++## R-APR-002 — Servlet-level approver re-check (defense-in-depth duplicate)
++- **Source:** `web/TaskActionServlet.java:91-98` (`requireApprover`), invoked at `:49` (approve) and `:54` (reject).
++- **Actors/preconditions:** user already passed the filter (authenticated) AND task `id` parsed and found (404 at `:31-36` happens first).
++- **Trigger:** approve/reject switch cases.
++- **Effects:** if `user == null || !user.getRole().canApprove()` → `403`, message `"Approval requires a manager or admin"`.
++- **Refusal behavior:** 403, no DB write (checked before `guard` and `updateStatus`).
++- **Confidence:** high. **Disagreement record (filter vs servlet):** the two layers use the *same predicate* (`Role.canApprove()`) but different messages, and the filter fires first on every normal route to `/tasks/action` (no exemption covers it), so the servlet's 403 message is unreachable through the standard route. No outcome-level disagreement — only duplicated enforcement and divergent refusal text. Also note check **ordering**: existence (404) precedes the servlet role check, but the filter role check precedes existence — so a non-approver probing a nonexistent id sees 403 (filter), not 404; an approver sees 404.
++
++## R-APR-003 — Definition of "may approve" (the deciding code path)
++- **Source:** `model/Role.java:13-16` — `canApprove()` returns `this == ADMIN || this == MANAGER`.
++- **Actors:** roles ADMIN, MANAGER pass; MEMBER, VIEWER refuse. This is decided by this method (called from `AuthFilter.java:42` and `TaskActionServlet.java:93`), **not** inferred from role names.
++- **Preconditions/trigger:** n/a (pure predicate).
++- **Effects:** defines the approver set for R-APR-001/002.
++- **Refusal behavior:** n/a.
++- **Confidence:** high. Related but non-deciding: `db/schema.sql:14-15` CHECK only constrains `person.role` to the four legal values — it grants no approval rights and does not mirror `canApprove`.
++
++## R-APR-004 — Starting-state guard: approve/reject require PENDING_APPROVAL
++- **Source:** `web/TaskActionServlet.java:48-57` (approve `:48-52`, reject `:53-57`) + `guard()` at `:100-109`; invoked at `:50` and `:55` with `expected = TaskStatus.PENDING_APPROVAL`.
++- **Actors:** any user who passed the approver checks (R-APR-001/002).
++- **Preconditions:** task exists; user is an approver.
++- **Trigger:** approve or reject on a task whose `status != 'PENDING_APPROVAL'`.
++- **Effects:** `409 Conflict`, message `"Cannot <action> a task in status <current> (expected PENDING_APPROVAL)"`; no DB write.
++- **Refusal behavior:** 409; task row untouched (observable via oracle `SELECT id,status FROM task ORDER BY id`).
++- **Confidence:** high. Ambiguity: none.
++
++## R-APR-005 — Transitions and persistence for successful approve/reject
++- **Source:** `web/TaskActionServlet.java:51` (approve → `TaskStatus.DONE`), `:56` (reject → `TaskStatus.IN_PROGRESS`); write via `dao/TaskDao.java:115-125` `updateStatus` — unconditional `UPDATE task SET status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?`.
++- **Preconditions:** R-APR-001..004 all passed.
++- **Effects:** new status persisted; `updated_at` bumped; response `302` redirect to `/tasks` (or `/tasks/form?id=<id>` when `return=detail`, `:66-73`).
++- **Refusal behavior:** n/a (success rule).
++- **Confidence:** high. **Note:** the status precondition lives *only* in the servlet; neither `updateStatus` SQL nor `db/schema.sql:33` (CHECK enumerates the four statuses, not transitions) enforces it. DAO/DB would accept any legal status from any current status — the guard is single-point in `TaskActionServlet`.
++
++## Gaps (discovered, deliberately not expanded into this pilot)
++- **G-APR-001:** `bulkClose` (`web/TaskActionServlet.java:26-29, 76-88`; `dao/TaskDao.java:128-147`) sets any non-DONE task to DONE in one UPDATE with **no** `canApprove` check and **no** PENDING_APPROVAL guard — a MEMBER/VIEWER can reach DONE (approve-equivalent) via `POST /tasks/action?action=bulkClose&ids=…`. Out of slice; flagged for orchestrator.
++- **G-APR-002:** `Long.parseLong(req.getParameter("id"))` at `TaskActionServlet.java:31` throws NumberFormatException (unhandled → 500) on missing/malformed `id`. Out of slice.
++- **G-APR-003:** `/api/*` is exempt from `AuthFilter` (`AuthFilter.java:28`) but `web/ApiTaskServlet.java` is GET-only read-back — no approval bypass there (verified).
+diff --git a/specs/S-APR.md b/specs/S-APR.md
+new file mode 100644
+index 0000000..05a7701
+--- /dev/null
++++ b/specs/S-APR.md
+@@ -0,0 +1,25 @@
++# EARS specs — approval slice — task-tracker-demo @ eee783057ec28d28fb36ec05484de9b4b40ceb9c
++
++System under specification: the task-tracker web app (frozen ~/app). All specs are **current behavior**, derived from the sources cited in `rules/R-APR.md`.
++
++## S-APR-001 — approve success (state + event driven)
++**While** the authenticated user's role satisfies `canApprove()` (ADMIN or MANAGER, per `model/Role.java:14-16`) **and** the target task's status is `PENDING_APPROVAL`, **when** the system receives `POST /tasks/action` with `action=approve` and `id` of that task, **the system shall** set that task's status to `DONE`, refresh its `updated_at`, and respond `302` redirecting to `/tasks`.
++- Observable: HTTP 302 with `Location: /tasks`; oracle `SELECT id,status FROM task ORDER BY id` shows the task `DONE`.
++
++## S-APR-002 — reject success (state + event driven)
++**While** the authenticated user's role satisfies `canApprove()` **and** the target task's status is `PENDING_APPROVAL`, **when** the system receives `POST /tasks/action` with `action=reject` and `id` of that task, **the system shall** set that task's status to `IN_PROGRESS`, refresh its `updated_at`, and respond `302` redirecting to `/tasks`.
++- Observable: HTTP 302; oracle shows the task `IN_PROGRESS`.
++
++## S-APR-003 — role refusal (unwanted behavior)
++**When** the system receives `POST /tasks/action` with `action=approve` or `action=reject`, **if** the authenticated user's role does not satisfy `canApprove()` (MEMBER or VIEWER), **then the system shall** respond `403 Forbidden` and leave the task's status unchanged.
++- Observable: HTTP 403; body contains `"Only managers or admins may approve or reject tasks"` (filter message, `web/AuthFilter.java:42-45` — fires before the servlet's own check); oracle shows task status unchanged. (If the filter were bypassed, the servlet's `requireApprover`, `web/TaskActionServlet.java:93-95`, yields 403 with `"Approval requires a manager or admin"` — same outcome, different text; see rules/R-APR.md disagreement record.)
++
++## S-APR-004 — wrong-starting-state refusal (unwanted behavior)
++**When** an authenticated user whose role satisfies `canApprove()` sends `POST /tasks/action` with `action=approve` or `action=reject`, **if** the target task's status is not `PENDING_APPROVAL`, **then the system shall** respond `409 Conflict` and leave the task's status unchanged.
++- Observable: HTTP 409; body matches `Cannot <action> a task in status <current> (expected PENDING_APPROVAL)` (`web/TaskActionServlet.java:101-108`); oracle shows task status unchanged.
++
++## S-APR-005 — unauthenticated request (supporting precondition)
++**When** the system receives `POST /tasks/action` with `action=approve` or `action=reject`, **if** no authenticated user is bound to the session, **then the system shall** respond `302` redirecting to `/login` and leave the task's status unchanged.
++- Observable: HTTP 302 `Location: /login` (`web/AuthFilter.java:33-38`); oracle unchanged.
++
++All five cases are source-supported; none was unsupported. Coverage note: (a)=S-APR-001/002, (b)=S-APR-003, (c)=S-APR-004 per dispatch item 2.

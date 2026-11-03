@@ -1,0 +1,419 @@
+{
+  "schema": 1,
+  "tool": "v0.0.0-20261102055029-b0f0bf56f5cd",
+  "generatedAt": "2026-11-02T20:01:05.465024587Z",
+  "deadline": "15m",
+  "campaign": {
+    "version": 2,
+    "id": "task-tracker-01-077665b61012ba68",
+    "name": "task-tracker-01",
+    "group": "task-tracker-01-077665b6",
+    "network": "cs-sandbox-task-tracker-01-077665b6",
+    "engine": "firecracker",
+    "createdAt": "0001-01-01T00:00:00Z",
+    "updatedAt": "0001-01-01T00:00:00Z",
+    "profilePath": "/home/rishi/.tmp/firecracker-deploy/runs/01/packet/profile.yaml",
+    "profileDigest": "a69d3f47d929aa7d71b6856d5ee0386890628bac215fc2f5402df2499a30a566",
+    "policy": {
+      "continueAttempts": 2,
+      "restarts": 1,
+      "elapsedSeconds": 900,
+      "blindProbes": 3,
+      "pollSeconds": 5,
+      "settlingSeconds": 15,
+      "providerWaitSeconds": 60,
+      "stallSeconds": 180
+    },
+    "deadline": "0001-01-01T00:15:00Z",
+    "members": [
+      {
+        "name": "orchestrator",
+        "role": "orchestrator",
+        "cli": "opencode",
+        "sandbox": "orchestrator-077665b6",
+        "ref": "orchestrator-077665b6.task-tracker-01-077665b6",
+        "branch": "cs-sandbox/orchestrator-077665b6.task-tracker-01-077665b6",
+        "solo": false,
+        "session": {
+          "name": "task-tracker-01-077665b61012ba68-orchestrator"
+        },
+        "profile": {
+          "cli": "opencode",
+          "policy": {
+            "stallSeconds": 180
+          },
+          "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+          "providerHeaderTimeoutSeconds": 60,
+          "repos": [
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+              "name": "outputs",
+              "resolvedCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+            }
+          ],
+          "snapshots": [
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app",
+              "name": "app"
+            },
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime",
+              "name": "runtime"
+            }
+          ],
+          "auth": {
+            "apiKey": [
+              "fireworks"
+            ],
+            "credentials": "lend"
+          },
+          "resources": {
+            "cpus": 4,
+            "memoryMiB": 6144
+          },
+          "imageStores": [
+            "tt-demo-01"
+          ]
+        },
+        "stallSeconds": 180
+      },
+      {
+        "name": "rule-analyst",
+        "role": "agent",
+        "cli": "opencode",
+        "sandbox": "rule-analyst-077665b6",
+        "ref": "rule-analyst-077665b6.task-tracker-01-077665b6",
+        "branch": "cs-sandbox/rule-analyst-077665b6.task-tracker-01-077665b6",
+        "solo": true,
+        "session": {
+          "name": "task-tracker-01-077665b61012ba68-rule-analyst"
+        },
+        "profile": {
+          "cli": "opencode",
+          "policy": {
+            "stallSeconds": 180,
+            "freshPerDispatch": true
+          },
+          "model": "fireworks-ai/accounts/fireworks/models/glm-5p3",
+          "providerHeaderTimeoutSeconds": 60,
+          "repos": [
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+              "name": "outputs",
+              "resolvedCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+            }
+          ],
+          "snapshots": [
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app",
+              "name": "app"
+            },
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime",
+              "name": "runtime"
+            }
+          ],
+          "auth": {
+            "apiKey": [
+              "fireworks"
+            ],
+            "credentials": "lend"
+          },
+          "resources": {
+            "cpus": 4,
+            "memoryMiB": 6144
+          },
+          "imageStores": [
+            "tt-demo-01"
+          ]
+        },
+        "stallSeconds": 180,
+        "freshPerDispatch": true
+      },
+      {
+        "name": "test-engineer",
+        "role": "agent",
+        "cli": "opencode",
+        "sandbox": "test-engineer-077665b6",
+        "ref": "test-engineer-077665b6.task-tracker-01-077665b6",
+        "branch": "cs-sandbox/test-engineer-077665b6.task-tracker-01-077665b6",
+        "solo": true,
+        "session": {
+          "name": "task-tracker-01-077665b61012ba68-test-engineer"
+        },
+        "profile": {
+          "cli": "opencode",
+          "policy": {
+            "stallSeconds": 180,
+            "freshPerDispatch": true
+          },
+          "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+          "repos": [
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+              "name": "outputs",
+              "resolvedCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+            }
+          ],
+          "snapshots": [
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app",
+              "name": "app"
+            },
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime",
+              "name": "runtime"
+            }
+          ],
+          "auth": {
+            "apiKey": [
+              "fireworks"
+            ],
+            "credentials": "lend"
+          },
+          "resources": {
+            "cpus": 4,
+            "memoryMiB": 6144
+          },
+          "imageStores": [
+            "tt-demo-01"
+          ]
+        },
+        "stallSeconds": 180,
+        "freshPerDispatch": true
+      },
+      {
+        "name": "verifier",
+        "role": "agent",
+        "cli": "opencode",
+        "sandbox": "verifier-077665b6",
+        "ref": "verifier-077665b6.task-tracker-01-077665b6",
+        "branch": "cs-sandbox/verifier-077665b6.task-tracker-01-077665b6",
+        "solo": true,
+        "session": {
+          "name": "task-tracker-01-077665b61012ba68-verifier"
+        },
+        "profile": {
+          "cli": "opencode",
+          "policy": {
+            "stallSeconds": 180,
+            "freshPerDispatch": true
+          },
+          "model": "fireworks-ai/accounts/fireworks/models/kimi-k3",
+          "repos": [
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+              "name": "outputs",
+              "resolvedCommit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+            }
+          ],
+          "snapshots": [
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app",
+              "name": "app"
+            },
+            {
+              "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime",
+              "name": "runtime"
+            }
+          ],
+          "auth": {
+            "apiKey": [
+              "fireworks"
+            ],
+            "credentials": "lend"
+          },
+          "resources": {
+            "cpus": 4,
+            "memoryMiB": 6144
+          },
+          "imageStores": [
+            "tt-demo-01"
+          ]
+        },
+        "stallSeconds": 180,
+        "freshPerDispatch": true
+      }
+    ]
+  },
+  "orientationGuest": ".local/share/cs-campaign/input/ORIENTATION.md",
+  "profile": {
+    "path": "profile.yaml",
+    "content": "apiVersion: codesweep.ai/v1alpha1\nkind: CampaignProfile\ndefaults:\n  engine: firecracker\n  deadline: 15m\n  credentials: lend\n  imageStores: [tt-demo-01]\n  resources: {cpus: 4, memoryMiB: 6144}\n  policy:\n    pollSeconds: 5\n    continueAttempts: 0\n    restarts: 0\n    blindProbes: 3\n    settlingSeconds: 15\n    providerWaitSeconds: 60\n    elapsedSeconds: 900\norchestrator:\n  cli: opencode\n  model: fireworks-ai/accounts/fireworks/models/glm-5p3\n  providerHeaderTimeoutSeconds: 60\n  auth: {apiKey: [fireworks]}\n  repos: [{path: ../repo, name: outputs}]\n  snapshots: [{path: ../inputs/app, name: app}, {path: ../inputs/runtime, name: runtime}]\n  policy: {stallSeconds: 180}\nagents:\n  rule-analyst:\n    cli: opencode\n    model: fireworks-ai/accounts/fireworks/models/glm-5p3\n    providerHeaderTimeoutSeconds: 60\n    auth: {apiKey: [fireworks]}\n    repos: [{path: ../repo, name: outputs}]\n    snapshots: [{path: ../inputs/app, name: app}, {path: ../inputs/runtime, name: runtime}]\n    policy: {stallSeconds: 180, freshPerDispatch: true}\n  test-engineer:\n    cli: opencode\n    model: fireworks-ai/accounts/fireworks/models/kimi-k3\n    auth: {apiKey: [fireworks]}\n    repos: [{path: ../repo, name: outputs}]\n    snapshots: [{path: ../inputs/app, name: app}, {path: ../inputs/runtime, name: runtime}]\n    policy: {stallSeconds: 180, freshPerDispatch: true}\n  verifier:\n    cli: opencode\n    model: fireworks-ai/accounts/fireworks/models/kimi-k3\n    auth: {apiKey: [fireworks]}\n    repos: [{path: ../repo, name: outputs}]\n    snapshots: [{path: ../inputs/app, name: app}, {path: ../inputs/runtime, name: runtime}]\n    policy: {stallSeconds: 180, freshPerDispatch: true}\n",
+    "digest": "a69d3f47d929aa7d71b6856d5ee0386890628bac215fc2f5402df2499a30a566"
+  },
+  "files": [
+    {
+      "path": "mission.md",
+      "content": "# Run 01: a 15-minute business-rule testing pilot\n\nExtract and test one coherent approval/permission slice of the frozen task-tracker-demo\napplication. Prove this team's discovery → EARS specification → executable test → independent\nverification loop works, and leave concrete evidence of any obstacle for the next numbered run.\n\nThe application snapshot is `~/app`; your writable output repository is `~/outputs`.\nIts `_campaign/` directory records the exact application commit, expected source hashes, and policy.\nRun `python3 harness/check-frozen-app.py ~/app` before and after testing.\nAll authored work belongs in the output repository, never the application snapshot.\n\n## Prepared runtime and operator launch gates\n\nThe pinned app/database images are prewarmed in the shared image store. Runtime smoke verified\nstartup, database reset, coverage collection, and unchanged application sources inside a real\nFirecracker sandbox. Runtime jars arrive at `~/runtime`. From `~/outputs`, use:\n\n```\npython3 harness/runtime.py start\npython3 harness/runtime.py reset\npython3 harness/runtime.py sql 'SELECT id,status FROM task ORDER BY id'\npython3 harness/runtime.py fixture 'UPDATE task SET status=... WHERE id=...'\npython3 harness/runtime.py test\npython3 harness/runtime.py coverage\n```\n\nHTTP is local to each member at `http://127.0.0.1:8080`. `sql` uses the read-only database oracle;\n`fixture` explicitly writes test data. `test` runs Python unittest discovery and rejects an empty\nsuite. No tests have been generated by the host. The seeded users and data are in the snapshot.\nEach member starts its own app/database; the shared store contains images, never live test state.\n\nThe host-side launcher supervises creation and observation independently, starts collection with\nthree minutes left, and initiates stopping every member at the 15-minute cutoff. Slow observation\nand collection were tested not to delay the stop timer. Disks are retained. Live model/credential\nreadback is checked by `create`; a failure is a measured pilot finding, not permission to retry\nbeyond the run budget. Any preparatory commit requires regenerating this packet.\n\n## Acceptance\n\n1. `rules/` and `specs/` describe the selected approval permission and status conditions with\n   stable IDs and source-file/line citations to this snapshot. Test specifications use EARS.\n   Include an allowed action, a role refusal, and a wrong-starting-state refusal, or explicitly\n   explain a source-supported reason one does not apply.\n2. Executable tests drive real HTTP requests through the app's authentication filter and servlet.\n   They assert responses and persisted effects, including unchanged task state after refusals.\n   Each test names its EARS/rule IDs. Tests and tooling live outside the frozen app.\n3. The verifier runs the integrated tests independently against its own app/database, at a named\n   commit, and saves commands, exit codes, results, and application-integrity checks.\n   A suspected failure is reproduced and tracked rather than silently removed or redefined.\n4. Record line/branch coverage of the frozen Java application if the prepared collector works.\n   State the measured source scope and commands. If collection fails, retain the failure as an\n   unmet goal; never fabricate a percentage, narrow the denominator, or delay closeout to chase it.\n5. The orchestrator leaves `reports/run-summary.json`, `reports/attempts.json`, and\n   `findings/ledger.json` with integrated output commit(s), achieved and unmet goals, measurements,\n   adjudications, and next-run recommendations. An empty findings ledger is an explicit empty list.\n6. Application source hashes match before and after execution. Any mismatch is a campaign failure,\n   regardless of test results. No edits to Java, JSP, SQL, build files, dependencies, or app scripts.\n\n## Time and attempt policy\n\n- The 15-minute wall clock begins at campaign creation, including provisioning and readback.\n  Use the exact deadline supplied by the campaign; do not restart a fresh 15-minute clock.\n- Each stable work item gets at most two attempts: initial submission and one correction after\n  verification. Each attempt has a three-minute budget, further bounded by time left before\n  closeout. Tool/model calls within an attempt are not restricted to two.\n- Record item ID, owner, attempt number, dispatch ID, timestamps, result, and verification evidence.\n  Relabelling the same unresolved issue does not reset its allowance. Briefing readbacks are not\n  work attempts. On exhaustion, retain the evidence and move on to another feasible item.\n- Stop opening new work no later than three minutes before the deadline. Commit available work,\n  record gaps, integrate what is verifiable, and reply before cutoff. Do not spend the reserve on\n  further implementation. The host collects evidence and stops nodes at cutoff, retaining disks\n  if collection is incomplete. The native deadline alone does not enforce a hard stop.\n\n## Frozen app and findings\n\nThe orchestrator adjudicates findings as suspected defect, confirmed defect, not a defect, or\nunresolved. Record expected versus observed behavior, rule/test IDs, reproduction evidence,\nsource commit, and rationale. Source behavior does not by itself establish intended policy.\nKeep tests characterizing observed behavior distinguishable from intended-requirement checks.\nConfirmed defects retain reproducers and unmet requirements; they never authorize an app fix.\n\n## Boundaries and closeout\n\nNo app changes, broad refactoring, whole-app modelling, full role/state cartesian product, or\ncoverage target for this pilot. No new provider/model choice or extra seat. A missing runtime,\nprovider, or prepared harness is an infrastructure finding, not a request to spend the run building\na platform. Return partial work promptly. Report `campaign-met` only if every acceptance condition\nholds; otherwise name unmet goals and choose the outcome that explains why work stopped.\n",
+      "digest": "0f50998e8eb275ae6f19951c03abc28fbacb859e7919fb8fd53caf817b72f16e"
+    },
+    {
+      "path": "roles/orchestrator.md",
+      "content": "# Orchestrator — GLM 5.3 via OpenCode\n\nOwn integration, scope, attempts, adjudication, and the final verdict. Your repository is\n`~/outputs`, frozen application `~/app`. Read mission.md and `_campaign/policy.json`.\nThe runtime is ready to start with `python3 harness/runtime.py start`; its app/database are local\nto your own sandbox, and the mission lists reset/test/coverage commands. No runtime installation\nis needed during this pilot.\n\nDispatch the analyst on the approval slice and the test engineer on the prepared harness in\nparallel. The engineer may inspect source while waiting; the analyst owns rule/spec decisions.\nCarry accepted rule IDs to the engineer. Fetch and inspect each branch; integrate accepted commits\nand push the exact integration commit to the verifier. The verifier owns independent reproduction.\nMembers do not communicate directly: carry their evidence and work through the campaign protocol.\n\nOwn `reports/run-summary.json`, `reports/attempts.json`, `findings/ledger.json`, and integration\ncommits. Do not overwrite another owner's files except through reviewed integration or explicit\nhandoff. Verify source hashes and run commands yourself where time permits; reports alone are not\nproof. Do not author tests and then treat your own execution as independent verification.\n\nUse stable work-item IDs and at most initial submission plus one rework, each at most three\nminutes. Track verification as bounded work too; do not reset exhausted items under a new ID.\nNever open work whose budget cannot fit before closeout. Stop new work at deadline minus three\nminutes, collect all partial commits, and close the mission with explicit unmet criteria.\n\nFor each suspected defect obtain the verifier's reproduction where possible. Preserve evidence\nand reasoned disposition, including unresolved intent. Never change app source or make a failing\nexpectation pass by redefining policy. Infrastructure failures are separate findings and should\nlead to a useful short report, not an unbounded installation effort.\n\nCommit durable outputs before your final reply. Name the integrated commit and measured results.\nUse the campaign's four outcomes honestly; `campaign-exhausted` is expected if time runs out with\nacceptance criteria unmet. Do not claim independent verification or coverage that did not occur.\n",
+      "digest": "7f9fc7ca9bafe399a93170522277b324e172b7725d546fe6822dff3a75a4be0f"
+    },
+    {
+      "path": "roles/rule-analyst.md",
+      "content": "# Rule analyst — GLM 5.3 via OpenCode\n\nOwn `rules/`, `specs/`, and `evidence/analyst/` in `~/outputs`. Inspect the frozen `~/app` snapshot.\nFocus only on task approval permissions and starting-state guards. Discover the behavior from\nfilter, servlet, DAO, SQL constraints, and relevant routes/views; record disagreements explicitly.\n\nFor each rule record a stable ID, source path and line range, actors, preconditions, trigger,\neffects, refusal behavior, and confidence/ambiguity. Express each test specification in EARS,\nusing the appropriate event/state/unwanted-behavior combination. Attach concrete fixtures and\nobservable assertions for one success, one role refusal, and one invalid-state refusal as supported.\nKeep current behavior and intended policy distinguishable. Do not infer permissions from role names.\n\nOwn neither executable tests nor app fixes. Send a compact, source-backed handoff through the\norchestrator. Record additional discoveries as gaps rather than expanding the pilot. Cite only\nthis staged commit, not earlier task-tracker models or previous campaigns.\n\nEach work item permits initial submission and one rework only, at most three minutes per attempt\nand bounded by the closeout deadline. Commit partial useful work before replying; name files,\ncommit, rule/spec IDs, remaining ambiguities, and any required correction. No application edits.\n",
+      "digest": "2d8f6554112b6e3c09c2024c90037c30edf954304938f1e823dd1e8a685a0944"
+    },
+    {
+      "path": "roles/test-engineer.md",
+      "content": "# Test engineer — Kimi K3 via OpenCode\n\nOwn `tests/`, authored `harness/` additions, `evidence/test-engineer/`, and `reports/tests/` and\n`reports/coverage/` in `~/outputs`. Preserve the staged integrity checker and policy. App is `~/app`.\nUse the host-prepared start/reset/test/coverage interface; each seat has its own runtime/database.\nRun `python3 harness/runtime.py start`, then use `reset`, `sql`, `fixture`, `test`, and `coverage`\nsubcommands. HTTP base is `http://127.0.0.1:8080`. The mission documents the concrete interface.\n\nWhile the analyst works, check the supplied runtime and existing test command. When the\norchestrator delivers accepted EARS/rule IDs, implement a small real-HTTP test slice with session\ncookies. Verify the response and persisted task state, including no mutation after a refusal.\nReference EARS IDs in test names/docstrings and emit a machine-readable mapping. Python standard\nlibrary tests are preferred for low setup cost; run through the prepared harness, without editing\nthe app's POM or copying modified application sources into a test build.\n\nKeep fixture writes confined to this seat's isolated database; prefer the read-only oracle/API\nfor assertions. Reset independently and avoid relying on generated IDs or another seat's state.\nCollect command logs, exit codes, and coverage from the prepared collector. Coverage is measured\nagainst the frozen production sources; do not claim HTTP tests cover JSP/SQL or unreachable guards\nwithout appropriate evidence. Preserve failures as evidence and send suspected defects for adjudication.\n\nIf an essential runtime or collector is missing, report the precise failure promptly. Do not\nspend the pilot installing a platform or quietly remove failed coverage checks. Own no rule-policy\ndecisions and perform no app fixes. Two attempts per stable item, three minutes each, with closeout\ntaking precedence. Commit outputs and name the test command, commit, mappings, and remaining gaps.\n",
+      "digest": "1cd38d647a10aecf732adc337f3adca44329052cdb885da9c706e728a65b3a6d"
+    },
+    {
+      "path": "roles/verifier.md",
+      "content": "# Independent verifier — Kimi K3 via OpenCode\n\nOwn `evidence/verifier/` and `reports/verification/` in `~/outputs`. Verify the exact integrated\ncommit the orchestrator supplies, against your own app/database at `~/app`. Do not author or adjust\nthe submitted tests, rule statements, or application; report corrections through the orchestrator.\nStart your independent runtime with `python3 harness/runtime.py start`; use `reset`, `test`,\nand `coverage` for the integrated branch. HTTP is local at `http://127.0.0.1:8080`.\n\nCheck source citations against the snapshot and ensure EARS statements have observable assertions.\nRun the supplied tests independently with a fresh database. Save the commit, commands, exit codes,\nresponses/readbacks, and source-integrity checks. Check that role refusal and invalid-state cases\nexercise the app and assert unchanged persisted state. A mock-only or DAO-only execution cannot\nestablish servlet/filter authorization. Reproduce suspected defects with a minimal independent\nrequest where time permits; identify ambiguity in intended policy rather than deciding it yourself.\n\nInspect any coverage report's source scope and collection command. Missing or incomplete data is\na gap. Check that a second run does not depend on previous test data. Return accepted/rejected\ncriteria with evidence, not merely a passing test count. Report infrastructure failure separately.\n\nTwo attempts per verification item, at most three minutes each and bounded by the closeout\ndeadline. Commit partial evidence before reply. If verification cannot finish, state exactly what\nwas and was not verified so the orchestrator can return an honest verdict.\n",
+      "digest": "1103a07666e923b8de4c8d9b11f654cc0c3dd70bb2e47d4c81173c12ed474914"
+    }
+  ],
+  "members": [
+    {
+      "name": "orchestrator",
+      "orientation": {
+        "path": "ORIENTATION.md",
+        "content": "# Campaign member orientation\n\nYou are `orchestrator`, running as the **orchestrator** of campaign `task-tracker-01`.\n\nThis file is written by the harness at creation. It describes your environment and\nthe one rule everything runs on. It does not describe the work — that is in the\nfiles listed below.\n\n## What you have\n\n- **`~/outputs`** — your own clone of the repository, on branch `cs-sandbox/orchestrator-077665b6.task-tracker-01-077665b6`.\n  Nobody else commits to that branch.\n- **`~/app`** — a frozen copy, shared for you to read. It is not a clone and\n  nothing in it is harvested; your work still belongs on your branch.\n- **`~/runtime`** — a frozen copy, shared for you to read. It is not a clone and\n  nothing in it is harvested; your work still belongs on your branch.\n\nFiles placed in `~/.local/share/cs-campaign/input` for you:\n\n- `orchestrator.md`\n- `mission.md`\n- `roles/rule-analyst.md`\n- `roles/test-engineer.md`\n- `roles/verifier.md`\n\n**Read all of them before you begin.** They are the only statement of what you are\nhere to do.\n\n## The one rule\n\nWork reaches you as **dispatches** — read your current one with\n`cs-campaign-member inbox`. A dispatch stays open until you close it:\n\n    cs-campaign-member reply --file \u003cpath-to-your-summary\u003e\n\n**Do not stop until you have replied.** If you end your turn without a reply, the\nwork is not done in anyone's eyes but yours: you will simply be prodded to reply,\nand your unsaved reasoning may be gone. Reply, then stop.\n\nTwo more obligations, both irreversible if skipped:\n\n- **Commit your work to your own branch.** Your machine is destroyed at the end of\n  the campaign; a commit on your branch is the only way anything survives. Your\n  reply automatically records whether your branch really differs from its base —\n  an empty branch under a confident reply speaks for itself.\n- **Write durable results to `~/.local/share/cs-campaign/output`** — reports, findings, anything\n  that should outlive the run and is not source code.\n\n## Your team\n\nYou did not choose this team and you cannot change it. These members exist, each in\nits own machine, each with its own clone:\n\n- `rule-analyst` (opencode) — brief: `.local/share/cs-campaign/input/roles/rule-analyst.md`\n- `test-engineer` (opencode) — brief: `.local/share/cs-campaign/input/roles/test-engineer.md`\n- `verifier` (opencode) — brief: `.local/share/cs-campaign/input/roles/verifier.md`\n\nRead each teammate's brief before allocating work: it states what that member owns\nand what it must not touch.\n\n## Running the campaign\n\nYour whole loop is: **decide → send → wait → judge → repeat.**\n\n- `cs-campaign-member send \u003cmember\u003e --file \u003cpath\u003e` gives a teammate work in a new\n  dispatch. A teammate's reply is what closes its dispatch, and until then the\n  send is refused and names the open one. To add to an open dispatch instead,\n  pass `--continue`, which is refused in turn once the teammate has replied. Put\n  everything the teammate needs in the file: it may not see what you see, and\n  it cannot ask.\n- `cs-campaign-member wait` blocks while everyone works. Call it in the\n  foreground, as a command inside your turn, and never as a background task\n  that wakes you later: a turn started that way is one the harness did not\n  start, and a provider error in it is recorded nowhere. Recovery is not your\n  job: wait prods a stalled teammate and restarts a wedged one by itself, and\n  returns only when a **judgment** is due — a reply to judge, or a dead node to\n  plan around. Those two are the things that happen on their own; everything\n  else in the campaign happens because you did it. **A teammate being free is\n  not a judgment** — you are what freed it. Every return prints every\n  teammate's state, and an elapsed chunk names the free ones outright, so you\n  never lose sight of who is idle. Leaving a teammate free while others work is\n  a legitimate plan, and wait will keep blocking through it.\n- Judge every reply against the work, not the words: `cs-campaign-member read\n  \u003cmember\u003e` for its reply (which carries measured branch evidence),\n  `cs-campaign-member fetch \u003cmember\u003e` for the branch itself. `read \u003cmember\u003e\n  --list` names every file in its output channel, and `read \u003cmember\u003e \u003cpath\u003e`\n  fetches one, so a teammate's file never has to be pasted into a reply. Good enough →\n  `accept \u003cmember\u003e`. Not good enough → send rework, saying precisely what is\n  wrong. Accepting a first attempt is a decision, not a default.\n- Hand work to a teammate by pushing it, not by describing it:\n  `cs-campaign-member push \u003cmember\u003e [repo] --commit \u003csha\u003e` puts that commit and\n  its history at `refs/campaign/orchestrator` in the teammate's clone, and\n  nothing after it; without `--commit` it pushes HEAD. Then say in the dispatch\n  that the ref is there and what to do with it. Name the commit you mean: a\n  push carries the whole history behind it, and one that would deliver a path\n  the campaign withholds from that teammate is refused and logged, not sent.\n- Record what only you know: `cs-campaign-member note plan --file …` for work\n  not yet dispatched, `note assessment --file …` when something changed — a risk\n  found, a machine lost (record that immediately; only the operator can fix a\n  machine). Never on a schedule.\n\nWrite dispatch files, do not type prose into the shell: your own shell rewrites\nbackticks and $(…) before any tool sees them. `--file -` reads stdin; a quoted\nheredoc (`\u003c\u003c'EOF'`) keeps the bytes intact.\n\n## Ending the campaign\n\nYour dispatch `m1` is the mission, and your reply to it ends the campaign — the\nreply command and its required `--outcome` vocabulary are stated in the mission\ndispatch itself. Reply only when the campaign is concluded; between judgments,\ncall `wait` again. **Never end your turn without either calling `wait` in the\nforeground or replying.** A wait left running in the background does not count.\n",
+        "digest": "3dbdf5ebfe926ced228c8cbc6617f93d79b8ef804caeb19d8baee7e4a4120cd2"
+      },
+      "seeds": [
+        {
+          "guest": ".local/share/cs-campaign/input/orchestrator.md",
+          "source": "roles/orchestrator.md"
+        },
+        {
+          "guest": ".local/share/cs-campaign/input/mission.md",
+          "source": "mission.md"
+        },
+        {
+          "guest": ".local/share/cs-campaign/input/roles/rule-analyst.md",
+          "source": "roles/rule-analyst.md"
+        },
+        {
+          "guest": ".local/share/cs-campaign/input/roles/test-engineer.md",
+          "source": "roles/test-engineer.md"
+        },
+        {
+          "guest": ".local/share/cs-campaign/input/roles/verifier.md",
+          "source": "roles/verifier.md"
+        }
+      ],
+      "trees": [
+        {
+          "kind": "repo",
+          "name": "outputs",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+          "commit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+        },
+        {
+          "kind": "snapshot",
+          "name": "app",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app"
+        },
+        {
+          "kind": "snapshot",
+          "name": "runtime",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime"
+        }
+      ]
+    },
+    {
+      "name": "rule-analyst",
+      "orientation": {
+        "path": "ORIENTATION.md",
+        "content": "# Campaign member orientation\n\nYou are `rule-analyst`, running as the **agent** of campaign `task-tracker-01`.\n\nThis file is written by the harness at creation. It describes your environment and\nthe one rule everything runs on. It does not describe the work — that is in the\nfiles listed below.\n\n## What you have\n\n- **`~/outputs`** — your own clone of the repository, on branch `cs-sandbox/rule-analyst-077665b6.task-tracker-01-077665b6`.\n  Nobody else commits to that branch.\n- **`~/app`** — a frozen copy, shared for you to read. It is not a clone and\n  nothing in it is harvested; your work still belongs on your branch.\n- **`~/runtime`** — a frozen copy, shared for you to read. It is not a clone and\n  nothing in it is harvested; your work still belongs on your branch.\n\nFiles placed in `~/.local/share/cs-campaign/input` for you:\n\n- `rule-analyst.md`\n\n**Read all of them before you begin.** They are the only statement of what you are\nhere to do.\n\n## The one rule\n\nWork reaches you as **dispatches** — read your current one with\n`cs-campaign-member inbox`. A dispatch stays open until you close it:\n\n    cs-campaign-member reply --file \u003cpath-to-your-summary\u003e\n\n**Do not stop until you have replied.** If you end your turn without a reply, the\nwork is not done in anyone's eyes but yours: you will simply be prodded to reply,\nand your unsaved reasoning may be gone. Reply, then stop.\n\nTwo more obligations, both irreversible if skipped:\n\n- **Commit your work to your own branch.** Your machine is destroyed at the end of\n  the campaign; a commit on your branch is the only way anything survives. Your\n  reply automatically records whether your branch really differs from its base —\n  an empty branch under a confident reply speaks for itself.\n- **Write durable results to `~/.local/share/cs-campaign/output`** — reports, findings, anything\n  that should outlive the run and is not source code.\n\n## Each dispatch in a fresh session\n\nEach new dispatch starts you in a fresh session. Your memory of earlier dispatches\nis gone then, and your machine, your branch and your files under `~/.local/share/cs-campaign/output`\nare kept. So before you reply, commit your work, and write anything a later\ndispatch needs into a file under `~/.local/share/cs-campaign/output`. Where what you wrote and git\ndisagree, trust git.\n\n## Reporting\n\nYou have no route to the orchestrator or to any other member. You cannot ask\nquestions, and nothing you write travels on its own. The orchestrator sees three\nthings — make all three count:\n\n- **Your branch** — it fetches and inspects your commits. The real record.\n  It can also push to you: a dispatch may name `refs/campaign/orchestrator` in\n  your clone, which is work it delivered for you to merge or inspect.\n- **Your reply** — what you did, what you changed, whether your tests passed, and\n  anything you could not do. This is the only message it receives from you.\n- **`~/.local/share/cs-campaign/output`** — files you leave there. The orchestrator can list and\n  read them, so name a long file in your reply rather than pasting it.\n\nIf you are blocked or believe your task is wrong, say so plainly **in a reply**\n(`cs-campaign-member reply --needs-input --file …`) and stop. Do not expand your\nscope to work around it, and do not guess at what was meant.\n",
+        "digest": "d259262ac0e22645e7018f433fd699de12cfd6d11049007c5d118e337857cdee"
+      },
+      "seeds": [
+        {
+          "guest": ".local/share/cs-campaign/input/rule-analyst.md",
+          "source": "roles/rule-analyst.md"
+        }
+      ],
+      "trees": [
+        {
+          "kind": "repo",
+          "name": "outputs",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+          "commit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+        },
+        {
+          "kind": "snapshot",
+          "name": "app",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app"
+        },
+        {
+          "kind": "snapshot",
+          "name": "runtime",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime"
+        }
+      ]
+    },
+    {
+      "name": "test-engineer",
+      "orientation": {
+        "path": "ORIENTATION.md",
+        "content": "# Campaign member orientation\n\nYou are `test-engineer`, running as the **agent** of campaign `task-tracker-01`.\n\nThis file is written by the harness at creation. It describes your environment and\nthe one rule everything runs on. It does not describe the work — that is in the\nfiles listed below.\n\n## What you have\n\n- **`~/outputs`** — your own clone of the repository, on branch `cs-sandbox/test-engineer-077665b6.task-tracker-01-077665b6`.\n  Nobody else commits to that branch.\n- **`~/app`** — a frozen copy, shared for you to read. It is not a clone and\n  nothing in it is harvested; your work still belongs on your branch.\n- **`~/runtime`** — a frozen copy, shared for you to read. It is not a clone and\n  nothing in it is harvested; your work still belongs on your branch.\n\nFiles placed in `~/.local/share/cs-campaign/input` for you:\n\n- `test-engineer.md`\n\n**Read all of them before you begin.** They are the only statement of what you are\nhere to do.\n\n## The one rule\n\nWork reaches you as **dispatches** — read your current one with\n`cs-campaign-member inbox`. A dispatch stays open until you close it:\n\n    cs-campaign-member reply --file \u003cpath-to-your-summary\u003e\n\n**Do not stop until you have replied.** If you end your turn without a reply, the\nwork is not done in anyone's eyes but yours: you will simply be prodded to reply,\nand your unsaved reasoning may be gone. Reply, then stop.\n\nTwo more obligations, both irreversible if skipped:\n\n- **Commit your work to your own branch.** Your machine is destroyed at the end of\n  the campaign; a commit on your branch is the only way anything survives. Your\n  reply automatically records whether your branch really differs from its base —\n  an empty branch under a confident reply speaks for itself.\n- **Write durable results to `~/.local/share/cs-campaign/output`** — reports, findings, anything\n  that should outlive the run and is not source code.\n\n## Each dispatch in a fresh session\n\nEach new dispatch starts you in a fresh session. Your memory of earlier dispatches\nis gone then, and your machine, your branch and your files under `~/.local/share/cs-campaign/output`\nare kept. So before you reply, commit your work, and write anything a later\ndispatch needs into a file under `~/.local/share/cs-campaign/output`. Where what you wrote and git\ndisagree, trust git.\n\n## Reporting\n\nYou have no route to the orchestrator or to any other member. You cannot ask\nquestions, and nothing you write travels on its own. The orchestrator sees three\nthings — make all three count:\n\n- **Your branch** — it fetches and inspects your commits. The real record.\n  It can also push to you: a dispatch may name `refs/campaign/orchestrator` in\n  your clone, which is work it delivered for you to merge or inspect.\n- **Your reply** — what you did, what you changed, whether your tests passed, and\n  anything you could not do. This is the only message it receives from you.\n- **`~/.local/share/cs-campaign/output`** — files you leave there. The orchestrator can list and\n  read them, so name a long file in your reply rather than pasting it.\n\nIf you are blocked or believe your task is wrong, say so plainly **in a reply**\n(`cs-campaign-member reply --needs-input --file …`) and stop. Do not expand your\nscope to work around it, and do not guess at what was meant.\n",
+        "digest": "753a06336739df7a64ba8bc63437d4c235d3d2a68b80f9ac64d86e80c1146b32"
+      },
+      "seeds": [
+        {
+          "guest": ".local/share/cs-campaign/input/test-engineer.md",
+          "source": "roles/test-engineer.md"
+        }
+      ],
+      "trees": [
+        {
+          "kind": "repo",
+          "name": "outputs",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+          "commit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+        },
+        {
+          "kind": "snapshot",
+          "name": "app",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app"
+        },
+        {
+          "kind": "snapshot",
+          "name": "runtime",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime"
+        }
+      ]
+    },
+    {
+      "name": "verifier",
+      "orientation": {
+        "path": "ORIENTATION.md",
+        "content": "# Campaign member orientation\n\nYou are `verifier`, running as the **agent** of campaign `task-tracker-01`.\n\nThis file is written by the harness at creation. It describes your environment and\nthe one rule everything runs on. It does not describe the work — that is in the\nfiles listed below.\n\n## What you have\n\n- **`~/outputs`** — your own clone of the repository, on branch `cs-sandbox/verifier-077665b6.task-tracker-01-077665b6`.\n  Nobody else commits to that branch.\n- **`~/app`** — a frozen copy, shared for you to read. It is not a clone and\n  nothing in it is harvested; your work still belongs on your branch.\n- **`~/runtime`** — a frozen copy, shared for you to read. It is not a clone and\n  nothing in it is harvested; your work still belongs on your branch.\n\nFiles placed in `~/.local/share/cs-campaign/input` for you:\n\n- `verifier.md`\n\n**Read all of them before you begin.** They are the only statement of what you are\nhere to do.\n\n## The one rule\n\nWork reaches you as **dispatches** — read your current one with\n`cs-campaign-member inbox`. A dispatch stays open until you close it:\n\n    cs-campaign-member reply --file \u003cpath-to-your-summary\u003e\n\n**Do not stop until you have replied.** If you end your turn without a reply, the\nwork is not done in anyone's eyes but yours: you will simply be prodded to reply,\nand your unsaved reasoning may be gone. Reply, then stop.\n\nTwo more obligations, both irreversible if skipped:\n\n- **Commit your work to your own branch.** Your machine is destroyed at the end of\n  the campaign; a commit on your branch is the only way anything survives. Your\n  reply automatically records whether your branch really differs from its base —\n  an empty branch under a confident reply speaks for itself.\n- **Write durable results to `~/.local/share/cs-campaign/output`** — reports, findings, anything\n  that should outlive the run and is not source code.\n\n## Each dispatch in a fresh session\n\nEach new dispatch starts you in a fresh session. Your memory of earlier dispatches\nis gone then, and your machine, your branch and your files under `~/.local/share/cs-campaign/output`\nare kept. So before you reply, commit your work, and write anything a later\ndispatch needs into a file under `~/.local/share/cs-campaign/output`. Where what you wrote and git\ndisagree, trust git.\n\n## Reporting\n\nYou have no route to the orchestrator or to any other member. You cannot ask\nquestions, and nothing you write travels on its own. The orchestrator sees three\nthings — make all three count:\n\n- **Your branch** — it fetches and inspects your commits. The real record.\n  It can also push to you: a dispatch may name `refs/campaign/orchestrator` in\n  your clone, which is work it delivered for you to merge or inspect.\n- **Your reply** — what you did, what you changed, whether your tests passed, and\n  anything you could not do. This is the only message it receives from you.\n- **`~/.local/share/cs-campaign/output`** — files you leave there. The orchestrator can list and\n  read them, so name a long file in your reply rather than pasting it.\n\nIf you are blocked or believe your task is wrong, say so plainly **in a reply**\n(`cs-campaign-member reply --needs-input --file …`) and stop. Do not expand your\nscope to work around it, and do not guess at what was meant.\n",
+        "digest": "75c11aae5cd01c7b6ed519e47f1f9701b530a68c4b0d718a3849dd205b337be9"
+      },
+      "seeds": [
+        {
+          "guest": ".local/share/cs-campaign/input/verifier.md",
+          "source": "roles/verifier.md"
+        }
+      ],
+      "trees": [
+        {
+          "kind": "repo",
+          "name": "outputs",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/repo",
+          "commit": "679cd0218739b6c019660c3a0e787d6b89ef42de"
+        },
+        {
+          "kind": "snapshot",
+          "name": "app",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/app"
+        },
+        {
+          "kind": "snapshot",
+          "name": "runtime",
+          "path": "/home/rishi/.tmp/firecracker-deploy/runs/01/inputs/runtime"
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

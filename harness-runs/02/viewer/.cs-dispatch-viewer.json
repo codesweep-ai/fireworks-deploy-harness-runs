@@ -1,0 +1,13 @@
+{
+ "tool": "cs-dispatch-viewer",
+ "version": "v0.0.0-20261102055029-b0f0bf56f5cd",
+ "files": [
+  "AGENTS.md",
+  "CLAUDE.md",
+  "facts.json",
+  "index.html",
+  "run-data.json",
+  "traces",
+  "tracer"
+ ]
+}

@@ -1,0 +1,99 @@
+[
+  {
+    "group": "Rules",
+    "path": "rules/R-APR.md",
+    "ids": [
+      "R-APR-001",
+      "R-APR-002",
+      "R-APR-003",
+      "R-APR-004",
+      "R-APR-005"
+    ],
+    "definedIDs": [
+      "R-APR-001",
+      "R-APR-002",
+      "R-APR-003",
+      "R-APR-004",
+      "R-APR-005"
+    ],
+    "url": "/runs/01/repo/rules/R-APR.md"
+  },
+  {
+    "group": "EARS specifications",
+    "path": "specs/S-APR.md",
+    "ids": [
+      "S-APR-001",
+      "S-APR-002",
+      "S-APR-003",
+      "S-APR-004",
+      "S-APR-005"
+    ],
+    "definedIDs": [
+      "S-APR-001",
+      "S-APR-002",
+      "S-APR-003",
+      "S-APR-004",
+      "S-APR-005"
+    ],
+    "url": "/runs/01/repo/specs/S-APR.md"
+  },
+  {
+    "group": "Executable tests",
+    "path": "tests/httpcase.py",
+    "ids": [],
+    "definedIDs": [],
+    "url": "/runs/01/repo/tests/httpcase.py"
+  },
+  {
+    "group": "Executable tests",
+    "path": "tests/test_approval_slice.py",
+    "ids": [
+      "R-APR-001",
+      "R-APR-003",
+      "R-APR-004",
+      "R-APR-005",
+      "S-APR-001",
+      "S-APR-002",
+      "S-APR-003",
+      "S-APR-004",
+      "S-APR-005"
+    ],
+    "definedIDs": [],
+    "url": "/runs/01/repo/tests/test_approval_slice.py"
+  },
+  {
+    "group": "Executable tests",
+    "path": "tests/test_skeleton.py",
+    "ids": [],
+    "definedIDs": [],
+    "url": "/runs/01/repo/tests/test_skeleton.py"
+  },
+  {
+    "group": "Test mappings",
+    "path": "reports/tests/mapping.json",
+    "ids": [
+      "R-APR-001",
+      "R-APR-003",
+      "R-APR-004",
+      "R-APR-005",
+      "S-APR-001",
+      "S-APR-002",
+      "S-APR-003",
+      "S-APR-004",
+      "S-APR-005"
+    ],
+    "definedIDs": [],
+    "url": "/runs/01/repo/reports/tests/mapping.json"
+  },
+  {
+    "group": "Findings",
+    "path": "findings/ledger.json",
+    "ids": [
+      "R-APR-001",
+      "R-APR-002",
+      "R-APR-004"
+    ],
+    "definedIDs": [],
+    "url": "/runs/01/repo/findings/ledger.json"
+  }
+]

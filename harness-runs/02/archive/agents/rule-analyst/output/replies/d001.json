@@ -1,0 +1,13 @@
+{
+  "dispatch": "d001",
+  "phase": "done",
+  "note": "{\"member\":\"rule-analyst\",\"role\":\"agent\",\"branch\":\"cs-sandbox/rule-analyst-7aac6234.task-tracker-02-7aac6234\",\"missing\":[],\"goal\":\"Read the task-tracker app at frozen ~/app (and scope.json operation families) and turn it into a complete, source-cited body of rules, specs, an app inventory, and analyst evidence — with stable rule/EARS IDs, mapped tests and remaining gaps — expanding beyond inherited approval rules and explicitly correcting any inherited assumption that the source disproves.\",\"scope\":\"I own rules/, specs/, rules/app-inventory.json, and evidence/analyst/ plus durable files under ~/.local/share/cs-campaign/output; I must not edit application source, own executable tests, or invent execution evidence — the engineer and verifier supply that through the orchestrator, and I analyze frozen copies only.\",\"obligations\":\"Every dispatch must be closed with a cs-campaign-member reply, and my work must be committed to my own branch (with durable non-code results in the output dir) before I stop — if I end a turn without replying I am treated as stopped and prodded, and anything not committed or written there is destroyed with my machine when the campaign ends.\"}\n",
+  "at": "2026-11-02T20:31:53.448341089Z",
+  "repos": [
+    {
+      "repo": "outputs",
+      "head": "5493ba9aef1fe69a36e2699abb20462af639b197",
+      "treeDiffersFromBase": false
+    }
+  ]
+}

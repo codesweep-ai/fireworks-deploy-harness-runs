@@ -1,0 +1,37 @@
+{
+  "campaignVersion": "v0.0.0-20261102055029-b0f0bf56f5cd",
+  "derivedFrom": "github.com/codesweep-ai/campaign@v0.0.0-20261102055029-b0f0bf56f5cd/go.mod",
+  "goModSHA256": "28f787e86ebf297c2291ac060e85f9545e64adf3f7a1eaa04db3824458179b54",
+  "binaries": {
+    "cs-campaign": {
+      "module": "github.com/codesweep-ai/campaign",
+      "version": "v0.0.0-20261102055029-b0f0bf56f5cd",
+      "package": "github.com/codesweep-ai/campaign/cmd/cs-campaign"
+    },
+    "cs-campaign-member": {
+      "module": "github.com/codesweep-ai/campaign",
+      "version": "v0.0.0-20261102055029-b0f0bf56f5cd",
+      "package": "github.com/codesweep-ai/campaign/cmd/cs-campaign-member"
+    },
+    "cs-dispatch-viewer": {
+      "module": "github.com/codesweep-ai/campaign",
+      "version": "v0.0.0-20261102055029-b0f0bf56f5cd",
+      "package": "github.com/codesweep-ai/campaign/dispatch-viewer/cmd/cs-dispatch-viewer"
+    },
+    "cs-sandbox": {
+      "module": "github.com/codesweep-ai/sandbox",
+      "version": "v0.0.0-20261025044344-a0df4c558d44",
+      "package": "github.com/codesweep-ai/sandbox/cmd/cs-sandbox"
+    },
+    "cs-tracer": {
+      "module": "github.com/codesweep-ai/tracer",
+      "version": "v0.0.0-20260929195245-961ae414c82a",
+      "package": "github.com/codesweep-ai/tracer/cmd/cs-tracer"
+    },
+    "cs-vcr": {
+      "module": "github.com/codesweep-ai/vcr",
+      "version": "v0.0.0-20260928070923-415d1810e561",
+      "package": "github.com/codesweep-ai/vcr/cmd/cs-vcr"
+    }
+  }
+}
